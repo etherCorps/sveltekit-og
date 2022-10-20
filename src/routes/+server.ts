@@ -19,18 +19,25 @@ const template = `
     </div>
   </div>
 `;
-const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
-const fontData: ArrayBuffer = await fontFile.arrayBuffer();
+const fontFile400 = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
+const fontFile700 = await fetch('https://og-playground.vercel.app/inter-latin-ext-700-normal.woff');
+const fontData400: ArrayBuffer = await fontFile400.arrayBuffer();
+const fontData700: ArrayBuffer = await fontFile700.arrayBuffer();
 
 export const GET: RequestHandler = async () => {
 	return new ImageResponse(template, {
-		height: 400,
-		width: 800,
+		height: 250,
+		width: 500,
 		fonts: [
 			{
-				name: 'Inter',
-				data: fontData,
+				name: 'Inter Latin',
+				data: fontData400,
 				weight: 400
+			},
+			{
+				name: 'Inter Latin',
+				data: fontData700,
+				weight: 700
 			}
 		]
 	});

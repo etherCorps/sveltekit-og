@@ -6,10 +6,9 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import type { SvelteComponent } from 'svelte';
 import type { SatoriOptions } from 'satori';
-
 const __filename = fileURLToPath(import.meta.url);
 const resSvgWasm = initWasm(readFileSync(join(__filename, '../vendors/resvg.wasm')));
-const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
+const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-700-normal.woff');
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const ImageResponse = class {
@@ -23,22 +22,23 @@ export const ImageResponse = class {
 					height: options.height,
 					fonts: options.fonts || [
 						{
-							name: 'Inter Latin',
+							name: 'Noto Sans',
 							data: fontData,
-							weight: 400,
 							style: 'normal'
 						}
 					]
 				});
 				const pngData = new Resvg(svg, { fitTo: { mode: 'width', value: options.width } });
-				a.enqueue(pngData.render().asPng());
+				a.enqueue(await pngData.render().asPng());
 				a.close();
 			}
 		});
 		return new Response(png, {
 			headers: {
 				'Content-Type': 'image/png',
-				'cache-control': 'public, immutable, no-transform, max-age=31536000',
+				'cache-control': import.meta.env.DEV
+					? 'no-cache, no-store'
+					: 'public, immutable, no-transform, max-age=31536000',
 				...options.headers
 			},
 
@@ -60,9 +60,12 @@ export const componentToImageResponse = class {
 };
 
 export type ImageResponseOptions = ConstructorParameters<typeof Response>[1] & ImageOptions;
+
 type ImageOptions = {
 	width?: number;
 	height?: number;
 	debug?: boolean;
 	fonts?: SatoriOptions['fonts'];
+	graphemeImages?: Record<string, string>;
+	loadAdditionalAsset?: (languageCode: string, segment: string) => Promise<SatoriOptions["fonts"] | string | undefined>;
 };

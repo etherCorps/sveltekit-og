@@ -1,38 +1,117 @@
-# create-svelte
+# Open Graph Image Generation
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+About
+Generate Open Graph Images dynamically from HTML/CSS without a browser in SvelteKit.
 
-## Creating a project
+## Quick Start
 
-If you're seeing this, you've probably already done this step. Congrats!
+Install `@ethercorps/sveltekit-og`, then use it inside a server endpoint route (+server.ts or +server.js):
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+```typescript
+// /routes/og/+server.ts
+import { ImageResponse } from '$lib';
+import type { RequestHandler } from './$types';
 
-# create a new project in my-app
-npm create svelte@latest my-app
+const template = `
+ <div tw="bg-gray-50 flex w-full h-full items-center justify-center">
+    <div tw="flex flex-col md:flex-row w-full py-12 px-4 md:items-center justify-between p-8">
+      <h2 tw="flex flex-col text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 text-left">
+        <span>Ready to dive in?</span>
+        <span tw="text-indigo-600">Start your free trial today.</span>
+      </h2>
+      <div tw="mt-8 flex md:mt-0">
+        <div tw="flex rounded-md shadow">
+          <a href="#" tw="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white">Get started</a>
+        </div>
+        <div tw="ml-3 flex rounded-md shadow">
+          <a href="#" tw="flex items-center justify-center rounded-md border border-transparent bg-white px-5 py-3 text-base font-medium text-indigo-600">Learn more</a>
+        </div>
+      </div>
+    </div>
+  </div>
+`;
+const fontFile400 = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
+const fontFile700 = await fetch('https://og-playground.vercel.app/inter-latin-ext-700-normal.woff');
+const fontData400: ArrayBuffer = await fontFile400.arrayBuffer();
+const fontData700: ArrayBuffer = await fontFile700.arrayBuffer();
+
+export const GET: RequestHandler = async () => {
+    return new ImageResponse(template, {
+        height: 250,
+        width: 500,
+        fonts: [
+            {
+                name: 'Inter Latin',
+                data: fontData400,
+                weight: 400
+            },
+            {
+                name: 'Inter Latin',
+                data: fontData700,
+                weight: 700
+            }
+        ]
+    });
+};
+
 ```
 
-## Developing
+Then run `pnpm dev` and access localhost:5173/og, the React element will be rendered and responded as a PNG from that endpoint:
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+![Rendered OG image](static/demo.png)
 
-```bash
-npm run dev
+Read more about the API, supported features and check out the examples in the following sections.
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+## API Reference
+
+The package exposes an `ImageResponse` constructor, with the following options available:
+
+```typescript
+import { ImageResponse } from '@ethercorps/sveltekit-og'
+
+// ...
+new ImageResponse(
+  element: string,
+  options: {
+    width?: number = 1200
+    height?: number = 630
+    fonts?: {
+      name: string,
+      data: ArrayBuffer,
+      weight: number,
+      style: 'normal' | 'italic'
+    }[]
+    debug?: boolean = false
+    graphemeImages?: Record<string, string>;
+    loadAdditionalAsset?: (languageCode: string, segment: string) => Promise<SatoriOptions["fonts"] | string | undefined>;
+    // Options that will be passed to the HTTP response
+    status?: number = 200
+    statusText?: string
+    headers?: Record<string, string>
+  },
+)
 ```
 
-## Building
+When running in production, these headers will be included by `@ethercorps/sveltekit-og`:
 
-To create a production version of your app:
-
-```bash
-npm run build
+```typescript
+'content-type': 'image/png',
+'cache-control': 'public, immutable, no-transform, max-age=31536000',
 ```
 
-You can preview the production build with `npm run preview`.
+During development, the `cache-control: no-cache, no-store` header is used instead.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+### Supported HTML and CSS Features
+
+Please refer to [Satori’s documentation](https://github.com/vercel/satori#documentation) for a list of supported HTML and CSS features.
+
+By default, `@ethercorps/sveltekit-og` only has the 'Inter Latin' font included. If you need to use other fonts, you can pass them in the `fonts` option.
+
+
+## Acknowledgements
+
+This project will not be possible without the following projects:
+
+- [Satori](https://github.com/vercel/satori)
+- [Google Fonts](https://fonts.google.com) and [Noto Sans](https://www.google.com/get/noto/)
+- [Resvg](https://github.com/RazrFalcon/resvg) and [Resvg.js](https://github.com/yisibl/resvg-js)
