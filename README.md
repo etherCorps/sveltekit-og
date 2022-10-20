@@ -9,7 +9,7 @@ Install `@ethercorps/sveltekit-og`, then use it inside a server endpoint route (
 
 ```typescript
 // /routes/og/+server.ts
-import { ImageResponse } from '$lib';
+import { ImageResponse } from '@ethercorps/sveltekit-og';
 import type { RequestHandler } from './$types';
 
 const template = `
