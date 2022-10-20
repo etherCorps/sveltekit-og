@@ -60,7 +60,7 @@ Then run `pnpm dev` and access localhost:5173/og, the React element will be rend
 
 ![Rendered OG image](static/demo.png)
 
-Read more about the API, supported features and check out the examples in the following sections.
+Read more about the API, supported features and check out the examples on Satori Playground.
 
 ## API Reference
 
@@ -112,6 +112,6 @@ By default, `@ethercorps/sveltekit-og` only has the 'Inter Latin' font included.
 
 This project will not be possible without the following projects:
 
-- [Satori](https://github.com/vercel/satori)
-- [Google Fonts](https://fonts.google.com) and [Noto Sans](https://www.google.com/get/noto/)
-- [Resvg](https://github.com/RazrFalcon/resvg) and [Resvg.js](https://github.com/yisibl/resvg-js)
+- [Satori & @vercel/og](https://github.com/vercel/satori)
+- [Google Fonts](https://fonts.google.com)
+- [Resvg.js](https://github.com/yisibl/resvg-js)
