@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import type { SvelteComponent } from 'svelte';
 import type { SatoriOptions } from 'satori';
 const __filename = fileURLToPath(import.meta.url);
-const resSvgWasm = initWasm(readFileSync(join(__filename, '../vendors/resvg.wasm')));
+const resSvgWasm = initWasm(fetch('https://unpkg.com/@resvg/resvg-wasm/index_bg.wasm'));
 const fontFile = await fetch('https://github.com/etherCorps/sveltekit-og/blob/main/static/noto-sans.ttf');
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
