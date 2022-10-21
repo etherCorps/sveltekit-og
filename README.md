@@ -113,3 +113,9 @@ This project will not be possible without the following projects:
 - [Satori & @vercel/og](https://github.com/vercel/satori)
 - [Noto by Google Fonts](https://fonts.google.com/noto)
 - [Resvg.js](https://github.com/yisibl/resvg-js)
+
+
+## Authors
+
+- [@theetherGit](https://www.github.com/theetherGit)
+- [@etherCorps](https://www.github.com/etherCorps)

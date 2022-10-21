@@ -1,6 +1,6 @@
 {
 	"name": "@ethercorps/sveltekit-og",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"private": false,
 	"scripts": {
 		"dev": "vite dev",
