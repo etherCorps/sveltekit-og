@@ -36,5 +36,19 @@
 		"@resvg/resvg-wasm": "^2.1.0",
 		"satori": "^0.0.42",
 		"satori-html": "^0.2.0"
-	}
+	},
+	"keywords": [
+		"open graph image",
+		"open graph",
+		"og image",
+		"og:image",
+		"social",
+		"card",
+		"sveltekit og",
+		"sveltekit-og",
+		"@ethercorps/sveltekit-og"
+	],
+	"license": "MIT",
+	"repository": "https://github.com/etherCorps/sveltekit-og",
+	"homepage": "https://github.com/etherCorps/sveltekit-og#readme"
 }
