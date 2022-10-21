@@ -1,14 +1,12 @@
 import { html as toReactNode } from 'satori-html';
 import satori from 'satori';
 import { Resvg, initWasm } from '@resvg/resvg-wasm';
-import { join } from 'path';
-import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import type { SvelteComponent } from 'svelte';
 import type { SatoriOptions } from 'satori';
 const __filename = fileURLToPath(import.meta.url);
 const resSvgWasm = initWasm(fetch('https://unpkg.com/@resvg/resvg-wasm/index_bg.wasm'));
-const fontFile = await fetch('https://github.com/etherCorps/sveltekit-og/blob/main/static/noto-sans.ttf');
+const fontFile = await fetch('https://sveltekit-og-five.vercel.app/noto-sans.ttf');
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const ImageResponse = class {
@@ -30,7 +28,6 @@ export const ImageResponse = class {
 						}
 					]
 				});
-				console.log(svg)
 				const pngData = new Resvg(svg, { fitTo: { mode: 'width', value: options.width } });
 				a.enqueue(await pngData.render().asPng());
 				a.close();
@@ -52,7 +49,7 @@ export const ImageResponse = class {
 };
 
 export const componentToImageResponse = class {
-	constructor(component: SvelteComponent, props = {}, optionsByUser: ImageResponseOptions) {
+	constructor(component, props = {}, optionsByUser: ImageResponseOptions) {
 		const SvelteRenderedMarkup = component.render(props);
 		let htmlTemplate = `${SvelteRenderedMarkup.html}`;
 		if (SvelteRenderedMarkup && SvelteRenderedMarkup.css && SvelteRenderedMarkup.css.code) {

@@ -30,10 +30,8 @@ const template = `
     </div>
   </div>
 `;
-const fontFile400 = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
-const fontFile700 = await fetch('https://og-playground.vercel.app/inter-latin-ext-700-normal.woff');
-const fontData400: ArrayBuffer = await fontFile400.arrayBuffer();
-const fontData700: ArrayBuffer = await fontFile700.arrayBuffer();
+const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
+const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const GET: RequestHandler = async () => {
     return new ImageResponse(template, {
@@ -42,13 +40,8 @@ export const GET: RequestHandler = async () => {
         fonts: [
             {
                 name: 'Inter Latin',
-                data: fontData400,
+                data: fontData,
                 weight: 400
-            },
-            {
-                name: 'Inter Latin',
-                data: fontData700,
-                weight: 700
             }
         ]
     });
@@ -61,6 +54,11 @@ Then run `pnpm dev` and access localhost:5173/og, the React element will be rend
 ![Rendered OG image](static/demo.png)
 
 Read more about the API, supported features and check out the examples on Satori Playground.
+
+## Examples:
+- `ImageResponse` · [_source_](/src/routes/+server.ts) · [_demo_](https://sveltekit-og-five.vercel.app)
+- `componentToImageResponse` · [_source_](/src/routes/component-og/) · [_demo_](https://sveltekit-og-five.vercel.app/component-og)
+
 
 ## API Reference
 
@@ -105,7 +103,7 @@ During development, the `cache-control: no-cache, no-store` header is used inste
 
 Please refer to [Satori’s documentation](https://github.com/vercel/satori#documentation) for a list of supported HTML and CSS features.
 
-By default, `@ethercorps/sveltekit-og` only has the 'Inter Latin' font included. If you need to use other fonts, you can pass them in the `fonts` option.
+By default, `@ethercorps/sveltekit-og` only has the 'Noto Sans' font included. If you need to use other fonts, you can pass them in the `fonts` option.
 
 
 ## Acknowledgements
@@ -113,5 +111,5 @@ By default, `@ethercorps/sveltekit-og` only has the 'Inter Latin' font included.
 This project will not be possible without the following projects:
 
 - [Satori & @vercel/og](https://github.com/vercel/satori)
-- [Google Fonts](https://fonts.google.com)
+- [Noto by Google Fonts](https://fonts.google.com/noto)
 - [Resvg.js](https://github.com/yisibl/resvg-js)
