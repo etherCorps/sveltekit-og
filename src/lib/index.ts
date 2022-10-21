@@ -8,7 +8,7 @@ import type { SvelteComponent } from 'svelte';
 import type { SatoriOptions } from 'satori';
 const __filename = fileURLToPath(import.meta.url);
 const resSvgWasm = initWasm(readFileSync(join(__filename, '../vendors/resvg.wasm')));
-const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-700-normal.woff');
+const fontFile = await fetch('https://github.com/etherCorps/sveltekit-og/blob/main/static/noto-sans.ttf');
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const ImageResponse = class {
@@ -20,14 +20,17 @@ export const ImageResponse = class {
 				const svg = await satori(toReactNode(htmlTemplate), {
 					width: options.width,
 					height: options.height,
+					debug: options.debug,
 					fonts: options.fonts || [
 						{
-							name: 'Noto Sans',
+							name: 'sans serif',
 							data: fontData,
-							style: 'normal'
+							style: 'normal',
+							weight: 700
 						}
 					]
 				});
+				console.log(svg)
 				const pngData = new Resvg(svg, { fitTo: { mode: 'width', value: options.width } });
 				a.enqueue(await pngData.render().asPng());
 				a.close();

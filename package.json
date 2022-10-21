@@ -4,6 +4,7 @@
 	"private": false,
 	"scripts": {
 		"dev": "vite dev",
+		"build:prod": "vite build",
 		"build": "svelte-kit sync && svelte-package",
 		"prepublishOnly": "echo 'Did you mean to publish `./package/`, instead of `./`?' && exit 1",
 		"test": "playwright test",
