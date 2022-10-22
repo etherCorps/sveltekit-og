@@ -1,12 +1,10 @@
 import { html as toReactNode } from 'satori-html';
 import satori from 'satori';
 import { Resvg, initWasm } from '@resvg/resvg-wasm';
-import { fileURLToPath } from 'url';
-import type { SvelteComponent } from 'svelte';
 import type { SatoriOptions } from 'satori';
-const __filename = fileURLToPath(import.meta.url);
-const resSvgWasm = initWasm(fetch('https://unpkg.com/@resvg/resvg-wasm/index_bg.wasm'));
-const fontFile = await fetch('https://sveltekit-og-five.vercel.app/noto-sans.ttf');
+
+const resSvgWasm = initWasm(fetch('https://sveltekit-og.ethercorps.io/resvg.wasm'));
+const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const ImageResponse = class {
