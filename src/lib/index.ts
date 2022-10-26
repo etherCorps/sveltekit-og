@@ -2,6 +2,7 @@ import { html as toReactNode } from 'satori-html';
 import satori from 'satori';
 import { Resvg, initWasm } from '@resvg/resvg-wasm';
 import type { SatoriOptions } from 'satori';
+import type {SvelteComponent} from "svelte";
 
 const resSvgWasm = initWasm(fetch('https://sveltekit-og.ethercorps.io/resvg.wasm'));
 const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
@@ -27,7 +28,7 @@ export const ImageResponse = class {
 					]
 				});
 				const pngData = new Resvg(svg, { fitTo: { mode: 'width', value: options.width } });
-				a.enqueue(await pngData.render().asPng());
+				a.enqueue(pngData.render().asPng());
 				a.close();
 			}
 		});
@@ -47,17 +48,22 @@ export const ImageResponse = class {
 };
 
 export const componentToImageResponse = class {
-	constructor(component, props = {}, optionsByUser: ImageResponseOptions) {
-		const SvelteRenderedMarkup = component.render(props);
-		let htmlTemplate = `${SvelteRenderedMarkup.html}`;
-		if (SvelteRenderedMarkup && SvelteRenderedMarkup.css && SvelteRenderedMarkup.css.code) {
-			htmlTemplate = `${SvelteRenderedMarkup.html}<style>${SvelteRenderedMarkup.css.code}</style>`;
-		}
+	 constructor(component: typeof SvelteComponent, props = {}, optionsByUser: ImageResponseOptions) {
+		const htmlTemplate = componentToMarkup(component, props)
 		return new ImageResponse(htmlTemplate, optionsByUser);
 	}
 };
 
-export type ImageResponseOptions = ConstructorParameters<typeof Response>[1] & ImageOptions;
+const componentToMarkup = (component: typeof SvelteComponent, props={}) => {
+	const SvelteRenderedMarkup = (component as any).render(props);
+	let htmlTemplate = `${SvelteRenderedMarkup.html}`;
+	if (SvelteRenderedMarkup && SvelteRenderedMarkup.css && SvelteRenderedMarkup.css.code) {
+		htmlTemplate = `${SvelteRenderedMarkup.html}<style>${SvelteRenderedMarkup.css.code}</style>`;
+	}
+	return htmlTemplate
+}
+
+type ImageResponseOptions = ConstructorParameters<typeof Response>[1] & ImageOptions;
 
 type ImageOptions = {
 	width?: number;

@@ -1,6 +1,6 @@
 {
 	"name": "@ethercorps/sveltekit-og",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"private": false,
 	"scripts": {
 		"dev": "vite dev",
@@ -35,8 +35,9 @@
 	"type": "module",
 	"dependencies": {
 		"@resvg/resvg-wasm": "^2.1.0",
-		"satori": "^0.0.42",
-		"satori-html": "^0.2.0"
+		"satori": "^0.0.43",
+		"satori-html": "^0.2.0",
+		"yoga-wasm-web": "0.1.2"
 	},
 	"keywords": [
 		"open graph image",

@@ -49,7 +49,7 @@ export const GET: RequestHandler = async () => {
 
 ```
 
-Then run `pnpm dev` and access localhost:5173/og, the React element will be rendered and responded as a PNG from that endpoint:
+Then run `pnpm dev` and access localhost:5173/og, the api/route endpoint be rendered and responded as a PNG from that api/endpoint:
 
 ![Rendered OG image](static/demo.png)
 
@@ -62,32 +62,53 @@ Read more about the API, supported features and check out the examples on Satori
 
 ## API Reference
 
-The package exposes an `ImageResponse` constructor, with the following options available:
+The package exposes an `ImageResponse` and `componentToImageResponse` constructors, with the following options available:
 
 ```typescript
-import { ImageResponse } from '@ethercorps/sveltekit-og'
+import {ImageResponse, componentToImageResponse} from '@ethercorps/sveltekit-og'
+import {SvelteComponent} from "svelte";
 
 // ...
 new ImageResponse(
-  element: string,
-  options: {
-    width?: number = 1200
-    height?: number = 630
-    fonts?: {
-      name: string,
-      data: ArrayBuffer,
-      weight: number,
-      style: 'normal' | 'italic'
+    element : string,
+    options : {
+    width ? : number = 1200
+    height ? : number = 630
+    fonts ? : {
+        name: string,
+        data: ArrayBuffer,
+        weight: number,
+        style: 'normal' | 'italic'
     }[]
-    debug?: boolean = false
-    graphemeImages?: Record<string, string>;
-    loadAdditionalAsset?: (languageCode: string, segment: string) => Promise<SatoriOptions["fonts"] | string | undefined>;
+    debug ? : boolean = false
+    graphemeImages ? : Record<string, string>;
+    loadAdditionalAsset ? : (languageCode: string, segment: string) => Promise<SatoriOptions["fonts"] | string | undefined>;
     // Options that will be passed to the HTTP response
-    status?: number = 200
-    statusText?: string
-    headers?: Record<string, string>
-  },
-)
+    status ? : number = 200
+    statusText ? : string
+    headers ? : Record<string, string>
+    })
+
+new componentToImageResponse(
+    component : typeof SvelteComponent,
+    props : {}, // All export let example inside prop dictionary
+    options : {
+    width ? : number = 1200
+    height ? : number = 630
+    fonts ? : {
+        name: string,
+        data: ArrayBuffer,
+        weight: number,
+        style: 'normal' | 'italic'
+    }[]
+    debug ? : boolean = false
+    graphemeImages ? : Record<string, string>;
+    loadAdditionalAsset ? : (languageCode: string, segment: string) => Promise<SatoriOptions["fonts"] | string | undefined>;
+    // Options that will be passed to the HTTP response
+    status ? : number = 200
+    statusText ? : string
+    headers ? : Record<string, string>
+    })
 ```
 
 When running in production, these headers will be included by `@ethercorps/sveltekit-og`:
@@ -111,6 +132,7 @@ By default, `@ethercorps/sveltekit-og` only has the 'Noto Sans' font included. I
 This project will not be possible without the following projects:
 
 - [Satori & @vercel/og](https://github.com/vercel/satori)
+- [Satori-Html](https://github.com/natemoo-re/satori-html)
 - [Noto by Google Fonts](https://fonts.google.com/noto)
 - [Resvg.js](https://github.com/yisibl/resvg-js)
 
