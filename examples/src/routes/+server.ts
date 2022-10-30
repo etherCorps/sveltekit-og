@@ -1,5 +1,5 @@
-import { ImageResponse } from '$lib';
-import type { RequestHandler } from '@sveltejs/kit';
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+import type { RequestHandler } from './$types';
 
 const template = `
  <div tw="bg-gray-50 flex w-full h-full items-center justify-center">
@@ -19,25 +19,18 @@ const template = `
     </div>
   </div>
 `;
-const fontFile400 = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
-const fontFile700 = await fetch('https://og-playground.vercel.app/inter-latin-ext-700-normal.woff');
-const fontData400: ArrayBuffer = await fontFile400.arrayBuffer();
-const fontData700: ArrayBuffer = await fontFile700.arrayBuffer();
+const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
+const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const GET: RequestHandler = async () => {
 	return new ImageResponse(template, {
-		height: 250,
-		width: 500,
+		height: 400,
+		width: 800,
 		fonts: [
 			{
-				name: 'Inter Latin',
-				data: fontData400,
+				name: 'Inter',
+				data: fontData,
 				weight: 400
-			},
-			{
-				name: 'Inter Latin',
-				data: fontData700,
-				weight: 700
 			}
 		]
 	});

@@ -9,8 +9,8 @@ Install `@ethercorps/sveltekit-og`, then use it inside a server endpoint route (
 
 ```typescript
 // /routes/og/+server.ts
-import {ImageResponse} from '@ethercorps/sveltekit-og';
-import {RequestHandler} from "./$types";
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+import { RequestHandler } from './$types';
 
 const template = `
  <div tw="bg-gray-50 flex w-full h-full items-center justify-center">
@@ -34,19 +34,18 @@ const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-4
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const GET: RequestHandler = async () => {
-    return new ImageResponse(template, {
-        height: 250,
-        width: 500,
-        fonts: [
-            {
-                name: 'Inter Latin',
-                data: fontData,
-                weight: 400
-            }
-        ]
-    });
+	return new ImageResponse(template, {
+		height: 250,
+		width: 500,
+		fonts: [
+			{
+				name: 'Inter Latin',
+				data: fontData,
+				weight: 400
+			}
+		]
+	});
 };
-
 ```
 
 Then run `pnpm dev` and access localhost:5173/og, the api/route endpoint be rendered and responded as a PNG from that api/endpoint:
@@ -56,9 +55,9 @@ Then run `pnpm dev` and access localhost:5173/og, the api/route endpoint be rend
 Read more about the API, supported features and check out the examples on Satori Playground.
 
 ## Examples:
+
 - `ImageResponse` · [_source_](/src/routes/+server.ts) · [_demo_](https://sveltekit-og-five.vercel.app)
 - `componentToImageResponse` · [_source_](/src/routes/component-og/) · [_demo_](https://sveltekit-og-five.vercel.app/component-og)
-
 
 ## API Reference
 
@@ -126,7 +125,6 @@ Please refer to [Satori’s documentation](https://github.com/vercel/satori#docu
 
 By default, `@ethercorps/sveltekit-og` only has the 'Noto Sans' font included. If you need to use other fonts, you can pass them in the `fonts` option.
 
-
 ## Acknowledgements
 
 This project will not be possible without the following projects:
@@ -135,7 +133,6 @@ This project will not be possible without the following projects:
 - [Satori-Html](https://github.com/natemoo-re/satori-html)
 - [Noto by Google Fonts](https://fonts.google.com/noto)
 - [Resvg.js](https://github.com/yisibl/resvg-js)
-
 
 ## Authors
 
