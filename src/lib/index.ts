@@ -3,7 +3,6 @@ import satori from 'satori';
 import { Resvg, initWasm } from '@resvg/resvg-wasm';
 import type { SatoriOptions } from 'satori';
 import type { SvelteComponent } from 'svelte';
-import { dev } from '$app/environment';
 
 const resSvgWasm = initWasm(fetch('https://sveltekit-og.ethercorps.io/resvg.wasm'));
 const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
@@ -36,9 +35,7 @@ class ImageResponse {
 		return new Response(png, {
 			headers: {
 				'Content-Type': 'image/png',
-				'cache-control': dev
-					? 'no-cache, no-store'
-					: 'public, immutable, no-transform, max-age=31536000',
+				'cache-control': 'public, immutable, no-transform, max-age=31536000',
 				...options.headers
 			},
 
