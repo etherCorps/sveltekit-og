@@ -8,7 +8,7 @@ const resSvgWasm = initWasm(fetch('https://sveltekit-og.ethercorps.io/resvg.wasm
 const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
-export class ImageResponse  {
+class ImageResponse  {
 	constructor(htmlTemplate: string, optionsByUser: ImageResponseOptions) {
 		const options = Object.assign({ width: 1200, height: 630, debug: !1 }, optionsByUser);
 		const png = new ReadableStream({
@@ -47,7 +47,7 @@ export class ImageResponse  {
 	}
 }
 
-export class componentToImageResponse {
+class componentToImageResponse {
 	 constructor(component: typeof SvelteComponent, props = {}, optionsByUser: ImageResponseOptions) {
 		const htmlTemplate = componentToMarkup(component, props)
 		return new ImageResponse(htmlTemplate, optionsByUser);
@@ -73,3 +73,5 @@ type ImageOptions = {
 	graphemeImages?: Record<string, string>;
 	loadAdditionalAsset?: (languageCode: string, segment: string) => Promise<SatoriOptions["fonts"] | string | undefined>;
 };
+
+export {componentToImageResponse, ImageResponse}

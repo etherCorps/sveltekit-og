@@ -1,4 +1,5 @@
 import { ImageResponse } from '$lib';
+import type {RequestHandler} from "@sveltejs/kit";
 
 const template = `
  <div tw="bg-gray-50 flex w-full h-full items-center justify-center">
@@ -23,7 +24,7 @@ const fontFile700 = await fetch('https://og-playground.vercel.app/inter-latin-ex
 const fontData400: ArrayBuffer = await fontFile400.arrayBuffer();
 const fontData700: ArrayBuffer = await fontFile700.arrayBuffer();
 
-export const GET: () => Promise<ImageResponse> = async () => {
+export const GET: RequestHandler = async () => {
 	return new ImageResponse(template, {
 		height: 250,
 		width: 500,

@@ -9,7 +9,8 @@ Install `@ethercorps/sveltekit-og`, then use it inside a server endpoint route (
 
 ```typescript
 // /routes/og/+server.ts
-import { ImageResponse } from '@ethercorps/sveltekit-og';
+import {ImageResponse} from '@ethercorps/sveltekit-og';
+import {RequestHandler} from "./$types";
 
 const template = `
  <div tw="bg-gray-50 flex w-full h-full items-center justify-center">
@@ -32,7 +33,7 @@ const template = `
 const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
-export const GET: () => Promise<ImageResponse> = async () => {
+export const GET: RequestHandler = async () => {
     return new ImageResponse(template, {
         height: 250,
         width: 500,
