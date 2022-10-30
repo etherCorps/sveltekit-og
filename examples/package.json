@@ -24,6 +24,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@ethercorps/sveltekit-og": "^0.1.5"
+		"@ethercorps/sveltekit-og": "^0.1.7"
 	}
 }
