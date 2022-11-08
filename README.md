@@ -56,7 +56,7 @@ Read more about the API, supported features and check out the examples on Satori
 
 ## Examples:
 
-- `ImageResponse` · [_source_](/src/routes/+server.ts) · [_demo_](https://sveltekit-og-five.vercel.app)
+- `ImageResponse` · [_source_](/src/routes/+server.ts#L5) · [_demo_](https://sveltekit-og-five.vercel.app)
 - `componentToImageResponse` · [_source_](/src/routes/component-og/) · [_demo_](https://sveltekit-og-five.vercel.app/component-og)
 
 ## API Reference
