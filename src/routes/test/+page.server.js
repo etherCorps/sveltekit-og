@@ -1,4 +1,4 @@
-import toReactElement from '$lib/toReactElement';
+import { toReactElement } from '$lib';
 import satori from 'satori';
 const htmlString = `
         <div tw="bg-gray-50 flex w-full">

@@ -3,6 +3,63 @@
 About
 Generate Open Graph Images dynamically from HTML/CSS without a browser in SvelteKit.
 
+## v1.0.0 Update (Breaking Changes)
+Finally, we have added html to react like element like object using svelte compiler.
+Now you can use `{ toReactElement }` with `"@ethercorps/sveltekit-og"` like:
+
+```typescript
+// +page.server.js
+
+import { toReactElement } from "@ethercorps/sveltekit-og"
+import satori from "satori";
+
+const htmlString = `
+        <div tw="bg-gray-50 flex w-full">
+        <div tw="flex flex-col md:flex-row w-full py-12 px-4 md:items-center justify-between p-8">
+          <h2 tw="flex flex-col text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 text-left">
+            <span>Ready to dive in?</span>
+            <span tw="text-indigo-600">Start your free trial today.</span>
+          </h2>
+          <div tw="mt-8 flex md:mt-0">
+            <div tw="flex rounded-md shadow">
+              <a tw="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white">Get started</a>
+            </div>
+            <div tw="ml-3 flex rounded-md shadow">
+              <a tw="flex items-center justify-center rounded-md border border-transparent bg-white px-5 py-3 text-base font-medium text-indigo-600">Learn more</a>
+            </div>
+          </div>
+        </div>
+        </div>
+        `;
+const newNode = toReactElement(htmlString);
+
+/** @type {import('./$types').PageServerLoad} */
+export async function load() {
+  const fontFile400 = await fetch(
+    'https://og-playground.vercel.app/inter-latin-ext-400-normal.woff'
+  );
+  const fontData400 = await fontFile400.arrayBuffer();
+  const svg = await satori(newNode, {
+    height: 350,
+    width: 500,
+    fonts: [
+      {
+        name: 'sans serif',
+        data: fontData400,
+        style: 'normal',
+        weight: 700
+      }
+    ]
+  });
+
+  return { svg };
+}
+```
+
+- We have changed to function based instead of class based ImageResponse and componentToImageResponse.
+- Removed `@resvg/resvg-wasm` with `@resvg/resvg-js` because of internal errors.
+- Removed `satori-html` because now we have `toReactElement` out of the box with svelte compiler.
+
 ## Quick Start
 
 Install `@ethercorps/sveltekit-og`, then use it inside a server endpoint route (+server.ts or +server.js):
@@ -34,7 +91,7 @@ const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-4
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const GET: RequestHandler = async () => {
-	return new ImageResponse(template, {
+	return await ImageResponse(template, {
 		height: 250,
 		width: 500,
 		fonts: [
@@ -68,7 +125,7 @@ import {ImageResponse, componentToImageResponse} from '@ethercorps/sveltekit-og'
 import {SvelteComponent} from "svelte";
 
 // ...
-new ImageResponse(
+ImageResponse(
     element : string,
     options : {
     width ? : number = 1200
@@ -88,7 +145,7 @@ new ImageResponse(
     headers ? : Record<string, string>
     })
 
-new componentToImageResponse(
+componentToImageResponse(
     component : typeof SvelteComponent,
     props : {}, // All export let example inside prop dictionary
     options : {
@@ -130,7 +187,6 @@ By default, `@ethercorps/sveltekit-og` only has the 'Noto Sans' font included. I
 This project will not be possible without the following projects:
 
 - [Satori & @vercel/og](https://github.com/vercel/satori)
-- [Satori-Html](https://github.com/natemoo-re/satori-html)
 - [Noto by Google Fonts](https://fonts.google.com/noto)
 - [Resvg.js](https://github.com/yisibl/resvg-js)
 
