@@ -6,7 +6,7 @@ const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-7
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const GET: RequestHandler = async () => {
-	return new componentToImageResponse(
+	return componentToImageResponse(
 		OG,
 		{ text: 'Ready to dive in?', spanText: 'Start your free trial today.' },
 		{

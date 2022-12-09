@@ -11,19 +11,17 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.27.1",
+		"@ethercorps/sveltekit-og": "^1.0.0",
+		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
-		"eslint": "^8.27.0",
+		"eslint": "^8.29.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte3": "^4.0.0",
-		"prettier": "^2.7.1",
-		"prettier-plugin-svelte": "^2.8.0",
-		"svelte": "^3.53.1",
-		"vite": "^3.2.3"
+		"prettier": "^2.8.1",
+		"prettier-plugin-svelte": "^2.8.1",
+		"svelte": "^3.54.0",
+		"vite": "^3.2.5"
 	},
-	"type": "module",
-	"dependencies": {
-		"@ethercorps/sveltekit-og": "^0.1.7"
-	}
+	"type": "module"
 }
