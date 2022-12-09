@@ -1,56 +1,55 @@
-import { html as toReactNode } from 'satori-html';
-import satori from 'satori';
-import { Resvg, initWasm } from '@resvg/resvg-wasm';
-import type { SatoriOptions } from 'satori';
+import satori, { type SatoriOptions } from 'satori';
+import { Resvg, type ResvgRenderOptions } from '@resvg/resvg-js';
 import type { SvelteComponent } from 'svelte';
+import toReactElement from './toReactElement';
 
-const resSvgWasm = initWasm(fetch('https://sveltekit-og.ethercorps.io/resvg.wasm'));
 const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
-class ImageResponse {
-	constructor(htmlTemplate: string, optionsByUser: ImageResponseOptions) {
-		const options = Object.assign({ width: 1200, height: 630, debug: !1 }, optionsByUser);
-		const png = new ReadableStream({
-			async start(a) {
-				await resSvgWasm;
-				const svg = await satori(toReactNode(htmlTemplate), {
-					width: options.width,
-					height: options.height,
-					debug: options.debug,
-					fonts: options.fonts || [
-						{
-							name: 'sans serif',
-							data: fontData,
-							style: 'normal',
-							weight: 700
-						}
-					]
-				});
-				const pngData = new Resvg(svg, { fitTo: { mode: 'width', value: options.width } });
-				a.enqueue(pngData.render().asPng());
-				a.close();
+const ImageResponse = async (htmlTemplate: string, optionsByUser: ImageResponseOptions) => {
+	const options = Object.assign({ width: 1200, height: 630, debug: !1 }, optionsByUser);
+	const svg = await satori(toReactElement(htmlTemplate), {
+		width: options.width,
+		height: options.height,
+		debug: options.debug,
+		fonts: options.fonts || [
+			{
+				name: 'sans serif',
+				data: fontData,
+				style: 'normal',
+				weight: 700
 			}
-		});
-		return new Response(png, {
-			headers: {
-				'Content-Type': 'image/png',
-				'cache-control': 'public, immutable, no-transform, max-age=31536000',
-				...options.headers
-			},
+		]
+	});
+	const reSvgOptions = {
+		fitTo: {
+			mode: 'width',
+			value: options.width
+		}
+	} as ResvgRenderOptions;
+	const reSvgObject = new Resvg(svg, reSvgOptions);
+	const pngData = await reSvgObject.render().asPng();
 
-			status: options.status,
-			statusText: options.statusText
-		});
-	}
-}
+	return new Response(pngData, {
+		headers: {
+			'Content-Type': 'image/png',
+			'cache-control': 'public, immutable, no-transform, max-age=31536000',
+			...options.headers
+		},
 
-class componentToImageResponse {
-	constructor(component: typeof SvelteComponent, props = {}, optionsByUser: ImageResponseOptions) {
-		const htmlTemplate = componentToMarkup(component, props);
-		return new ImageResponse(htmlTemplate, optionsByUser);
-	}
-}
+		status: options.status,
+		statusText: options.statusText
+	});
+};
+
+const componentToImageResponse = (
+	component: typeof SvelteComponent,
+	props = {},
+	optionsByUser: ImageResponseOptions
+) => {
+	const htmlTemplate = componentToMarkup(component, props);
+	return ImageResponse(htmlTemplate, optionsByUser);
+};
 
 const componentToMarkup = (component: typeof SvelteComponent, props = {}) => {
 	const SvelteRenderedMarkup = (component as any).render(props);
@@ -75,4 +74,6 @@ type ImageOptions = {
 	) => Promise<SatoriOptions['fonts'] | string | undefined>;
 };
 
-export { componentToImageResponse, ImageResponse };
+type ImageResponseType = typeof ImageResponse;
+
+export { componentToImageResponse, ImageResponse, toReactElement, satori, type ImageResponseType };

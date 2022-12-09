@@ -14,29 +14,31 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.27.1",
+		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"@sveltejs/package": "next",
-		"@typescript-eslint/eslint-plugin": "^5.42.1",
-		"@typescript-eslint/parser": "^5.42.1",
-		"eslint": "^8.27.0",
+		"@typescript-eslint/eslint-plugin": "^5.46.0",
+		"@typescript-eslint/parser": "^5.46.0",
+		"eslint": "^8.29.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte3": "^4.0.0",
-		"prettier": "^2.7.1",
-		"prettier-plugin-svelte": "^2.8.0",
-		"svelte": "^3.53.1",
-		"svelte-check": "^2.9.2",
+		"prettier": "^2.8.1",
+		"prettier-plugin-svelte": "^2.8.1",
+		"svelte": "^3.54.0",
+		"svelte-check": "^2.10.2",
 		"svelte-preprocess": "^4.10.7",
 		"tslib": "^2.4.1",
-		"typescript": "^4.8.4",
-		"vite": "^3.2.3"
+		"typescript": "^4.9.4",
+		"vite": "^3.2.5"
 	},
 	"type": "module",
 	"dependencies": {
-		"@resvg/resvg-wasm": "^2.1.0",
-		"satori": "^0.0.44",
-		"satori-html": "^0.3.0"
+		"@resvg/resvg-js": "^2.2.0",
+		"satori": "^0.0.44"
+	},
+	"peerDependencies": {
+		"svelte": "^3.54.0"
 	},
 	"keywords": [
 		"open graph image",
