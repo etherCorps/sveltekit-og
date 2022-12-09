@@ -59,6 +59,7 @@ export async function load() {
 - Removed `@resvg/resvg-wasm` with `@resvg/resvg-js` because of internal errors.
 - Removed `satori-html` because now we have `toReactElement` out of the box with svelte compiler.
 - Access to `satori` directly from `"@ethercorps/sveltekit-og"`. [_source_](/src/routes/test/+page.server.js) · [_demo_](https://sveltekit-og-five.vercel.app/test)
+> If you find a problem related to undefined a please check [_vite.config.js_](/vite.config.ts) and add ``` define: { _a: 'undefined' } in config.```
 
 > If you find any issue and have suggestion for this project please open a ticket and if you want to contribute please create a new discussion. 
 
