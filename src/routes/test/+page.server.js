@@ -1,5 +1,4 @@
-import { toReactElement } from '$lib';
-import satori from 'satori';
+import { toReactElement, satori } from '$lib';
 const htmlString = `
         <div tw="bg-gray-50 flex w-full">
         <div tw="flex flex-col md:flex-row w-full py-12 px-4 md:items-center justify-between p-8">
