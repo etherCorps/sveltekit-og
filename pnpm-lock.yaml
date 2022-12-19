@@ -13,7 +13,6 @@ specifiers:
   eslint: ^8.29.0
   eslint-config-prettier: ^8.5.0
   eslint-plugin-svelte3: ^4.0.0
-  monaco-editor: ^0.34.1
   postcss: ^8.4.19
   prettier: ^2.8.1
   prettier-plugin-svelte: ^2.9.0
@@ -43,7 +42,6 @@ devDependencies:
   eslint: 8.29.0
   eslint-config-prettier: 8.5.0_eslint@8.29.0
   eslint-plugin-svelte3: 4.0.0_2aagxyyd66x6iymg5nfckajqjq
-  monaco-editor: 0.34.1
   postcss: 8.4.19
   prettier: 2.8.1
   prettier-plugin-svelte: 2.9.0_sro2v6ld777payjtkjtiuogcxi
@@ -1557,10 +1555,6 @@ packages:
     hasBin: true
     dependencies:
       minimist: 1.2.7
-    dev: true
-
-  /monaco-editor/0.34.1:
-    resolution: {integrity: sha512-FKc80TyiMaruhJKKPz5SpJPIjL+dflGvz4CpuThaPMc94AyN7SeC9HQ8hrvaxX7EyHdJcUY5i4D0gNyJj1vSZQ==}
     dev: true
 
   /mri/1.2.0:
