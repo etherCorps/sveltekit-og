@@ -76,4 +76,4 @@ type ImageOptions = {
 
 type ImageResponseType = typeof ImageResponse;
 
-export { componentToImageResponse, ImageResponse, toReactElement, satori, type ImageResponseType };
+export { componentToImageResponse, ImageResponse, toReactElement, type ImageResponseType };
