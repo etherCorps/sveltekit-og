@@ -11,7 +11,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@ethercorps/sveltekit-og": "^1.1.0",
+		"@ethercorps/sveltekit-og": "^1.1.1",
 		"@playwright/test": "^1.29.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
