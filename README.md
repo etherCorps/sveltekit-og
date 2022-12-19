@@ -4,13 +4,14 @@ About
 Generate Open Graph Images dynamically from HTML/CSS without a browser in SvelteKit.
 
 ## v1.0.0 Update (Breaking Changes)
+
 Finally, We have added html to react like element like object converter out of the box and with svelte compiler.
 Now you can use `{ toReactElement }` with `"@ethercorps/sveltekit-og"` like:
 
 ```typescript
 // +page.server.js
 
-import { toReactElement, satori } from "@ethercorps/sveltekit-og"
+import { toReactElement, satori } from '@ethercorps/sveltekit-og';
 
 const htmlString = `
         <div tw="bg-gray-50 flex w-full">
@@ -34,34 +35,33 @@ const newNode = toReactElement(htmlString);
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
-  const fontFile400 = await fetch(
-    'https://og-playground.vercel.app/inter-latin-ext-400-normal.woff'
-  );
-  const fontData400 = await fontFile400.arrayBuffer();
-  const svg = await satori(newNode, {
-    height: 350,
-    width: 500,
-    fonts: [
-      {
-        name: 'sans serif',
-        data: fontData400,
-        style: 'normal',
-        weight: 700
-      }
-    ]
-  });
+	const fontFile400 = await fetch(
+		'https://og-playground.vercel.app/inter-latin-ext-400-normal.woff'
+	);
+	const fontData400 = await fontFile400.arrayBuffer();
+	const svg = await satori(newNode, {
+		height: 350,
+		width: 500,
+		fonts: [
+			{
+				name: 'sans serif',
+				data: fontData400,
+				style: 'normal',
+				weight: 700
+			}
+		]
+	});
 
-  return { svg };
+	return { svg };
 }
 ```
 
 - We have changed to function based instead of class based ImageResponse and componentToImageResponse.
 - Removed `@resvg/resvg-wasm` with `@resvg/resvg-js` because of internal errors.
 - Removed `satori-html` because now we have `toReactElement` out of the box with svelte compiler.
-- Access to `satori` directly from `"@ethercorps/sveltekit-og"`. [_source_](/src/routes/test/+page.server.js) · [_demo_](https://sveltekit-og-five.vercel.app/test)
-> If you find a problem related to undefined a please check [_vite.config.js_](/vite.config.ts) and add ``` define: { _a: 'undefined' } in config.```
+  > If you find a problem related to undefined a please check [_vite.config.js_](/vite.config.ts) and add ` define: { _a: 'undefined' } in config.`
 
-> If you find any issue and have suggestion for this project please open a ticket and if you want to contribute please create a new discussion. 
+> If you find any issue and have suggestion for this project please open a ticket and if you want to contribute please create a new discussion.
 
 ## Quick Start
 

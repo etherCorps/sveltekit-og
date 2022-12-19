@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Ian Mono';
+    src: url('/iaw-mono-var.woff2') format('woff2');
+}
+
+@layer base {
+  html {
+    font-family: Ian Mono, monospace;
+  }
+}
