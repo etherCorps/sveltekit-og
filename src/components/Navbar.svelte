@@ -24,8 +24,8 @@
 
 			<!-- secondary nav -->
 			<div class="hidden md:flex items-center space-x-1">
-				<a href="" class="py-5 px-3 underline">Docs</a>
-				<a href="" class="py-5 px-3 underline">Github</a>
+				<a href="https://github.com/etherCorps/sveltekit-og/#readme" target="_blank" rel="noreferrer" class="py-5 px-3 underline">Docs</a>
+				<a href="https://github.com/etherCorps/sveltekit-og" target="_blank" rel="noreferrer" class="py-5 px-3 underline">Github</a>
 			</div>
 
 			<!-- mobile button goes here -->
