@@ -23,7 +23,7 @@ const newNode = toReactElement(htmlString);
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
 	const fontFile400 = await fetch(
-		'https://og-playground.vercel.app/inter-latin-ext-400-normal.woff'
+		'https://raw.githubusercontent.com/etherCorps/sveltekit-og/main/static/inter-latin-ext-400-normal.woff'
 	);
 	const fontData400 = await fontFile400.arrayBuffer();
 	const svg = await satori(newNode, {

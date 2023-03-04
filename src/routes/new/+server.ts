@@ -19,8 +19,8 @@ const template = `
     </div>
   </div>
 `;
-const fontFile400 = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
-const fontFile700 = await fetch('https://og-playground.vercel.app/inter-latin-ext-700-normal.woff');
+const fontFile400 = await fetch('https://raw.githubusercontent.com/etherCorps/sveltekit-og/main/static/inter-latin-ext-400-normal.woff');
+const fontFile700 = await fetch('https://raw.githubusercontent.com/etherCorps/sveltekit-og/main/static/inter-latin-ext-700-normal.woff');
 const fontData400: ArrayBuffer = await fontFile400.arrayBuffer();
 const fontData700: ArrayBuffer = await fontFile700.arrayBuffer();
 
