@@ -3,6 +3,10 @@
 About
 Generate Open Graph Images dynamically from HTML/CSS without a browser in SvelteKit.
 
+## v1.2.2 Update (Breaking Change)
+
+- We don't provide access to satori from `@ethercorps/sveltekit-og`.
+
 ## v1.0.0 Update (Breaking Changes)
 
 Finally, We have added html to react like element like object converter out of the box and with svelte compiler.
