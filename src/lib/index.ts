@@ -1,7 +1,6 @@
 import satori, { type SatoriOptions } from 'satori';
 import { Resvg, type ResvgRenderOptions } from '@resvg/resvg-js';
 import type { SvelteComponent } from 'svelte';
-import toReactElement from './toReactElement';
 
 const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
@@ -76,4 +75,4 @@ type ImageOptions = {
 
 type ImageResponseType = typeof ImageResponse;
 
-export { componentToImageResponse, ImageResponse, toReactElement, type ImageResponseType };
+export { componentToImageResponse, ImageResponse, type ImageResponseType };
