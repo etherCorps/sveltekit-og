@@ -176,3 +176,7 @@ This project will not be possible without the following projects:
 
 - [@theetherGit](https://www.github.com/theetherGit)
 - [@etherCorps](https://www.github.com/etherCorps)
+
+## Contributors
+
+- [@jasongitmail](https://github.com/jasongitmail)
