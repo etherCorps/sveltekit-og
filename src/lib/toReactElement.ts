@@ -60,7 +60,7 @@ const root: VNode = {
 };
 /* End of satori-html */
 
-const toReactElement = (htmlString: string): VNode => {
+export const toReactElement = (htmlString: string): VNode => {
 	const svelteAST: Ast = parse(htmlString);
 	walk(svelteAST, {
 		enter(node: any, parent: any, prop: any, index: any) {
