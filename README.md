@@ -3,6 +3,19 @@
 About
 Generate Open Graph Images dynamically from HTML/CSS without a browser in SvelteKit.
 
+## v1.2.3 Update (Breaking Changes)
+> Now you have to install dependency by yourself which will make it easier to build for all plateforms.
+
+```
+pnpm i @resvg/resvg-js
+```
+
+```
+pnpm i satori
+```
+
+> From now on their will be no issues related to build, and soon this library going to have its own documentation.
+
 ## v1.2.2 Update (Breaking Change)
 
 - We don't provide access to satori from `@ethercorps/sveltekit-og`.
