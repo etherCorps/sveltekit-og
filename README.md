@@ -99,8 +99,8 @@ const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const GET: RequestHandler = async () => {
 	return await ImageResponse(template, {
-		height: 250,
-		width: 500,
+		height: 630,
+		width: 1200,
 		fonts: [
 			{
 				name: 'Inter Latin',
