@@ -10,7 +10,7 @@ npm install -D @ethercorps/sveltekit-og
 
 ## Usage
 
-Create a file at: `/src/routes/og/+server.ts`. Alternatively, you can use JavaScript by removing the types from this example.
+Create a file at `/src/routes/og/+server.ts`. Alternatively, you can use JavaScript by removing the types from this example.
 
 ```typescript
 // src/routes/og/+server.ts
@@ -55,6 +55,8 @@ export const GET: RequestHandler = async () => {
 ```
 
 Then run `npm dev` and visit `localhost:5173/og` to view your generated PNG. Remember that hot module reloading does not work with server routes, so if you change your HTML or CSS, hard refresh the route to see changes. 
+
+## Example Output
 
 ![Rendered OG image](static/demo.png)
 
