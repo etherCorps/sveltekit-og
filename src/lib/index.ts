@@ -1,10 +1,28 @@
 import satori, { type SatoriOptions } from 'satori';
-import { Resvg, type ResvgRenderOptions } from '@resvg/resvg-js';
 import type { SvelteComponent } from 'svelte';
 import toReactElement from './toReactElement';
+import {Resvg as wasmSvg, initWasm, type ResvgRenderOptions} from "@resvg/resvg-wasm"
+import {readFileSync} from "fs"
+import { dirname } from "path"
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+
 
 const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
+
+let initialized = false;
+const initReSvg = async () => {
+	const indexWasmRes = await fetch('https://unpkg.com/@resvg/resvg-wasm/index_bg.wasm');
+	const buffer = await indexWasmRes.arrayBuffer();
+	await initWasm(buffer);
+		// await initWasm( readFileSync( __dirname + "/resvg.wasm" ));
+	initialized = true;
+};
+
 
 const ImageResponse = async (htmlTemplate: string, optionsByUser: ImageResponseOptions) => {
 	const options = Object.assign({ width: 1200, height: 630, debug: !1 }, optionsByUser);
@@ -21,16 +39,22 @@ const ImageResponse = async (htmlTemplate: string, optionsByUser: ImageResponseO
 			}
 		]
 	});
+
 	const reSvgOptions = {
 		fitTo: {
 			mode: 'width',
 			value: options.width
 		}
 	} as ResvgRenderOptions;
-	const reSvgObject = new Resvg(svg, reSvgOptions);
-	const pngData = await reSvgObject.render().asPng();
 
-	return new Response(pngData, {
+	if (!initialized) {
+		await initReSvg();
+		initialized = true
+	}
+	const reSvgInit = new wasmSvg(svg, reSvgOptions);
+	const pngBuffer = reSvgInit.render().asPng();
+
+	return new Response(pngBuffer, {
 		headers: {
 			'Content-Type': 'image/png',
 			'cache-control': 'public, immutable, no-transform, max-age=31536000',

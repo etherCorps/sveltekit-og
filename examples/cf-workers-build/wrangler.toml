@@ -1,0 +1,13 @@
+name = "test-sveltekit-og"
+account_id = "394fea48b28fa3f0d4751e6a12240570"
+
+main = "./.cloudflare/worker.js"
+site.bucket = "./.cloudflare/public"
+
+build.command = "pnpm run build"
+
+node_compat = true
+compatibility_flags = [ "nodejs_compat" ]
+
+compatibility_date = "2023-06-05"
+workers_dev = true

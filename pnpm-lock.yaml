@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@playwright/test': ^1.34.3
-  '@resvg/resvg-js': ^2.4.1
+  '@resvg/resvg-wasm': ^2.4.1
   '@sveltejs/adapter-auto': next
   '@sveltejs/adapter-vercel': ^2.4.3
   '@sveltejs/kit': 1.10.0
@@ -28,7 +28,7 @@ specifiers:
   vite: ^4.3.9
 
 dependencies:
-  '@resvg/resvg-js': 2.4.1
+  '@resvg/resvg-wasm': 2.4.1
   satori: 0.10.1
   svelte: 3.59.1
 
@@ -406,130 +406,9 @@ packages:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: true
 
-  /@resvg/resvg-js-android-arm-eabi/2.4.1:
-    resolution: {integrity: sha512-AA6f7hS0FAPpvQMhBCf6f1oD1LdlqNXKCxAAPpKh6tR11kqV0YIB9zOlIYgITM14mq2YooLFl6XIbbvmY+jwUw==}
+  /@resvg/resvg-wasm/2.4.1:
+    resolution: {integrity: sha512-yi6R0HyHtsoWTRA06Col4WoDs7SvlXU3DLMNP2bdAgs7HK18dTEVl1weXgxRzi8gwLteGUbIg29zulxIB3GSdg==}
     engines: {node: '>= 10'}
-    cpu: [arm]
-    os: [android]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js-android-arm64/2.4.1:
-    resolution: {integrity: sha512-/QleoRdPfsEuH9jUjilYcDtKK/BkmWcK+1LXM8L2nsnf/CI8EnFyv7ZzCj4xAIvZGAy9dTYr/5NZBcTwxG2HQg==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [android]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js-darwin-arm64/2.4.1:
-    resolution: {integrity: sha512-U1oMNhea+kAXgiEXgzo7EbFGCD1Edq5aSlQoe6LMly6UjHzgx2W3N5kEXCwU/CgN5FiQhZr7PlSJSlcr7mdhfg==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [darwin]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js-darwin-x64/2.4.1:
-    resolution: {integrity: sha512-avyVh6DpebBfHHtTQTZYSr6NG1Ur6TEilk1+H0n7V+g4F7x7WPOo8zL00ZhQCeRQ5H4f8WXNWIEKL8fwqcOkYw==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js-linux-arm-gnueabihf/2.4.1:
-    resolution: {integrity: sha512-isY/mdKoBWH4VB5v621co+8l101jxxYjuTkwOLsbW+5RK9EbLciPlCB02M99ThAHzI2MYxIUjXNmNgOW8btXvw==}
-    engines: {node: '>= 10'}
-    cpu: [arm]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js-linux-arm64-gnu/2.4.1:
-    resolution: {integrity: sha512-uY5voSCrFI8TH95vIYBm5blpkOtltLxLRODyhKJhGfskOI7XkRw5/t1u0sWAGYD8rRSNX+CA+np86otKjubrNg==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js-linux-arm64-musl/2.4.1:
-    resolution: {integrity: sha512-6mT0+JBCsermKMdi/O2mMk3m7SqOjwi9TKAwSngRZ/nQoL3Z0Z5zV+572ztgbWr0GODB422uD8e9R9zzz38dRQ==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js-linux-x64-gnu/2.4.1:
-    resolution: {integrity: sha512-60KnrscLj6VGhkYOJEmmzPlqqfcw1keDh6U+vMcNDjPhV3B5vRSkpP/D/a8sfokyeh4VEacPSYkWGezvzS2/mg==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js-linux-x64-musl/2.4.1:
-    resolution: {integrity: sha512-0AMyZSICC1D7ge115cOZQW8Pcad6PjWuZkBFF3FJuSxC6Dgok0MQnLTs2MfMdKBlAcwO9dXsf3bv9tJZj8pATA==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js-win32-arm64-msvc/2.4.1:
-    resolution: {integrity: sha512-76XDFOFSa3d0QotmcNyChh2xHwk+JTFiEQBVxMlHpHMeq7hNrQJ1IpE1zcHSQvrckvkdfLboKRrlGB86B10Qjw==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [win32]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js-win32-ia32-msvc/2.4.1:
-    resolution: {integrity: sha512-odyVFGrEWZIzzJ89KdaFtiYWaIJh9hJRW/frcEcG3agJ464VXkN/2oEVF5ulD+5mpGlug9qJg7htzHcKxDN8sg==}
-    engines: {node: '>= 10'}
-    cpu: [ia32]
-    os: [win32]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js-win32-x64-msvc/2.4.1:
-    resolution: {integrity: sha512-vY4kTLH2S3bP+puU5x7hlAxHv+ulFgcK6Zn3efKSr0M0KnZ9A3qeAjZteIpkowEFfUeMPNg2dvvoFRJA9zqxSw==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [win32]
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  /@resvg/resvg-js/2.4.1:
-    resolution: {integrity: sha512-wTOf1zerZX8qYcMmLZw3czR4paI4hXqPjShNwJRh5DeHxvgffUS5KM7XwxtbIheUW6LVYT5fhT2AJiP6mU7U4A==}
-    engines: {node: '>= 10'}
-    optionalDependencies:
-      '@resvg/resvg-js-android-arm-eabi': 2.4.1
-      '@resvg/resvg-js-android-arm64': 2.4.1
-      '@resvg/resvg-js-darwin-arm64': 2.4.1
-      '@resvg/resvg-js-darwin-x64': 2.4.1
-      '@resvg/resvg-js-linux-arm-gnueabihf': 2.4.1
-      '@resvg/resvg-js-linux-arm64-gnu': 2.4.1
-      '@resvg/resvg-js-linux-arm64-musl': 2.4.1
-      '@resvg/resvg-js-linux-x64-gnu': 2.4.1
-      '@resvg/resvg-js-linux-x64-musl': 2.4.1
-      '@resvg/resvg-js-win32-arm64-msvc': 2.4.1
-      '@resvg/resvg-js-win32-ia32-msvc': 2.4.1
-      '@resvg/resvg-js-win32-x64-msvc': 2.4.1
     dev: false
 
   /@rollup/pluginutils/4.2.1:
@@ -978,7 +857,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001495
-      electron-to-chromium: 1.4.421
+      electron-to-chromium: 1.4.423
       node-releases: 2.0.12
       update-browserslist-db: 1.0.11_browserslist@4.21.7
     dev: true
@@ -1174,8 +1053,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /electron-to-chromium/1.4.421:
-    resolution: {integrity: sha512-wZOyn3s/aQOtLGAwXMZfteQPN68kgls2wDAnYOA8kCjBvKVrW5RwmWVspxJYTqrcN7Y263XJVsC66VCIGzDO3g==}
+  /electron-to-chromium/1.4.423:
+    resolution: {integrity: sha512-y4A7YfQcDGPAeSWM1IuoWzXpg9RY1nwHzHSwRtCSQFp9FgAVDgdWlFf0RbdWfLWQ2WUI+bddUgk5RgTjqRE6FQ==}
     dev: true
 
   /emoji-regex/10.2.1:
@@ -2199,8 +2078,8 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rollup/3.23.1:
-    resolution: {integrity: sha512-ybRdFVHOoljGEFILHLd2g/qateqUdjE6YS41WXq4p3C/WwD3xtWxV4FYWETA1u9TeXQc5K8L8zHE5d/scOvrOQ==}
+  /rollup/3.24.0:
+    resolution: {integrity: sha512-OgraHOIg2YpHQTjl0/ymWfFNBEyPucB7lmhXrQUh38qNOegxLapSPFs9sNr0qKR75awW41D93XafoR2QfhBdUQ==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -2694,7 +2573,7 @@ packages:
     dependencies:
       esbuild: 0.17.19
       postcss: 8.4.24
-      rollup: 3.23.1
+      rollup: 3.24.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true

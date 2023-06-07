@@ -41,7 +41,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@resvg/resvg-js": "^2.4.1",
+		"@resvg/resvg-wasm": "^2.4.1",
 		"satori": "^0.10.1",
 		"svelte": "^3.59.1"
 	},

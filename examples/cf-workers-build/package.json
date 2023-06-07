@@ -13,7 +13,7 @@
 	"devDependencies": {
 		"@ethercorps/sveltekit-og": "link:../../package",
 		"@playwright/test": "^1.34.3",
-		"@sveltejs/adapter-node": "^1.2.4",
+		"@sveltejs/adapter-cloudflare-workers": "^1.1.2",
 		"@sveltejs/kit": "^1.20.2",
 		"eslint": "^8.42.0",
 		"eslint-config-prettier": "^8.8.0",
@@ -21,11 +21,13 @@
 		"prettier": "^2.8.8",
 		"prettier-plugin-svelte": "^2.10.1",
 		"svelte": "^3.59.1",
-		"vite": "^4.3.9"
+		"vite": "^4.3.9",
+		"vite-plugin-node-polyfills": "^0.8.2"
 	},
 	"type": "module",
 	"dependencies": {
 		"@resvg/resvg-wasm": "^2.4.1",
+		"rollup-plugin-node-polyfills": "^0.2.1",
 		"satori": "^0.10.1"
 	}
 }

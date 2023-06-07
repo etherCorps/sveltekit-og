@@ -1,20 +1,16 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import type { UserConfig } from 'vite';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 
-const config: UserConfig = {
+const config = {
 	plugins: [sveltekit()],
 	define: {
 		_a: 'undefined'
 	},
 	build: {
+		polyfillModulePreload: true,
 		rollupOptions: {
-			external: ["@resvg/resvg-js"]
+			plugins: [nodePolyfills()]
 		}
-	},
-	optimizeDeps: {
-		exclude: [
-			"@resvg/resvg-js"
-		]
 	}
 };
 
