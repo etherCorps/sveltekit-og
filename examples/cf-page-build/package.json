@@ -13,7 +13,7 @@
 	"devDependencies": {
 		"@ethercorps/sveltekit-og": "link:../../package",
 		"@playwright/test": "^1.34.3",
-		"@sveltejs/adapter-vercel": "^2.4.3",
+		"@sveltejs/adapter-cloudflare": "^2.3.0",
 		"@sveltejs/kit": "^1.20.2",
 		"eslint": "^8.42.0",
 		"eslint-config-prettier": "^8.8.0",
@@ -21,7 +21,9 @@
 		"prettier": "^2.8.8",
 		"prettier-plugin-svelte": "^2.10.1",
 		"svelte": "^3.59.1",
-		"vite": "^4.3.9"
+		"vite": "^4.3.9",
+		"url": "^0.11.0",
+		"//":"url package is required to work on cloudflare workers and pages."
 	},
 	"type": "module"
 }

@@ -5,6 +5,16 @@ const config: UserConfig = {
 	plugins: [sveltekit()],
 	define: {
 		_a: 'undefined'
+	},
+	build: {
+		rollupOptions: {
+			external: ["@resvg/resvg-js"]
+		}
+	},
+	optimizeDeps: {
+		exclude: [
+			"@resvg/resvg-js"
+		]
 	}
 };
 
