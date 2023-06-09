@@ -23,9 +23,5 @@
 		"svelte": "^3.59.1",
 		"vite": "^4.3.9"
 	},
-	"type": "module",
-	"dependencies": {
-		"@resvg/resvg-wasm": "^2.4.1",
-		"satori": "^0.10.1"
-	}
+	"type": "module"
 }
