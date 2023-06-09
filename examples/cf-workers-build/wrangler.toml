@@ -8,6 +8,5 @@ build.command = "pnpm run build"
 
 compatibility_date = "2023-06-05"
 compatibility_flags = [ "nodejs_compat" ]
-node_compat = true
 
 workers_dev = true
