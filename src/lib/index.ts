@@ -1,6 +1,6 @@
 import satori, { type SatoriOptions } from 'satori';
 import type { SvelteComponent } from 'svelte';
-import toReactElement from './toReactElement';
+import toReactElement from './toReactElement.js';
 import { svg2png, initialize, type ConvertOptions } from 'svg2png-wasm';
 
 let initialized = false;
