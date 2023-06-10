@@ -7,8 +7,9 @@ Dynamically generate Open Graph images from an HTML+CSS template or Svelte compo
 ```bash
 pnpm install -D @ethercorps/sveltekit-og
 ```
+
 > Using with Cloudflare Pages or Workers then you have to provide `url` polyfill by just installing it as `devDependency`.
-> 
+
 ```bash
 pnpm i -D url
 ```
@@ -45,21 +46,21 @@ const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-4
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const GET: RequestHandler = async () => {
-  return await ImageResponse(template, {
-    height: 630,
-    width: 1200,
-    fonts: [
-      {
-        name: 'Inter Latin',
-        data: fontData,
-        weight: 400
-      }
-    ]
-  });
+	return await ImageResponse(template, {
+		height: 630,
+		width: 1200,
+		fonts: [
+			{
+				name: 'Inter Latin',
+				data: fontData,
+				weight: 400
+			}
+		]
+	});
 };
 ```
 
-Then run `npm dev` and visit `localhost:5173/og` to view your generated PNG. Remember that hot module reloading does not work with server routes, so if you change your HTML or CSS, hard refresh the route to see changes. 
+Then run `npm dev` and visit `localhost:5173/og` to view your generated PNG. Remember that hot module reloading does not work with server routes, so if you change your HTML or CSS, hard refresh the route to see changes.
 
 ## Example Output
 
@@ -69,10 +70,9 @@ Then run `npm dev` and visit `localhost:5173/og` to view your generated PNG. Rem
 
 When run in development, image headers contain `cache-control: no-cache, no-store`. In production, image headers contain `'cache-control': 'public, immutable, no-transform, max-age=31536000'`, which caches the image for 1 year. In both cases, the `'content-type': 'image/png'` is used.
 
-
 ## Styling
 
-Notice that our example uses TailwindCSS classes (e.g. `tw="bg-gray-50"`). Alternatively, your HTML can contain style attributes using any of [the subset of CSS supported by Satori](https://github.com/vercel/satori#css). 
+Notice that our example uses TailwindCSS classes (e.g. `tw="bg-gray-50"`). Alternatively, your HTML can contain style attributes using any of [the subset of CSS supported by Satori](https://github.com/vercel/satori#css).
 
 Satori supports only a subset of HTML and CSS. For full details, see [Satori’s documentation](https://github.com/vercel/satori#documentation). Notably, Satori only supports flex-based layouts.
 
@@ -80,7 +80,7 @@ Satori supports only a subset of HTML and CSS. For full details, see [Satori’s
 
 Satori supports `ttf`, `otf`, and `woff` font formats; `woff2` is not supported. To maximize the font parsing speed, `ttf` or `otf` are recommended over `woff`.
 
-By default, `@ethercorps/sveltekit-og` includes only 'Noto Sans' font. If you need to use other fonts, you can specify them as shown in the example. Notably, you can also import a font file that is stored locally within your project and are not required to use fetch. 
+By default, `@ethercorps/sveltekit-og` includes only 'Noto Sans' font. If you need to use other fonts, you can specify them as shown in the example. Notably, you can also import a font file that is stored locally within your project and are not required to use fetch.
 
 ## Examples
 
@@ -101,7 +101,7 @@ ImageResponse(
     options : {
       width ? : number = 1200
       height ? : number = 630,
-      backgroundColor ? : string = "#fff"       
+      backgroundColor ? : string = "#fff"
       fonts ? : {
           name: string,
           data: ArrayBuffer,
@@ -142,6 +142,7 @@ componentToImageResponse(
 ## Changelog
 
 ### v1.2.3 Update (Breaking Changes)
+
 > Now you have to install dependency by yourself which will make it easier to build for all plateforms.
 
 ```

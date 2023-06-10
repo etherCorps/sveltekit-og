@@ -34,16 +34,16 @@ const ImageResponse = async (htmlTemplate: string, optionsByUser: ImageResponseO
 
 	if (!initialized) {
 		await initSvgToPng();
-		initialized = true
+		initialized = true;
 	}
 
 	const defaultConfig: ConvertOptions = {
 		width: options.width, // optional
-		height: options.height, // optional
+		height: options.height // optional
 	};
 
 	if (Object.hasOwn(options, 'backgroundColor')) {
-		defaultConfig.backgroundColor = options.backgroundColor
+		defaultConfig.backgroundColor = options.backgroundColor;
 	}
 
 	const png = await svg2png(svg, defaultConfig);

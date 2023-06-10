@@ -15,7 +15,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.34.3",
+		"@playwright/test": "^1.35.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-vercel": "^2.4.3",
 		"@sveltejs/kit": "1.10.0",
@@ -30,6 +30,7 @@
 		"postcss": "^8.4.24",
 		"prettier": "^2.8.8",
 		"prettier-plugin-svelte": "^2.10.1",
+		"prism-svelte": "^0.5.0",
 		"prismjs": "^1.29.0",
 		"svelte": "^3.59.1",
 		"svelte-check": "^2.10.3",

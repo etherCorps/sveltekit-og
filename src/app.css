@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'Ian Mono';
-    src: url('/iaw-mono-var.woff2') format('woff2');
+	font-family: 'Ian Mono';
+	src: url('/iaw-mono-var.woff2') format('woff2');
 }
 
 @layer base {
-  html {
-    font-family: Ian Mono, monospace;
-  }
+	html {
+		font-family: Ian Mono, monospace;
+	}
 }
