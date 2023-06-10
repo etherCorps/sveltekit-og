@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: "lts"
       - run: pnpm install
+      - run: pnpm build
       #- run: pnpm test
       - uses: JS-DevTools/npm-publish@v2
         with:
