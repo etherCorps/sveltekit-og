@@ -78,7 +78,7 @@ Satori supports only a subset of HTML and CSS. For full details, see [Satori’s
 
 ## Fonts
 
-Satori supports `ttf`, `otf`, and `woff` font formats. To maximize the font parsing speed, `ttf` or `otf` are recommended over `woff`.
+Satori supports `ttf`, `otf`, and `woff` font formats; `woff2` is not supported. To maximize the font parsing speed, `ttf` or `otf` are recommended over `woff`.
 
 By default, `@ethercorps/sveltekit-og` includes only 'Noto Sans' font. If you need to use other fonts, you can specify them as shown in the example. Notably, you can also import a font file that is stored locally within your project and are not required to use fetch. 
 
