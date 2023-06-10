@@ -59,11 +59,61 @@ export const GET: RequestHandler = async () => {
 };
 
 `;
+
+	const apiReference = `
+import {ImageResponse, componentToImageResponse} from '@ethercorps/sveltekit-og'
+import {SvelteComponent} from "svelte";
+
+// ...
+ImageResponse(
+    element : string,
+    options : {
+      width ? : number = 1200
+      height ? : number = 630,
+      backgroundColor ? : string = "#fff"
+      fonts ? : {
+          name: string,
+          data: ArrayBuffer,
+          weight: number,
+          style: 'normal' | 'italic'
+      }[]
+      debug ? : boolean = false
+      graphemeImages ? : Record<string, string>;
+      loadAdditionalAsset ? : (languageCode: string, segment: string) => Promise<SatoriOptions["fonts"] | string | undefined>;
+      // Options that will be passed to the HTTP response
+      status ? : number = 200
+      statusText ? : string
+      headers ? : Record<string, string>
+    })
+
+componentToImageResponse(
+    component : typeof SvelteComponent,
+    props : {}, // All export let example inside prop dictionary
+    options : {
+      width ? : number = 1200
+      height ? : number = 630
+      fonts ? : {
+          name: string,
+          data: ArrayBuffer,
+          weight: number,
+          style: 'normal' | 'italic'
+      }[]
+      debug ? : boolean = false
+      graphemeImages ? : Record<string, string>;
+      loadAdditionalAsset ? : (languageCode: string, segment: string) => Promise<SatoriOptions["fonts"] | string | undefined>;
+      // Options that will be passed to the HTTP response
+      status ? : number = 200
+      statusText ? : string
+      headers ? : Record<string, string>
+    })
+
+	`;
 	const highlightedQuickEg = Prism.highlight(source, Prism.languages.svelte, 'svelte');
+	const highlightedApiReference = Prism.highlight(apiReference, Prism.languages.svelte, 'svelte');
 
 </script>
 
-<div class="mx-10 mt-5 space-y-5">
+<div class="mx-10 mt-5 pb-10 space-y-5">
 	<section id="introduction" class="space-y-3">
 		<h1 class="font-bold text-2xl">Introduction</h1>
 		<p class="">
@@ -123,7 +173,68 @@ export const GET: RequestHandler = async () => {
 			</p>
 		</div>
 		<h2 class="font-bold text-xl">
-			Image Output: <a target="_blank" rel="noreferrer" href="https://sveltekit-og.ethercorps.io/new"> Live </a>
+			Image Output: <a target="_blank" class="hover:text-indigo-500 transition-all" rel="noreferrer" href="https://sveltekit-og.ethercorps.io/new"> Live Version</a>
+			<img loading="lazy" class="rounded-lg mt-5 shadow-lg shadow-indigo-200" src="https://sveltekit-og.ethercorps.io/new" alt="@ethercorps/sveltekit-og Demo OG Generated PNG" />
 		</h2>
 	</section>
+
+	<section id="headers" class="space-y-3">
+		<h1 class="font-bold text-2xl">Headers</h1>
+		<p class="">
+			Notice that our example uses TailwindCSS classes (e.g. <span class="bg-gray-100 px-2 py-1 rounded-full">tw="bg-gray-50"</span>). Alternatively, your HTML can contain style attributes using any of <a href="https://github.com/vercel/satori#css" target="_blank" rel="noreferrer" class="text-indigo-500">the subset of CSS supported by Satori</a>.
+			<br />
+			<br />
+			Satori supports only a subset of HTML and CSS. For full details, see <a href="https://github.com/vercel/satori#documentation" target="_blank" rel="noreferrer" class="text-indigo-500">Satori’s documentation</a>. Notably, Satori only supports flex-based layouts.
+		</p>
+	</section>
+
+	<section id="fonts" class="space-y-3">
+		<h1 class="font-bold text-2xl">Fonts</h1>
+		<p class="">
+			Satori supports <span class="bg-gray-100 px-2 py-1 rounded-full">ttf</span>, <span class="bg-gray-100 px-2 py-1 rounded-full">otf</span>, and <span class="bg-gray-100 px-2 py-1 rounded-full">woff</span> font formats; <span class="bg-gray-100 px-2 py-1 rounded-full">woff2</span> is not supported. To maximize the font parsing speed, <span class="bg-gray-100 px-2 py-1 rounded-full">ttf</span> or <span class="bg-gray-100 px-2 py-1 rounded-full">otf</span> are recommended over <span class="bg-gray-100 px-2 py-1 rounded-full">woff</span>.
+			<br />
+			<br />
+			By default, <span class="bg-gray-100 px-2 py-1 rounded-full">@ethercorps/sveltekit-og</span> includes only 'Noto Sans' font. If you need to use other fonts, you can specify them as shown in the example. Notably, you can also import a font file that is stored locally within your project and are not required to use fetch.
+		</p>
+	</section>
+
+	<section id="examples" class="space-y-3">
+		<h1 class="font-bold text-2xl">Examples</h1>
+
+		<li><span class="bg-gray-100 px-2 py-1 rounded-full">ImageResponse</span> - <a href="https://github.com/etherCorps/sveltekit-og/blob/main/src/routes/new/+server.ts" target="_blank" rel="noreferrer" class="text-indigo-500">Source</a> - <a href="https://sveltekit-og-five.vercel.app/new" target="_blank" rel="noreferrer" class="text-indigo-500">Demo</a></li>
+		<li><span class="bg-gray-100 px-2 py-1 rounded-full">componentToImageResponse</span> - <a href="https://github.com/etherCorps/sveltekit-og/tree/main/src/routes/component-og" target="_blank" rel="noreferrer" class="text-indigo-500">Source</a> - <a href="https://sveltekit-og-five.vercel.app/component-og" target="_blank" rel="noreferrer" class="text-indigo-500">Demo</a></li>
+	</section>
+
+	<section id="api-reference" class="space-y-3">
+		<h1 class="font-bold text-2xl">Api Reference</h1>
+
+		<p>
+			The package exposes an <span class="bg-gray-100 px-2 py-1 rounded-full">ImageResponse</span> and <span class="bg-gray-100 px-2 py-1 rounded-full">componentToImageResponse</span> constructors, with the following options available.
+		</p>
+		<pre class="bg-gray-100 overflow-auto px-3 py-1.5 rounded-xl"><code class="" >{@html highlightedApiReference}</code></pre>
+	</section>
+
+	<div id="footer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 place-content-evenly">
+		<section id="acknowledgements" class="space-y-3 bg-indigo-50 px-3 py-1.5 shadow-md w-full shadow-indigo-500 rounded-lg border border-indigo-500">
+			<h1 class="font-bold text-2xl">Acknowledgements</h1>
+			<p>This project will not be possible without the following projects:</p>
+
+			<li><a href="https://github.com/vercel/satori" target="_blank" rel="noreferrer" class="text-indigo-500">Satori & Vercel-OG</a></li>
+			<li><a href="https://fonts.google.com/noto" target="_blank" rel="noreferrer" class="text-indigo-500">Noto by Google Fonts</a></li>
+			<li><a href="https://github.com/ssssota/svg2png-wasm" target="_blank" rel="noreferrer" class="text-indigo-500">svg2png-wasm</a></li>
+		</section>
+		<section id="author" class="space-y-3 bg-indigo-50 px-3 py-1.5 shadow-md w-full shadow-indigo-500 rounded-lg border border-indigo-500">
+			<h1 class="font-bold text-2xl">Author</h1>
+			<p>I would like to thank myself:</p>
+
+			<li><a href="https://github.com/etherCorps" target="_blank" rel="noreferrer" class="text-indigo-500">@ethercorps</a></li>
+			<li><a href="https://github.com/theetherGit" target="_blank" rel="noreferrer" class="text-indigo-500">@theetherGit</a></li>
+		</section>
+		<section id="contributors" class="space-y-3 bg-indigo-50 px-3 py-1.5 shadow-md w-full shadow-indigo-500 rounded-lg border border-indigo-500">
+			<h1 class="font-bold text-2xl">Contributors</h1>
+			<p>Without your commits, support, ideas and works every library is incomplete. So, special thanks to:</p>
+
+			<li><a href="https://github.com/jasongitmail" target="_blank" rel="noreferrer" class="text-indigo-500">@jasongitmail</a></li>
+		</section>
+	</div>
 </div>
