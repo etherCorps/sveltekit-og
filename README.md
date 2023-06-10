@@ -4,8 +4,13 @@ Dynamically generate Open Graph images from an HTML+CSS template or Svelte compo
 
 ## Installation
 
-```sh
-npm install -D @ethercorps/sveltekit-og
+```bash
+pnpm install -D @ethercorps/sveltekit-og
+```
+> Using with Cloudflare Pages or Workers then you have to provide `url` polyfill by just installing it as `devDependency`.
+> 
+```bash
+pnpm i -D url
 ```
 
 ## Usage
@@ -95,7 +100,8 @@ ImageResponse(
     element : string,
     options : {
       width ? : number = 1200
-      height ? : number = 630
+      height ? : number = 630,
+      backgroundColor ? : string = "#fff"       
       fonts ? : {
           name: string,
           data: ArrayBuffer,
@@ -170,7 +176,7 @@ This project will not be possible without the following projects:
 
 - [Satori & @vercel/og](https://github.com/vercel/satori)
 - [Noto by Google Fonts](https://fonts.google.com/noto)
-- [Resvg.js](https://github.com/yisibl/resvg-js)
+- [svg2png-wasm](https://github.com/ssssota/svg2png-wasm)
 
 ## Authors
 
