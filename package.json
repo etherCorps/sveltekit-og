@@ -21,6 +21,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
+		"@builder.io/partytown": "^0.8.0",
 		"@playwright/test": "^1.35.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-vercel": "^2.4.3",

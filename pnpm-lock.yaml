@@ -13,6 +13,9 @@ dependencies:
     version: 1.4.0
 
 devDependencies:
+  '@builder.io/partytown':
+    specifier: ^0.8.0
+    version: 0.8.0
   '@playwright/test':
     specifier: ^1.35.0
     version: 1.35.0
@@ -91,6 +94,11 @@ packages:
   /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
+    dev: true
+
+  /@builder.io/partytown@0.8.0:
+    resolution: {integrity: sha512-M6H7nSMwW2dHd1/MQ+9J1Jqdw22uhl1nKv90kIiL9G7gjFVqqouQp4qSS1oZclmtW1XjAa4Q5UnbHB4iytmxZA==}
+    hasBin: true
     dev: true
 
   /@esbuild/android-arm64@0.17.19:
