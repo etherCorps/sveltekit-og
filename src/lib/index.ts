@@ -2,14 +2,13 @@ import satori, { type SatoriOptions } from 'satori';
 import type { SvelteComponent } from 'svelte';
 import toReactElement from './toReactElement.js';
 import { svg2png, initialize, type ConvertOptions } from 'svg2png-wasm';
+import {base64ToArrayBuffer, notoSans700Base64, svg2pngWasmBase64} from "./utils.js";
 
 let initialized = false;
 
-const fontFile = await fetch('https://sveltekit-og.ethercorps.io/noto-sans.ttf');
-const fontData: ArrayBuffer = await fontFile.arrayBuffer();
+const fontData: ArrayBuffer = base64ToArrayBuffer(notoSans700Base64);
 
-const indexWasmRes = await fetch('https://unpkg.com/svg2png-wasm/svg2png_wasm_bg.wasm');
-const svg2PngWasmBuffer = await indexWasmRes.arrayBuffer();
+const svg2PngWasmBuffer = base64ToArrayBuffer(svg2pngWasmBase64);
 
 const initSvgToPng = async () => {
 	await initialize(svg2PngWasmBuffer).catch((e) => console.log(e));
