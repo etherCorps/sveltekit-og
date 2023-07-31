@@ -11,7 +11,7 @@
 		"test:build": "pnpm build && pnpm test:vercel:build && pnpm test:netlify:build && pnpm test:pages:build && pnpm test:workers:build && pnpm test:node:build",
 		"test:vercel:build": "cd examples/vercel-build && pnpm install && pnpm build",
 		"test:netlify:build": "cd examples/netlify-build && pnpm install && pnpm build",
-		"test:pages:build": "pnpm build && cd examples/cf-page-build && pnpm install && pnpm build",
+		"test:pages:build": "cd examples/cf-page-build && pnpm install && pnpm build",
 		"test:workers:build": "cd examples/cf-workers-build && pnpm install && pnpm build",
 		"test:node:build": "cd examples/node-build && pnpm install && pnpm build",
 		"test": "playwright test",
