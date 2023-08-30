@@ -61,7 +61,7 @@ const ImageResponse = async (htmlTemplate: string, optionsByUser: ImageResponseO
 };
 
 const componentToImageResponse = (
-	component: typeof SvelteComponent,
+	component: typeof SvelteComponent<any>,
 	props = {},
 	optionsByUser: ImageResponseOptions
 ) => {
@@ -69,7 +69,7 @@ const componentToImageResponse = (
 	return ImageResponse(htmlTemplate, optionsByUser);
 };
 
-const componentToMarkup = (component: typeof SvelteComponent, props = {}) => {
+const componentToMarkup = (component: typeof SvelteComponent<any>, props = {}) => {
 	const SvelteRenderedMarkup = (component as any).render(props);
 	let htmlTemplate = `${SvelteRenderedMarkup.html}`;
 	if (SvelteRenderedMarkup && SvelteRenderedMarkup.css && SvelteRenderedMarkup.css.code) {

@@ -9,3 +9,5 @@ node_modules
 .idea
 package
 .vercel
+pnpm-lock.yaml
+dist
