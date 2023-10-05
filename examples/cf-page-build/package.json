@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"build:prod": "cd ../.. && pnpm install && pnpm build && cd examples/cf-pages-build && pnpm install && pnpm build",
+		"build:prod": "cd ../.. && npm install && npm build && cd examples/cf-pages-build && npm install && npm build",
 		"preview": "vite preview",
 		"test": "playwright test",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
