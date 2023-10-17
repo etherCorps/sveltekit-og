@@ -4,13 +4,11 @@ import type {SvelteComponent} from "svelte";
 
 export const ImageResponse = async (htmlTemplate: string, options?: ImageResponseOptions) => {
     const reactVNode = html(`${htmlTemplate}`);
-    console.log(reactVNode)
     return new IR(reactVNode, options)
 };
 
 export const componentToImageResponse = async (component: SvelteComponent, props: Record<string, any>, options?: ImageResponseOptions) => {
     const ssrSvelte = component.render(props);
-    console.log(ssrSvelte);
     return ImageResponse(`${ssrSvelte.html}<style>${ssrSvelte.css.code}</style>`, options)
 };
 
