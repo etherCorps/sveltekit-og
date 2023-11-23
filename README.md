@@ -4,7 +4,8 @@ Dynamically generate Open Graph images from an HTML+CSS template or Svelte compo
 
 ## Disclaimer
 
-This documentation is currently unmaintained, as the development focus is compatibility with cloudflare, vercel and vercel edge.
+This `documentation`  is currently `unmaintained` , as the `development` focus is `compatibility` with cloudflare, vercel and vercel edge. 
+I won't suggest anyone to use this library in `production` till  `January 1, 2024`. 
 
 ## Installation
 
