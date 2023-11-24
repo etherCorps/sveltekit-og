@@ -5,13 +5,12 @@ import { loadGoogleFont } from './font.js';
 import type { ImageResponseOptions } from './types.js';
 import {toReactElement, svelteComponentToJsx} from "@ethercorps/svelte-h2j"
 
-import { html } from "satori-html";
 import {ImageResponse as IR} from "@vercel/og"
 import type {SvelteComponent} from "svelte";
 
 export const ImageResponse = async (htmlTemplate: string, options?: ImageResponseOptions) => {
     const reactVNode = toReactElement(`${htmlTemplate}`);
-    console.log(reactVNode)
+    console.log(reactVNode);
     return new IR(reactVNode, options)
 };
 
@@ -43,43 +42,43 @@ interface FontOptions {
     lang?: string;
 }
 
-export declare type ImageResponseOptions = ImageOptions & ConstructorParameters<typeof Response>[1];
+// export declare type ImageResponseOptions = ImageOptions & ConstructorParameters<typeof Response>[1];
 
-declare type ImageOptions = {
-    /**
-     * The width of the image.
-     *
-     * @type {number}
-     * @default 1200
-     */
-    width?: number;
-    /**
-     * The height of the image.
-     *
-     * @type {number}
-     * @default 630
-     */
-    height?: number;
-    /**
-     * Display debug information on the image.
-     *
-     * @type {boolean}
-     * @default false
-     */
-    debug?: boolean;
-    /**
-     * A list of fonts to use.
-     *
-     * @type {{ data: ArrayBuffer; name: string; weight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900; style?: 'normal' | 'italic' }[]}
-     * @default Noto Sans Latin Regular.
-     */
-    fonts?: FontOptions[];
-    /**
-     * Using a specific Emoji style. Defaults to `twemoji`.
-     *
-     * @link https://github.com/vercel/og#emoji
-     * @type {EmojiType}
-     * @default 'twemoji'
-     */
-    emoji?: EmojiType;
-};
+// declare type ImageOptions = {
+//     /**
+//      * The width of the image.
+//      *
+//      * @type {number}
+//      * @default 1200
+//      */
+//     width?: number;
+//     /**
+//      * The height of the image.
+//      *
+//      * @type {number}
+//      * @default 630
+//      */
+//     height?: number;
+//     /**
+//      * Display debug information on the image.
+//      *
+//      * @type {boolean}
+//      * @default false
+//      */
+//     debug?: boolean;
+//     /**
+//      * A list of fonts to use.
+//      *
+//      * @type {{ data: ArrayBuffer; name: string; weight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900; style?: 'normal' | 'italic' }[]}
+//      * @default Noto Sans Latin Regular.
+//      */
+//     fonts?: FontOptions[];
+//     /**
+//      * Using a specific Emoji style. Defaults to `twemoji`.
+//      *
+//      * @link https://github.com/vercel/og#emoji
+//      * @type {EmojiType}
+//      * @default 'twemoji'
+//      */
+//     emoji?: EmojiType;
+// };
