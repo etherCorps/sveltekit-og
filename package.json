@@ -50,7 +50,11 @@
 	"types": "./dist/index.d.ts",
 	"type": "module",
 	"dependencies": {
+		"@ethercorps/svelte-h2j": "^0.1.0",
+		"@resvg/resvg-wasm": "^2.6.0",
 		"@vercel/og": "^0.5.17",
-		"satori-html": "^0.3.2"
+		"satori": "^0.10.11",
+		"satori-html": "^0.3.2",
+		"yoga-wasm-web": "^0.3.3"
 	}
 }

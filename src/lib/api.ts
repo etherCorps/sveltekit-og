@@ -1,9 +1,16 @@
+import satori, { init } from 'satori/wasm';
+import initYoga from 'yoga-wasm-web';
+import { Resvg, initWasm } from '@resvg/resvg-wasm';
+import { loadGoogleFont } from './font.js';
+import type { ImageResponseOptions } from './types.js';
+import {toReactElement, svelteComponentToJsx} from "@ethercorps/svelte-h2j"
+
 import { html } from "satori-html";
 import {ImageResponse as IR} from "@vercel/og"
 import type {SvelteComponent} from "svelte";
 
 export const ImageResponse = async (htmlTemplate: string, options?: ImageResponseOptions) => {
-    const reactVNode = html(`${htmlTemplate}`);
+    const reactVNode = toReactElement(`${htmlTemplate}`);
     console.log(reactVNode)
     return new IR(reactVNode, options)
 };
