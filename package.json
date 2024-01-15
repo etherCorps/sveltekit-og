@@ -16,7 +16,8 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
+			"svelte": "./dist/index.js",
+			"import": "./dist/index.js"
 		}
 	},
 	"files": [
@@ -28,24 +29,24 @@
 		"svelte": "^4.0.0"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^2.0.0",
-		"@sveltejs/kit": "^1.20.4",
-		"@sveltejs/package": "^2.0.0",
-		"@typescript-eslint/eslint-plugin": "^5.45.0",
-		"@typescript-eslint/parser": "^5.45.0",
+		"@sveltejs/adapter-auto": "^2.1.1",
+		"@sveltejs/kit": "^1.30.3",
+		"@sveltejs/package": "^2.2.5",
+		"@typescript-eslint/eslint-plugin": "^5.62.0",
+		"@typescript-eslint/parser": "^5.62.0",
 		"css-tree": "^2.3.1",
-		"eslint": "^8.28.0",
-		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-svelte": "^2.30.0",
-		"prettier": "^2.8.0",
+		"eslint": "^8.56.0",
+		"eslint-config-prettier": "^8.10.0",
+		"eslint-plugin-svelte": "^2.35.1",
+		"prettier": "^2.8.8",
 		"prettier-plugin-svelte": "^2.10.1",
-		"publint": "^0.1.9",
-		"svelte": "^4.0.5",
-		"svelte-check": "^3.4.3",
-		"tslib": "^2.4.1",
-		"typescript": "^5.0.0",
-		"vite": "^4.4.2",
-		"vitest": "^0.34.0"
+		"publint": "^0.1.16",
+		"svelte": "^4.2.8",
+		"svelte-check": "^3.6.3",
+		"tslib": "^2.6.2",
+		"typescript": "^5.3.3",
+		"vite": "^4.5.1",
+		"vitest": "^0.34.6"
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -53,7 +54,6 @@
 	"dependencies": {
 		"@ethercorps/svelte-h2j": "^0.1.0",
 		"@resvg/resvg-js": "^2.6.0",
-		"satori": "^0.10.11",
-		"vite-plugin-wasm": "^3.2.2"
+		"satori": "^0.10.11"
 	}
 }

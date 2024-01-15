@@ -9,6 +9,7 @@
             <span>{text}</span>
             <span tw="text-indigo-600">{spanText}</span>
         </h2>
+
         <div tw="mt-8 flex md:mt-0">
             <div tw="flex rounded-md shadow">
                 <a
