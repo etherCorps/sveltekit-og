@@ -1,13 +1,15 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-devDependencies:
+dependencies:
   '@ethercorps/sveltekit-og':
-    specifier: link:../../package
-    version: link:../../package
+    specifier: link:../../
+    version: link:../..
+
+devDependencies:
   '@playwright/test':
     specifier: ^1.34.3
     version: 1.34.3

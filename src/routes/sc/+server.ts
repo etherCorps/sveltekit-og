@@ -1,10 +1,11 @@
 import type {RequestHandler} from "@sveltejs/kit";
-import {componentToImageResponse} from "$lib";
+import {ImageResponse} from "$lib/api.js";
 import OG from "./OG.svelte";
 
 export const GET: RequestHandler = async () => {
-    return await componentToImageResponse(
-        OG,
+    return new ImageResponse(
+        OG as any,
+        {},
         { text: 'Ready to dive in?', spanText: 'Start your free trial today.' }
     );
 };

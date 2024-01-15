@@ -1,1 +1,2 @@
-export {componentToImageResponse, ImageResponse, type ImageResponseOptions} from "./api.js"
+export {ImageResponse} from "./api.js"
+export type {ImageResponseOptions} from "./types.js"
