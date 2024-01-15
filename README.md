@@ -3,20 +3,12 @@
 Dynamically generate Open Graph images from an HTML+CSS template or Svelte component using fast and efficient conversion from HTML > SVG > PNG. Based on [Satori](https://github.com/vercel/satori#documentation). No headless browser required.
 
 ## Disclaimer
-
-This `documentation`  is currently `unmaintained` , as the `development` focus is `compatibility` with cloudflare, vercel and vercel edge. 
-I won't suggest anyone to use this library in `production` till  `January 1, 2024`. 
+This project doesn't support edge services like vercel edge and cloudflare workers.
 
 ## Installation
 
 ```bash
 pnpm install -D @ethercorps/sveltekit-og
-```
-
-> Using with Cloudflare Pages or Workers then you have to provide `url` polyfill by just installing it as `devDependency`.
-
-```bash
-pnpm i -D url
 ```
 
 ## Usage
@@ -89,15 +81,15 @@ By default, `@ethercorps/sveltekit-og` includes only 'Noto Sans' font. If you ne
 
 ## Examples
 
-- `ImageResponse` · [_source_](/src/routes/new/+server.ts) · [_demo_](https://sveltekit-og-five.vercel.app/new)
-- `componentToImageResponse` · [_source_](/src/routes/component-og/) · [_demo_](https://sveltekit-og-five.vercel.app/component-og)
+- `ImageResponse` · [_source_](/src/routes/+server.ts) · [_demo_](https://sveltekit-og-five.vercel.app)
+- `Component Rendering` · [_source_](/src/routes/sc/+server.ts) · [_demo_](https://sveltekit-og-five.vercel.app/sc)
 
 ## API Reference
 
-The package exposes an `ImageResponse` and `componentToImageResponse` constructors, with the following options available:
+The package exposes an `ImageResponse` constructors, with the following options available:
 
 ```typescript
-import {ImageResponse, componentToImageResponse} from '@ethercorps/sveltekit-og'
+import {ImageResponse} from '@ethercorps/sveltekit-og'
 import {SvelteComponent} from "svelte";
 
 // ...
@@ -120,31 +112,15 @@ ImageResponse(
       status ? : number = 200
       statusText ? : string
       headers ? : Record<string, string>
-    })
-
-componentToImageResponse(
-    component : typeof SvelteComponent,
-    props : {}, // All export let example inside prop dictionary
-    options : {
-      width ? : number = 1200
-      height ? : number = 630
-      fonts ? : {
-          name: string,
-          data: ArrayBuffer,
-          weight: number,
-          style: 'normal' | 'italic'
-      }[]
-      debug ? : boolean = false
-      graphemeImages ? : Record<string, string>;
-      loadAdditionalAsset ? : (languageCode: string, segment: string) => Promise<SatoriOptions["fonts"] | string | undefined>;
-      // Options that will be passed to the HTTP response
-      status ? : number = 200
-      statusText ? : string
-      headers ? : Record<string, string>
-    })
+    } {props})
 ```
 
 ## Changelog
+
+### v3.0.0 (Breaking Changes)
+
+> Just install @ethercorps/sveltekit-og
+> No wasm as of now, only support for nodejs based runtime.
 
 ### v1.2.3 Update (Breaking Changes)
 
@@ -182,7 +158,8 @@ This project will not be possible without the following projects:
 
 - [Satori & @vercel/og](https://github.com/vercel/satori)
 - [Noto by Google Fonts](https://fonts.google.com/noto)
-- [svg2png-wasm](https://github.com/ssssota/svg2png-wasm)
+
+[//]: # (- [svg2png-wasm]&#40;https://github.com/ssssota/svg2png-wasm&#41;)
 
 ## Authors
 
