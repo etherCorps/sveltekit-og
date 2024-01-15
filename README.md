@@ -8,7 +8,7 @@ This project doesn't support edge services like vercel edge and cloudflare worke
 ## Installation
 
 ```bash
-pnpm install -D @ethercorps/sveltekit-og
+pnpm install @ethercorps/sveltekit-og
 ```
 
 ## Usage
