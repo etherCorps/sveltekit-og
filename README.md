@@ -43,7 +43,7 @@ const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-4
 const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
 export const GET: RequestHandler = async () => {
-  return await ImageResponse(template, {
+  return await new ImageResponse(template, {
     height: 630,
     width: 1200,
     fonts: [
