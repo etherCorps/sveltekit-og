@@ -35,5 +35,5 @@ export const GET: RequestHandler = async ({fetch}) => {
 				weight: 400
 			}
 		]
-	});
+	}, {props: {}});
 };

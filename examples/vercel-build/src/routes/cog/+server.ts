@@ -20,6 +20,6 @@ export const GET: RequestHandler = async ({fetch}) => {
 				}
 			]
 		},
-		{ text: 'Ready to dive in?', spanText: 'Start your free trial today.' }
+		{props: { text: 'Ready to dive in?', spanText: 'Start your free trial today.' }}
 	);
 };
