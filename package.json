@@ -1,6 +1,6 @@
 {
 	"name": "@ethercorps/sveltekit-og",
-	"version": "3.0.0",
+	"version": "4.0.0-next.1",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
@@ -26,12 +26,13 @@
 		"!dist/**/*.spec.*"
 	],
 	"peerDependencies": {
-		"svelte": "^4.0.0"
+		"svelte": "^5.0.0"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^2.1.1",
-		"@sveltejs/kit": "^1.30.3",
+		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/package": "^2.2.5",
+		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
 		"@typescript-eslint/parser": "^5.62.0",
 		"css-tree": "^2.3.1",
@@ -41,18 +42,18 @@
 		"prettier": "^2.8.8",
 		"prettier-plugin-svelte": "^2.10.1",
 		"publint": "^0.1.16",
-		"svelte": "^4.2.8",
+		"svelte": "^5.0.0-next.153",
 		"svelte-check": "^3.6.3",
 		"tslib": "^2.6.2",
 		"typescript": "^5.3.3",
-		"vite": "^4.5.1",
-		"vitest": "^0.34.6"
+		"vite": "^5.0.0",
+		"vitest": "^1.0.0"
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"type": "module",
 	"dependencies": {
-		"@ethercorps/svelte-h2j": "^0.1.0",
+		"@ethercorps/svelte-h2j": "5.0.0-next.2",
 		"@resvg/resvg-js": "^2.6.0",
 		"satori": "^0.10.11"
 	}

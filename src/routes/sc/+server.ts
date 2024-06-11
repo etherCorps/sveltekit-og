@@ -6,6 +6,9 @@ export const GET: RequestHandler = async () => {
     return new ImageResponse(
         OG as any,
         {},
-        { text: 'Ready to dive in?', spanText: 'Start your free trial today.' }
+        { props: {
+                text: 'Ready to dive in?', spanText: 'Start your free trial today.'
+            }
+        }
     );
 };

@@ -15,3 +15,8 @@ export interface ImageResponseOptions {
     // Format
     format?: 'svg' | 'png'; // Defaults to 'png'
 }
+
+export type ComponentOptions = {
+    props?: Record<string, any>;
+    style?: string;
+};
