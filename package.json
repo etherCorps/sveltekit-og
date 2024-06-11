@@ -1,6 +1,6 @@
 {
 	"name": "@ethercorps/sveltekit-og",
-	"version": "4.0.0-next.1",
+	"version": "3.0.0-next.17",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
@@ -26,35 +26,39 @@
 		"!dist/**/*.spec.*"
 	],
 	"peerDependencies": {
-		"svelte": "^5.0.0"
+		"svelte": "^4.0.0"
 	},
-	"devDependencies": {
-		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/kit": "^2.0.0",
-		"@sveltejs/package": "^2.2.5",
-		"@sveltejs/vite-plugin-svelte": "^3.0.0",
-		"@typescript-eslint/eslint-plugin": "^5.62.0",
-		"@typescript-eslint/parser": "^5.62.0",
-		"css-tree": "^2.3.1",
-		"eslint": "^8.56.0",
-		"eslint-config-prettier": "^8.10.0",
-		"eslint-plugin-svelte": "^2.35.1",
-		"prettier": "^2.8.8",
-		"prettier-plugin-svelte": "^2.10.1",
-		"publint": "^0.1.16",
-		"svelte": "^5.0.0-next.153",
-		"svelte-check": "^3.6.3",
-		"tslib": "^2.6.2",
-		"typescript": "^5.3.3",
-		"vite": "^5.0.0",
-		"vitest": "^1.0.0"
-	},
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^3.3.1",
+    "@sveltejs/adapter-vercel": "^5.7.2",
+    "@sveltejs/kit": "^2.21.2",
+    "@sveltejs/package": "^2.3.11",
+    "@sveltejs/vite-plugin-svelte": "^4.0.4",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "css-tree": "^2.3.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-svelte": "^2.46.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-svelte": "^3.4.0",
+    "publint": "^0.1.16",
+    "rollup-plugin-visualizer": "^5.14.0",
+    "satori-html": "0.3.2",
+    "svelte": "^5.33.14",
+    "svelte-check": "^4.2.1",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.19",
+    "vite-plugin-wasm": "^3.4.1",
+    "vitest": "^1.6.1"
+  },
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"type": "module",
 	"dependencies": {
-		"@ethercorps/svelte-h2j": "5.0.0-next.2",
-		"@resvg/resvg-js": "^2.6.0",
-		"satori": "^0.10.11"
+		"@resvg/resvg-js": "^2.6.2",
+		"satori": "^0.10.11",
+		"std-env": "^3.7.0"
 	}
 }
