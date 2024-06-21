@@ -1,6 +1,6 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
-import { loadGoogleFont } from './font.js';
+import { loadGoogleFont } from './external/font.js';
 import type { ImageResponseOptions } from './types.js';
 import {toReactElement, svelteComponentToJsx} from "@ethercorps/svelte-h2j"
 import type {SvelteComponent} from "svelte";
