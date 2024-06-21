@@ -58,7 +58,11 @@
 	"type": "module",
 	"dependencies": {
 		"@resvg/resvg-js": "^2.6.2",
+		"@resvg/resvg-wasm": "^2.6.2",
+		"mlly": "^1.7.1",
 		"satori": "^0.10.11",
-		"std-env": "^3.7.0"
+		"std-env": "^3.7.0",
+		"unwasm": "^0.3.9",
+		"yoga-wasm-web": "^0.3.3"
 	}
 }

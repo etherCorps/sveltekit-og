@@ -3,7 +3,7 @@ import type { SatoriOptions } from 'satori/wasm';
 export interface ImageResponseOptions {
     width?: number;
     height?: number;
-    // emoji?: 'twemoji' | 'blobmoji' | 'noto' | 'openmoji' = 'twemoji',
+    emoji?: 'twemoji' | 'blobmoji' | 'noto' | 'openmoji' | 'fluent' | fluentFlat,
     fonts?: SatoriOptions['fonts'];
     debug?: boolean;
 
@@ -14,28 +14,15 @@ export interface ImageResponseOptions {
 
     // Format
     format?: 'svg' | 'png'; // Defaults to 'png'
+
+    // Debug
+    debug?: boolean
 }
 
-export interface RuntimeCompatibilitySchema {
-    ['css-inline']: 'node' | 'wasm' | 'wasm-fs' | false
-    resvg: 'node' | 'wasm' | 'wasm-fs' | false
-    satori: 'node' | 'wasm' | 'wasm-fs' | false
-    wasm?: WasmPluginOptions
+export interface RuntimeCompatibility {
+    resvg: 'node' | 'wasm' | 'wasm-fs'
+    satori: 'node' | 'wasm' | 'wasm-fs'
 }
 
-interface WasmPluginOptions {
-    /**
-     * Directly import the `.wasm` files instead of bundling as base64 string.
-     *
-     * @default false
-     */
-    esmImport?: boolean;
-    /**
-     * Avoid using top level await and always use a proxy.
-     *
-     * Useful for compatibility with environments that don't support top level await.
-     *
-     * @default false
-     */
-    lazy?: boolean;
-}
+
+export type SupportedRuntimes = 'node' | 'stackblitz' | 'codesandbox' | 'aws-lambda' | 'netlify' | 'netlify-edge' | 'vercel' | 'vercel-edge' | 'cloudflare-pages' | 'cloudflare-workers'
