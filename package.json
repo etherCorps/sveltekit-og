@@ -56,10 +56,13 @@
 	"type": "module",
 	"dependencies": {
 		"@ethercorps/svelte-h2j": "^4.0.0",
-		"@resvg/resvg-wasm": "^2.6.2",
 		"satori": "^0.10.13",
 		"std-env": "^3.7.0",
 		"unwasm": "^0.3.9",
 		"yoga-wasm-web": "^0.3.3"
+	},
+	"optionalDependencies": {
+		"@resvg/resvg-js": "^2.6.2",
+		"@resvg/resvg-wasm": "^2.6.2"
 	}
 }
