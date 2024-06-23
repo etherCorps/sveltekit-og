@@ -1,7 +1,7 @@
 import type {SvelteComponent} from "svelte";
 
 import type { SatoriOptions } from 'satori';
-import type { ResvgRenderOptions } from '@resvg/resvg-js';
+import type { ResvgRenderOptions } from '@resvg/resvg-wasm';
 import { svelteComponentToJsx, toReactElement } from '@ethercorps/svelte-h2j';
 
 import { loadDynamicAsset } from './emoji.js';
