@@ -1,8 +1,8 @@
 import type { RuntimeCompatibility, SupportedRuntimes } from '../types.js';
 
 const NodeRuntime: RuntimeCompatibility = {
-	'resvg': 'node',
-	'satori': 'node',
+	'resvg': 'wasm',
+	'satori': 'wasm',
 }
 
 const WorkersRuntime: RuntimeCompatibility = {

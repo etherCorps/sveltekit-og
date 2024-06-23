@@ -2,9 +2,18 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
 import {vitePluginSvelteH2J} from "@ethercorps/svelte-h2j/vite";
 import { rollup as wasmPlugin } from "unwasm/plugin"
+import wasm from "vite-plugin-wasm";
 
 export default defineConfig({
-	plugins: [vitePluginSvelteH2J(), sveltekit()],
+	plugins: [wasm(), vitePluginSvelteH2J(), sveltekit()],
+	worker: {
+		plugins: [
+			wasm()
+		]
+	},
+	// optimizeDeps: {
+	// 	exclude: ["@resvg/resvg-wasm", "yoga-wasm-web"],
+	// },
 	build: {
 		rollupOptions: {
 			plugins: [wasmPlugin({
