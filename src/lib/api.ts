@@ -1,13 +1,13 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { loadGoogleFont } from './external/font.js';
-import type { ComponentOptions, ImageResponseOptions } from './types.js';
+import type { ImageResponseOptions } from './types.js';
 import {toReactElement, svelteComponentToJsx} from "@ethercorps/svelte-h2j"
-import {SvelteComponent} from "svelte";
+import type {SvelteComponent} from "svelte";
 
-export const og = async ( element: string | typeof SvelteComponent, options: ImageResponseOptions, componentOptions: ComponentOptions) => {
+export const og = async ( element: string | SvelteComponent, options: ImageResponseOptions, props = {}) => {
 
-    const reactElement = typeof element === 'string' ? toReactElement(element) : svelteComponentToJsx(element, componentOptions);
+    const reactElement = typeof element === 'string' ? toReactElement(element) : svelteComponentToJsx(element, props);
 
     // render the React element-like object into an SVG
     const svg = await satori(reactElement, {
@@ -50,12 +50,12 @@ export const og = async ( element: string | typeof SvelteComponent, options: Ima
 };
 
 export class ImageResponse extends Response {
-    constructor(element: string | typeof SvelteComponent, options: ImageResponseOptions = {} , { props = {}, style='' }: ComponentOptions) {
+    constructor(element: string | SvelteComponent, options: ImageResponseOptions = {} , props= {}) {
         super();
 
         const body = new ReadableStream({
             async start(controller) {
-                const buffer = await og( element, options, { props, style });
+                const buffer = await og( element, options, props);
                 controller.enqueue(buffer);
                 controller.close();
             }

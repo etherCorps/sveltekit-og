@@ -7,7 +7,7 @@ export function getRuntime(): SupportedRuntimes {
 	if (isDevelopment) {
 		return 'node';
 	}
-	const parsedProvider = provider.replace('_', '-')
+	const parsedProvider = provider.replace('_', '-');
 	const compatibility = runtimeCompatibility[env['OG_RUNTIME'] || parsedProvider];
 	if (compatibility) return parsedProvider;
 
@@ -22,9 +22,9 @@ export function getRuntime(): SupportedRuntimes {
 			return 'vercel-edge'
 		case 'workerd':
 			return 'cloudflare-workers'
-	}
+	};
 }
 
 export function getRuntimeCompatibility(runtime: SupportedRuntimes = getRuntime()): RuntimeCompatibility {
-	return runtimeCompatibility[runtime]
+	return runtimeCompatibility[runtime];
 }
