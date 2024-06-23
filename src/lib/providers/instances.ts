@@ -12,13 +12,13 @@ const compatibility = getRuntimeCompatibility()
 
 
 export async function useResvg() {
-	resvgInstance.instance = resvgInstance.instance || await import(/* @vite-ignore */`./resvg/${compatibility.resvg}.ts`).then(m => m.default)
+	resvgInstance.instance = resvgInstance.instance || await import(/* @vite-ignore */`./resvg/${compatibility.resvg}`).then(m => m.default)
 	await resvgInstance.instance!.initWasmPromise
 	return resvgInstance.instance!.Resvg
 }
 
 export async function useSatori(biding: string) {
-	satoriInstance.instance = satoriInstance.instance || await import(/* @vite-ignore */`./satori/${compatibility.satori}.ts`).then(m => m.default)
+	satoriInstance.instance = satoriInstance.instance || await import(/* @vite-ignore */`./satori/${compatibility.satori}`).then(m => m.default)
 	await satoriInstance.instance!.initWasmPromise
 	return satoriInstance.instance!.satori
 }
