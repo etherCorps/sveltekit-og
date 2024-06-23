@@ -30,6 +30,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/adapter-vercel": "^5.3.2",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/package": "^2.2.5",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
