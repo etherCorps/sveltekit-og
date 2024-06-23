@@ -6,7 +6,7 @@ const wasm = readWasmFile('yoga-wasm-web/dist/yoga.wasm')
   .then(async yoga => await initYoga(yoga))
 
 export default {
-  initWasmPromise: new Promise<void>((resolve) => {
+  initWasmPromise: ((resolve) => {
     wasm.then((yoga) => {
       init(yoga)
       resolve()
