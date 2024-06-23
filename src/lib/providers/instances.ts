@@ -10,10 +10,10 @@ const satoriInstance: { instance?: { initWasmPromise: Promise<void>, satori: typ
 
 export async function useResvg() {
 
-	const isEdge = isEdgeLight || isWorkerd
+	const moduleImport = isEdgeLight || isWorkerd ? import(`./resvg/wasm.js`) : import('./resvg/node.js')
 
 	try {
-		resvgInstance.instance = resvgInstance.instance || await import(`./resvg/${isEdge ? 'wasm' : 'node'}.js`).then(m => m.default)
+		resvgInstance.instance = resvgInstance.instance || await moduleImport.then(m => m.default)
 		await resvgInstance.instance!.initWasmPromise
 	} catch (e) {
 		console.log(e);
