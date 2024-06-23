@@ -61,7 +61,6 @@ export type ResponseImageOptions = {
 
 /**
  * Image response options type exposed to devs for ImageResponse Instance
- * TODO: Expose to everyone
  * */
 export type ImageResponseOptions = ImageOptions & ResponseImageOptions;
 

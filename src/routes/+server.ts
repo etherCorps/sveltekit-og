@@ -43,6 +43,7 @@ export const GET: RequestHandler = async () => {
 </div>
     `;
     return new ImageResponse(html, {
+        debug: true,
         height: 400,
         width: 800
     })
