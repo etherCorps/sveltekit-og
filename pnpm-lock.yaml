@@ -11,6 +11,12 @@ importers:
       '@ethercorps/svelte-h2j':
         specifier: ^4.0.0
         version: 4.0.0(svelte@4.2.18)
+      '@resvg/resvg-js':
+        specifier: ^2.6.2
+        version: 2.6.2
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
       satori:
         specifier: ^0.10.13
         version: 0.10.13
@@ -23,13 +29,6 @@ importers:
       yoga-wasm-web:
         specifier: ^0.3.3
         version: 0.3.3
-    optionalDependencies:
-      '@resvg/resvg-js':
-        specifier: ^2.6.2
-        version: 2.6.2
-      '@resvg/resvg-wasm':
-        specifier: ^2.6.2
-        version: 2.6.2
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: ^3.2.2
@@ -2318,10 +2317,8 @@ snapshots:
       '@resvg/resvg-js-win32-arm64-msvc': 2.6.2
       '@resvg/resvg-js-win32-ia32-msvc': 2.6.2
       '@resvg/resvg-js-win32-x64-msvc': 2.6.2
-    optional: true
 
-  '@resvg/resvg-wasm@2.6.2':
-    optional: true
+  '@resvg/resvg-wasm@2.6.2': {}
 
   '@rollup/pluginutils@4.2.1':
     dependencies:

@@ -8,11 +8,11 @@ export class ImageResponse extends Response {
 	constructor(element: string | SvelteComponent, options?: ImageResponseOptions, props?: Record<string, any>) {
 
 		const extended_options = Object.assign({ ...DEFAULT_OPTIONS }, options)
-		const create_image_funtion = extended_options.format === 'png' ? createPng : createSvg;
+		const create_image_function = extended_options.format === 'png' ? createPng : createSvg;
 		const body = new ReadableStream({
 
 			async start(controller) {
-				const buffer = await create_image_funtion(element, extended_options, { props })
+				const buffer = await create_image_function(element, extended_options, { props })
 				controller.enqueue(buffer);
 				controller.close();
 			}

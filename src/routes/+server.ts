@@ -17,6 +17,7 @@ export const GET: RequestHandler = async () => {
   text-align: center;
 ">
   <div style="
+  display: flex;
     background-image: linear-gradient(90deg, rgb(0, 124, 240), rgb(0, 223, 216));
     background-clip: text;
     -webkit-background-clip: text;

@@ -7,7 +7,9 @@ import wasm from "vite-plugin-wasm";
 export default defineConfig({
 	plugins: [wasm(), vitePluginSvelteH2J(), sveltekit()],
 	optimizeDeps: {
-		exclude: ["@resvg/resvg-wasm", "yoga-wasm-web"],
+		exclude: [
+			"@resvg/resvg-wasm"
+		]
 	},
 	build: {
 		rollupOptions: {

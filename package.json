@@ -1,6 +1,6 @@
 {
 	"name": "@ethercorps/sveltekit-og",
-	"version": "3.0.0-next.11",
+	"version": "3.0.0-next.13",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
@@ -26,9 +26,6 @@
 		"!dist/**/*.test.*",
 		"!dist/**/*.spec.*"
 	],
-	"peerDependencies": {
-		"svelte": "^4.0.0"
-	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.2.2",
 		"@sveltejs/adapter-vercel": "^5.3.2",
@@ -62,8 +59,19 @@
 		"unwasm": "^0.3.9",
 		"yoga-wasm-web": "^0.3.3"
 	},
-	"optionalDependencies": {
+	"peerDependencies": {
+		"svelte": "^4.0.0",
+		"unwasm": "^0.3.9",
+		"vite-plugin-wasm": "^3.3.0",
 		"@resvg/resvg-js": "^2.6.2",
 		"@resvg/resvg-wasm": "^2.6.2"
+	},
+	"peerDependenciesMeta": {
+		"@resvg/resvg-js": {
+			"optional": true
+		},
+		"@resvg/resvg-wasm": {
+			"optional": true
+		}
 	}
 }
