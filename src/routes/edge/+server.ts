@@ -4,7 +4,7 @@ import type { Config } from '@sveltejs/adapter-vercel';
 
 export const config: Config = {
 	runtime: 'edge',
-	external: ['@resvg/resvg-wasm']
+	split: true
 };
 
 export const GET: RequestHandler = async () => {

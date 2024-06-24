@@ -13,7 +13,7 @@ import type { ComponentOptions, ImageOptions, VNode } from '../types.js';
 // TODO: Export VNode Type from svelte-h2j
 // TODO: Make svelte-h2j functions async in new v5 support
 
-export async function createVNode(element: string | SvelteComponent, componentOptions?: ComponentOptions): VNode {
+export async function createVNode(element: string | SvelteComponent, componentOptions?: ComponentOptions): Promise<VNode> {
 	return typeof element === 'string' ? toReactElement(element) : svelteComponentToJsx(element, componentOptions?.props)
 }
 
