@@ -68,7 +68,7 @@ export type ImageResponseOptions = ImageOptions & ResponseImageOptions;
  * Svelte Component props to render the component which dynamic content
  * */
 export type ComponentOptions =  {
-    props: Record<string, any>
+    props?: Record<string, any>
 };
 
 /**
@@ -81,27 +81,4 @@ export interface VNode {
         children?: string | VNode | VNode[];
         [prop: string]: any;
     };
-};
-
-
-/**
- * Supported runtimes by sveltekit-og
- * TODO: Test all the runtimes.
- * */
-export type SupportedRuntimes = 'node' | 'stackblitz' | 'codesandbox' | 'aws-lambda' | 'netlify' | 'netlify-edge' | 'vercel' | 'vercel-edge' | 'cloudflare-pages' | 'cloudflare-workers';
-
-/**
- * Files support on the basis of runtime
- * node: Use nodejs based implementation of the provider
- * wasm: Use wasm based implementation of the provider
- * wasm-fs: Mainly provided for web containers which supports `fs`.
- * */
-type SupportedImplementations = 'node' | 'wasm' | 'wasm-fs';
-
-/**
- * Provider and There supported Implementations
- * */
-export interface RuntimeCompatibility {
-    resvg: SupportedImplementations;
-    satori: SupportedImplementations;
-};
+}

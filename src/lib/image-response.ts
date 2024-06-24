@@ -2,7 +2,6 @@ import type { SvelteComponent } from 'svelte';
 import type { ImageResponseOptions } from './types.js';
 import { DEFAULT_OPTIONS, DEFAULT_STATUS_CODE, DEFAULT_STATUS_TEXT } from './helpers/defaults.js';
 import { createPng, createSvg } from './helpers/create.js';
-import { isDevelopment } from 'std-env';
 
 export class ImageResponse extends Response {
 	constructor(element: string | SvelteComponent, options?: ImageResponseOptions, props?: Record<string, any>) {
@@ -22,7 +21,7 @@ export class ImageResponse extends Response {
 		super(body, {
 			headers: {
 				'Content-Type': `image/${extended_options.format}`,
-				'Cache-Control': (extended_options.debug || isDevelopment)
+				'Cache-Control': extended_options.debug
 					? 'no-cache, no-store'
 					: 'public, immutable, no-transform, max-age=31536000',
 				...extended_options.headers
