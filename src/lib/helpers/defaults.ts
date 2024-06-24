@@ -2,7 +2,7 @@ import type { SatoriOptions } from 'satori';
 
 import type { ImageOptions } from '../types.js';
 
-export async function default_fonts(): SatoriOptions['fonts'] {
+export async function default_fonts(): Promise<SatoriOptions['fonts']> {
 	const [noto_sans_regular_font_resp, noto_sans_bold_font_reps] = await Promise.all([
 		fetch('https://cdn-sveltekit-og.ethercorps.io/NotoSans-Regular.ttf'), fetch('https://cdn-sveltekit-og.ethercorps.io/NotoSans-Bold.ttf')
 	])
@@ -16,13 +16,13 @@ export async function default_fonts(): SatoriOptions['fonts'] {
 
 	return [
 		{
-			data: noto_sans_regular_font,
+			data: new Uint8Array(noto_sans_regular_font),
 			name: 'Inter',
 			weight: 400,
 			style: 'normal'
 		},
 		{
-			data: noto_sans_bold_font,
+			data: new Uint8Array(noto_sans_bold_font),
 			name: 'Inter',
 			weight: 700,
 			style: 'normal'
