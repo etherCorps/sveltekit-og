@@ -1,51 +1,19 @@
-import type {RequestHandler} from "@sveltejs/kit";
+import { json, type RequestHandler } from '@sveltejs/kit';
 import {ImageResponse} from "$lib";
+
 
 export const GET: RequestHandler = async () => {
     const html = `
-    <div style="
-  display: flex;
-  height: 100%;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  background-image: linear-gradient(to bottom, #dbf4ff, #fff1f1);
-  font-size: 60px;
-  letter-spacing: -2px;
-  font-weight: 700;
-  text-align: center;
-">
-  <div style="
-  display: flex;
-    background-image: linear-gradient(90deg, rgb(0, 124, 240), rgb(0, 223, 216));
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-  ">
-    HTML
+<div tw="h-full w-full flex flex-col items-center justify-center bg-white text-sm font-bold">
+  <img tw="w-40 h-40" src="https://www.ethercorps.io/logo_transparent.png"/>
+  <div style="margin-top: 20px; color: gray">Hello, OGs</div>
   </div>
-  <div style="
-    background-image: linear-gradient(90deg, rgb(121, 40, 202), rgb(255, 0, 128));
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-  ">
-    CSS
-  </div>
-  <div style="
-    background-image: linear-gradient(90deg, rgb(255, 77, 77), rgb(249, 203, 40));
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-  ">
-    IMAGE
-  </div>
-</div>
-    `;
+`.replaceAll('\n', '').trim()
+
     return new ImageResponse(html, {
+        format: 'png',
         debug: false,
         height: 300,
-        width: 600
+        width: 600,
     })
 };

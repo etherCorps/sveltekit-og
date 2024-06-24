@@ -20,7 +20,7 @@ export class ImageResponse extends Response {
 
 		super(body, {
 			headers: {
-				'Content-Type': `image/${extended_options.format}`,
+				'Content-Type': `image/${extended_options.format}${extended_options.format === 'svg' ? '+xml' : ''}`,
 				'Cache-Control': extended_options.debug
 					? 'no-cache, no-store'
 					: 'public, immutable, no-transform, max-age=31536000',
