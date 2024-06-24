@@ -9,10 +9,8 @@ const resvgInstance: { instance?: { initWasmPromise: Promise<void>, Resvg: typeo
 const satoriInstance: { instance?: { initWasmPromise: Promise<void>, satori: typeof _satori } } = { instance: undefined }
 
 export async function useResvg() {
-	const moduleImport = isEdgeLight || isWorkerd ? import(`./resvg/wasm.js`) : import('./resvg/node.js')
-	console.log(moduleImport, 'hjhnj');
+	const moduleImport = isEdgeLight || isWorkerd ? import(`./resvg/edge.js`) : import('./resvg/node.js')
 	resvgInstance.instance = resvgInstance.instance || await moduleImport.then(m => m.default)
-	console.log(resvgInstance, 'instance');
 	await resvgInstance.instance!.initWasmPromise
 	return resvgInstance.instance!.Resvg
 }
