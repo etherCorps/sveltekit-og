@@ -17,6 +17,7 @@ export default defineConfig({
 				esmImport: true,
 				lazy: true
 			})],
+			external: [/.+\.wasm$/i, /.+\.ttf$/i, /.+\.woff$/i]
 		}
 	},
 	test: {

@@ -16,13 +16,13 @@ export async function default_fonts(): Promise<SatoriOptions['fonts']> {
 
 	return [
 		{
-			data: new Uint8Array(noto_sans_regular_font),
+			data: noto_sans_regular_font,
 			name: 'Inter',
 			weight: 400,
 			style: 'normal'
 		},
 		{
-			data: new Uint8Array(noto_sans_bold_font),
+			data: noto_sans_bold_font,
 			name: 'Inter',
 			weight: 700,
 			style: 'normal'
