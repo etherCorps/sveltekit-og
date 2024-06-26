@@ -4,7 +4,9 @@ import adapter from '@sveltejs/adapter-vercel';
 const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
-	preprocess: adapter(),
+	preprocess: adapter({
+		external:['@ethercorps/svelte-h2j']
+	}),
 
 	kit: {
 		// adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.

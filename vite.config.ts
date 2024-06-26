@@ -6,18 +6,21 @@ import wasm from "vite-plugin-wasm";
 
 export default defineConfig({
 	plugins: [wasm(), vitePluginSvelteH2J(), sveltekit()],
-	// optimizeDeps: {
-	// 	exclude: [
-	// 		"@resvg/resvg-wasm"
-	// 	]
-	// },
+	optimizeDeps: {
+		exclude: [
+			// "@ethercorps/svelte-h2j"
+		]
+	},
+	esbuild: {
+		// exclude: ['@ethercorps/svelte-h2j']
+	},
 	build: {
 		rollupOptions: {
 			plugins: [wasmPlugin({
 				esmImport: true,
 				lazy: true
 			})],
-			external: [/.+\.wasm$/i, /.+\.ttf$/i, /.+\.woff$/i]
+			external: [/.+\.wasm$/i, /.+\.ttf$/i, /.+\.woff$/i, '@ethercorps/svelte-h2j']
 		}
 	},
 	test: {
