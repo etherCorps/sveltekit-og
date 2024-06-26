@@ -10,6 +10,7 @@ const config = {
 				esmImport: true,
 				lazy: true
 			})],
+			external: ['@ethercorps/svelte-h2j']
 		}
 	}
 };
