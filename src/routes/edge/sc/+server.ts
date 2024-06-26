@@ -1,11 +1,11 @@
 import type {RequestHandler} from "@sveltejs/kit";
-import {ImageResponse} from "$lib/image-response.js";
+import {ImageResponse} from "$lib/index.js";
 import OG from "../../(components)/OG.svelte";
 import type { Config } from '@sveltejs/adapter-vercel';
 
 export const config: Config = {
 	runtime: 'edge',
-	split: true
+	split: true,
 };
 
 

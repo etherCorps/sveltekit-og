@@ -1,5 +1,5 @@
 import type {RequestHandler} from "@sveltejs/kit";
-import {ImageResponse} from "$lib/image-response.js";
+import {ImageResponse} from "$lib/index.js";
 import OG from "../(components)/OG.svelte";
 
 export const GET: RequestHandler = async () => {

@@ -1,6 +1,6 @@
 {
 	"name": "@ethercorps/sveltekit-og",
-	"version": "3.0.0-next.14",
+	"version": "3.0.0-next.15",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
@@ -41,26 +41,27 @@
 		"prettier": "^2.8.8",
 		"prettier-plugin-svelte": "^2.10.1",
 		"publint": "^0.1.16",
+		"rollup-plugin-visualizer": "^5.12.0",
 		"svelte": "^4.2.18",
 		"svelte-check": "^3.8.1",
 		"tslib": "^2.6.3",
 		"typescript": "^5.5.2",
 		"vite": "^5.3.1",
 		"vite-plugin-wasm": "^3.3.0",
-		"vitest": "^1.6.0"
+		"vitest": "^1.6.0",
+		"@ethercorps/svelte-h2j": "^4.0.0"
 	},
+	"main": "./dist/index.js",
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"type": "module",
 	"dependencies": {
-		"@ethercorps/svelte-h2j": "^4.0.0",
+		"@resvg/resvg-wasm": "^2.6.2",
 		"satori": "^0.10.13",
 		"std-env": "^3.7.0",
-		"unwasm": "^0.3.9",
-		"@resvg/resvg-wasm": "^2.6.2"
+		"unwasm": "^0.3.9"
 	},
 	"peerDependencies": {
-		"svelte": "^4.0.0",
 		"unwasm": "^0.3.9",
 		"vite-plugin-wasm": "^3.3.0"
 	}
