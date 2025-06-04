@@ -1,23 +1,25 @@
-import type {SvelteComponent} from "svelte";
+import type { Component } from 'svelte';
 
 import type { SatoriOptions } from 'satori';
 import type { ResvgRenderOptions } from '@resvg/resvg-wasm';
-import { svelteComponentToJsx, toReactElement } from '@ethercorps/svelte-h2j';
+import { html } from 'satori-html';
 
 import { loadDynamicAsset } from './emoji.js';
 import { default_fonts, DEFAULT_WIDTH } from '../helpers/defaults.js';
 import { useResvg, useSatori } from '../providers/instances.js';
 import type { ComponentOptions, ImageOptions, VNode } from '../types.js';
+import { render } from 'svelte/server';
 
-
-// TODO: Export VNode Type from svelte-h2j
-// TODO: Make svelte-h2j functions async in new v5 support
-
-export async function createVNode(element: string | SvelteComponent, componentOptions?: ComponentOptions): Promise<VNode> {
-	return typeof element === 'string' ? toReactElement(element) : svelteComponentToJsx(element, componentOptions?.props)
+function svelteComponentToJsx(component: Component<any>, props: Record<string, any> = {}) {
+	const { body, head} = render(component, { props });
+	return html(body+head)
 }
 
-export async function createSvg(element: string | SvelteComponent, imageOptions: ImageOptions, componentOptions?: ComponentOptions): Promise<string> {
+export async function createVNode(element: string | Component, componentOptions?: ComponentOptions): Promise<VNode> {
+	return typeof element === 'string' ? html(element.replaceAll('\n', '').trim()) : svelteComponentToJsx(element, componentOptions?.props)
+}
+
+export async function createSvg(element: string | Component, imageOptions: ImageOptions, componentOptions?: ComponentOptions): Promise<string> {
 	const [satori, vnodes] = await Promise.all([useSatori(), createVNode(element, componentOptions)]);
 
 	if (!Object.hasOwn(imageOptions, 'fonts')) {
@@ -39,7 +41,7 @@ export async function createSvg(element: string | SvelteComponent, imageOptions:
 	return satori(vnodes,  imageOptions as SatoriOptions)
 }
 
-export async function createPng(element: string | SvelteComponent, imageOptions: ImageOptions, componentOptions?: ComponentOptions) {
+export async function createPng(element: string | Component, imageOptions: ImageOptions, componentOptions?: ComponentOptions) {
 	const svg = await createSvg(element, imageOptions, componentOptions)
 
 	if (imageOptions.debug) {

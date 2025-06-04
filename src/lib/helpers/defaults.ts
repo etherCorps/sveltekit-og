@@ -41,6 +41,6 @@ export const DEFAULT_OPTIONS: ImageOptions = {
 	height: DEFAULT_HEIGHT,
 	width: DEFAULT_WIDTH,
 	debug: false,
-	format: 'png',
+	format: DEFAULT_FORMAT,
 	emoji: 'twemoji'
 }

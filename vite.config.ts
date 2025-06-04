@@ -1,12 +1,11 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
-import {vitePluginSvelteH2J} from "@ethercorps/svelte-h2j/vite";
 import { rollup as wasmPlugin } from "unwasm/plugin"
 import wasm from "vite-plugin-wasm";
 import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
-	plugins: [wasm(), vitePluginSvelteH2J(), sveltekit(), visualizer({
+	plugins: [wasm(), sveltekit(), visualizer({
 		emitFile: true
 	})],
 	optimizeDeps: {

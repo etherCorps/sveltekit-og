@@ -1,15 +1,20 @@
-<script>
-    /**
+<svelte:options css="injected" />
+<script lang="ts">
+    interface Props {
+        /**
      * @type string
      * */
-    export let text;
-    /**
+        text: any;
+        /**
      * @type string
      * */
-    export let spanText;
+        spanText: any;
+    }
+
+    let { text, spanText }: Props = $props();
 </script>
 
-<div tw="bg-gray-50 flex w-full h-full items-center justify-center">
+<div class="cool-bg" tw="bg-gray-50 flex w-full h-full items-center justify-center">
     <div tw="flex flex-col w-full py-12 px-4 justify-between p-8">
         <h2 tw="flex flex-col text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 text-left">
             <span>{text}</span>
@@ -30,3 +35,9 @@
         </div>
     </div>
 </div>
+
+<style>
+    .cool-bg {
+        background: linear-gradient(135deg, red 0%, #e5e7eb 100%);
+    }
+</style>
