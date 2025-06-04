@@ -7,6 +7,9 @@
   "build": {
     "command": "pnpm run build"
   },
+  "observability": {
+    "enabled": true
+  },
   "compatibility_flags": [
     "nodejs_compat"
   ],
