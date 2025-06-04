@@ -14,6 +14,9 @@ importers:
       satori:
         specifier: ^0.10.14
         version: 0.10.14
+      satori-html:
+        specifier: 0.3.2
+        version: 0.3.2
       std-env:
         specifier: ^3.9.0
         version: 3.9.0
@@ -66,9 +69,6 @@ importers:
       rollup-plugin-visualizer:
         specifier: ^5.14.0
         version: 5.14.0(rollup@4.41.1)
-      satori-html:
-        specifier: 0.3.2
-        version: 0.3.2
       svelte:
         specifier: ^5.33.14
         version: 5.33.14
