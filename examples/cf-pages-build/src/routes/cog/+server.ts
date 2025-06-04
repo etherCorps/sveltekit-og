@@ -9,7 +9,7 @@ export const GET: RequestHandler = async ({fetch}) => {
 	return new ImageResponse(
 		OG,
 		{
-			debug: true,
+			debug: false,
 			height: 250,
 			width: 500,
 			fonts: [
