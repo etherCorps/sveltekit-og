@@ -22,7 +22,7 @@ export default defineConfig({
 				esmImport: true,
 				lazy: true
 			})],
-			external: [/.+\.wasm$/i, /.+\.ttf$/i, /.+\.woff$/i, '@ethercorps/svelte-h2j']
+			external: [/.+\.wasm$/i, /.+\.ttf$/i, /.+\.woff$/i]
 		}
 	},
 	test: {
