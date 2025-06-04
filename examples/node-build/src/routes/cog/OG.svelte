@@ -1,6 +1,5 @@
 <script>
-	export let text;
-	export let spanText;
+	let { text, spanText } = $props();
 </script>
 
 <div tw="bg-gray-50 flex w-full h-full items-center justify-center">
