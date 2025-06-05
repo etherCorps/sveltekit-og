@@ -12,3 +12,4 @@ vite.config.ts.timestamp-*
 .idea
 .vercel
 .netlify
+**/**/.wrangler

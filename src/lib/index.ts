@@ -1,2 +1,2 @@
-export {ImageResponse} from "./api.js"
-export type {ImageResponseOptions, ComponentOptions} from "./types.js"
+export {ImageResponse} from "./image-response.js"
+export type {ImageResponseOptions, VNode} from "./types.js"

@@ -1,5 +1,6 @@
 import { ImageResponse } from '@ethercorps/sveltekit-og';
 import type { RequestHandler } from '@sveltejs/kit';
+import type { Config } from '@sveltejs/adapter-vercel';
 
 const template = `
  <div tw="bg-gray-50 flex w-full h-full items-center justify-center">
