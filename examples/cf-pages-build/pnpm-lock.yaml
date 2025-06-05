@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ethercorps/sveltekit-og':
-        specifier: 3.0.0-next.17
-        version: 3.0.0-next.17(unwasm@0.3.9)(vite-plugin-wasm@3.4.1(vite@6.3.5(@types/node@20.2.5)))
+        specifier: 3.0.0-next.18
+        version: 3.0.0-next.18(unwasm@0.3.9)(vite-plugin-wasm@3.4.1(vite@6.3.5(@types/node@20.2.5)))
     devDependencies:
       '@playwright/test':
         specifier: ^1.34.3
@@ -423,8 +423,8 @@ packages:
     resolution: {integrity: sha512-6SWlXpWU5AvId8Ac7zjzmIOqMOba/JWY8XZ4A7q7Gn1Vlfg/SFFIlrtHXt9nPn4op9ZPAkl91Jao+QQv3r/ukw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@ethercorps/sveltekit-og@3.0.0-next.17':
-    resolution: {integrity: sha512-O96hk/9dIUx70nkp2O09yHXSnYxwBiRpn1GqULEXBkDBZv9trtPZNLIdDXjbD/Jg3xe9xfJqmLpnzmFJr6uYaQ==}
+  '@ethercorps/sveltekit-og@3.0.0-next.18':
+    resolution: {integrity: sha512-unv/APSKHTXt4yIEEA7J4mZa23RlTzk2ggyyni8/pMPSZKnge6mRNYth28GLOQudKyrozW+3ktd+/z4CYJdIuQ==}
     peerDependencies:
       unwasm: ^0.3.9
       vite-plugin-wasm: ^3.3.0
@@ -1309,6 +1309,9 @@ packages:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
     engines: {node: '>=6'}
 
+  satori-html@0.3.2:
+    resolution: {integrity: sha512-wjTh14iqADFKDK80e51/98MplTGfxz2RmIzh0GqShlf4a67+BooLywF17TvJPD6phO0Hxm7Mf1N5LtRYvdkYRA==}
+
   satori@0.10.14:
     resolution: {integrity: sha512-abovcqmwl97WKioxpkfuMeZmndB1TuDFY/R+FymrZyiGP+pMYomvgSzVPnbNMWHHESOPosVHGL352oFbdAnJcA==}
     engines: {node: '>=16'}
@@ -1404,6 +1407,9 @@ packages:
 
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
+
+  ultrahtml@1.6.0:
+    resolution: {integrity: sha512-R9fBn90VTJrqqLDwyMph+HGne8eqY1iPfYhPzZrvKpIfwkWZbcYlfpsb8B9dTvBfpy1/hqAD7Wi8EKfP9e8zdw==}
 
   undici@5.29.0:
     resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
@@ -1756,10 +1762,11 @@ snapshots:
 
   '@eslint/js@8.42.0': {}
 
-  '@ethercorps/sveltekit-og@3.0.0-next.17(unwasm@0.3.9)(vite-plugin-wasm@3.4.1(vite@6.3.5(@types/node@20.2.5)))':
+  '@ethercorps/sveltekit-og@3.0.0-next.18(unwasm@0.3.9)(vite-plugin-wasm@3.4.1(vite@6.3.5(@types/node@20.2.5)))':
     dependencies:
       '@resvg/resvg-wasm': 2.6.2
       satori: 0.10.14
+      satori-html: 0.3.2
       std-env: 3.9.0
       unwasm: 0.3.9
       vite-plugin-wasm: 3.4.1(vite@6.3.5(@types/node@20.2.5))
@@ -2602,6 +2609,10 @@ snapshots:
     dependencies:
       mri: 1.2.0
 
+  satori-html@0.3.2:
+    dependencies:
+      ultrahtml: 1.6.0
+
   satori@0.10.14:
     dependencies:
       '@shuding/opentype.js': 1.4.0-beta.0
@@ -2724,6 +2735,8 @@ snapshots:
   type-fest@0.20.2: {}
 
   ufo@1.6.1: {}
+
+  ultrahtml@1.6.0: {}
 
   undici@5.29.0:
     dependencies:
