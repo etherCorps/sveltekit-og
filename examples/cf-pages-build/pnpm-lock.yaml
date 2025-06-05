@@ -39,6 +39,9 @@ importers:
       svelte:
         specifier: ^5.0.0
         version: 5.33.14
+      unwasm:
+        specifier: ^0.3.9
+        version: 0.3.9
       vite:
         specifier: ^6.3.5
         version: 6.3.5(@types/node@20.2.5)

@@ -6,16 +6,10 @@ import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
 	plugins: [wasm(), sveltekit(), visualizer({
-		emitFile: true
+		emitFile: true,
+		open: true,
+		filename: 'stats.html',
 	})],
-	optimizeDeps: {
-		exclude: [
-			// "@ethercorps/svelte-h2j"
-		]
-	},
-	esbuild: {
-		// exclude: ['@ethercorps/svelte-h2j']
-	},
 	build: {
 		rollupOptions: {
 			plugins: [wasmPlugin({

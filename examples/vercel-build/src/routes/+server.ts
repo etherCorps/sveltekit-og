@@ -21,10 +21,6 @@ const template = `
   </div>
 `;
 
-export const config: Config = {
-	runtime: 'edge',
-};
-
 export const GET: RequestHandler = async ({fetch}) => {
 
 	const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
