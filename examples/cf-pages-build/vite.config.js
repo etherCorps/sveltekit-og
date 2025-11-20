@@ -1,21 +1,12 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import {rollup as unwasm} from "unwasm/plugin"
+import { rollupWasm } from "@ethercorps/sveltekit-og/plugin"
 const config = {
 	plugins: [sveltekit()],
 	build: {
 		rollupOptions: {
-			// external: ['@ethercorps/sveltekit-og']
-			plugins: [unwasm({
-				esmImport: true,
-				lazy: true
-			})],
+			plugins: [rollupWasm()],
 		}
 	}
-	// build:{
-	// 	rollupOptions: {
-	// 		external: ["@ethercorps/sveltekit-og"]
-	// 	}
-	// }
 };
 
 export default config;

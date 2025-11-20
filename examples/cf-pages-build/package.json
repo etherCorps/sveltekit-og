@@ -20,11 +20,10 @@
 		"prettier": "^3.1.0",
 		"prettier-plugin-svelte": "^3.2.6",
 		"svelte": "^5.0.0",
-		"unwasm": "^0.3.9",
 		"vite": "^6.3.5"
 	},
 	"type": "module",
 	"dependencies": {
-		"@ethercorps/sveltekit-og": "3.0.0-next.18"
+		"@ethercorps/sveltekit-og": "3.0.0-next.19"
 	}
 }
