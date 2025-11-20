@@ -20,10 +20,10 @@
 			"svelte": "./dist/index.js",
 			"import": "./dist/index.js"
 		},
-      "./plugin": {
-          "types": "./dist/plugin.d.ts",
-          "import": "./dist/plugin.js"
-        }
+		"./plugin": {
+			"types": "./dist/plugin.d.ts",
+			"import": "./dist/plugin.js"
+		}
 	},
 	"files": [
 		"dist",
@@ -60,11 +60,12 @@
 	"dependencies": {
 		"@resvg/resvg-wasm": "^2.6.2",
 		"satori": "^0.10.14",
+		"satori-html": "0.3.2",
 		"std-env": "^3.9.0",
-		"satori-html": "0.3.2"
+		"unwasm": "^0.5.0"
 	},
-  "peerDependencies": {
-    "@sveltejs/kit": ">=2.0.0"
-  },
-  "packageManager": "pnpm@10.12.1"
+	"peerDependencies": {
+		"@sveltejs/kit": ">=2.0.0"
+	},
+	"packageManager": "pnpm@10.12.1"
 }
