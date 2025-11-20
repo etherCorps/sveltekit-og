@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "cf-sveltekit-og",
+  "name": "sveltekit-og",
   "main": ".svelte-kit/cloudflare/_worker.js",
   "workers_dev": true,
   "compatibility_date": "2025-06-02",
