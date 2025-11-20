@@ -13,7 +13,39 @@ pnpm install @ethercorps/sveltekit-og
 
 ## Usage
 
-Create a file at `/src/routes/og/+server.ts`. Alternatively, you can use JavaScript by removing the types from this example.
+- Add `rollupWasm` to `build.rollupOptions.plugins` in `vite.cofig.js` file.
+- 
+```ts
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vitest/config';
+import { rollupWasm } from './src/lib/plugin.js';
+
+export default defineConfig({
+	plugins: [sveltekit()],
+	build: {
+		rollupOptions: {
+			plugins: [rollupWasm()],
+		}
+	}
+});
+```
+
+- For node adapter update config with `rollupWasm`
+
+```ts
+export default defineConfig({
+	plugins: [sveltekit()],
+	build: {
+		rollupOptions: {
+			plugins: [
+				rollupWasm({ esmImport: false })
+            ],
+		}
+	}
+});
+```
+
+- Create a file at `/src/routes/og/+server.ts`. Alternatively, you can use JavaScript by removing the types from this example.
 
 ```typescript
 // src/routes/og/+server.ts
