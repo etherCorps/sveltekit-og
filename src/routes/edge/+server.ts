@@ -1,11 +1,5 @@
 import { type RequestHandler } from '@sveltejs/kit';
 import {ImageResponse} from "$lib/index.js";
-import type { Config } from '@sveltejs/adapter-vercel';
-
-export const config: Config = {
-	runtime: 'edge',
-	split: true,
-};
 
 export const GET: RequestHandler = async () => {
 	const html = `

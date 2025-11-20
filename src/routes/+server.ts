@@ -1,7 +1,6 @@
 import { type RequestHandler } from '@sveltejs/kit';
 import {ImageResponse} from "$lib/index.js";
 
-
 export const GET: RequestHandler = async () => {
     const html = `
 <div tw="h-full w-full flex flex-col items-center justify-center bg-white text-6xl font-bold">
