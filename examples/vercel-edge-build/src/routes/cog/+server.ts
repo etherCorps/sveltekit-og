@@ -1,6 +1,12 @@
 import OG from './OG.svelte';
 import type { RequestHandler } from '@sveltejs/kit';
 import { ImageResponse } from '@ethercorps/sveltekit-og';
+import type { Config } from '@sveltejs/adapter-vercel';
+
+export const config: Config = {
+	runtime: 'edge',
+	split: true,
+};
 
 export const GET: RequestHandler = async ({fetch}) => {
 	const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-700-normal.woff');
