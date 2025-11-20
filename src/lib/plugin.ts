@@ -1,9 +1,9 @@
-import { rollup, type UnwasmPluginOptions } from "unwasm/plugin"
+import { unwasm, type UnwasmPluginOptions } from "unwasm/plugin"
 
-type Plugin = ReturnType<typeof rollup>
+type Plugin = ReturnType<typeof unwasm>
 
 export function rollupWasm(options?: UnwasmPluginOptions): Plugin {
-	return rollup({
+	return unwasm({
 		esmImport: true,
 		lazy: true,
 		...options
