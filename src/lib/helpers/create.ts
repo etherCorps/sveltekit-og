@@ -4,7 +4,7 @@ import type { SatoriOptions } from 'satori';
 import type { ResvgRenderOptions } from '@resvg/resvg-wasm';
 import { html } from 'satori-html';
 
-import { loadDynamicAsset } from './emoji.js';
+import { type EmojiType, loadDynamicAsset } from './emoji.js';
 import { default_fonts, DEFAULT_WIDTH } from '../helpers/defaults.js';
 import { useResvg, useSatori } from '../providers/instances.js';
 import type { ComponentOptions, ImageOptions, VNode } from '../types.js';
@@ -21,24 +21,21 @@ export async function createVNode(element: string | Component, componentOptions?
 
 export async function createSvg(element: string | Component, imageOptions: ImageOptions, componentOptions?: ComponentOptions): Promise<string> {
 	const [satori, vnodes] = await Promise.all([useSatori(), createVNode(element, componentOptions)]);
-
-	if (!Object.hasOwn(imageOptions, 'fonts')) {
-		imageOptions['fonts'] = await default_fonts()
+	const satoriOptions = structuredClone(imageOptions) as SatoriOptions
+	if (!Object.hasOwn(satoriOptions, 'fonts')) {
+		satoriOptions['fonts'] = await default_fonts()
 	}
 
-	// Add dynamic emoji loading handler
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	imageOptions['loadAdditionalAsset'] = loadDynamicAsset({
-		emoji: imageOptions.emoji
-	})
+	satoriOptions['loadAdditionalAsset'] = loadDynamicAsset({
+		emoji: imageOptions.emoji as EmojiType
+	}) as SatoriOptions["loadAdditionalAsset"]
 
-	if (imageOptions.debug) {
+	if (satoriOptions.debug) {
 		console.info('VNode proivided to satori:', vnodes, '\n');
 		console.info('Options proivided to satori:', imageOptions, '\n');
 	}
 
-	return satori(vnodes,  imageOptions as SatoriOptions)
+	return satori(vnodes, satoriOptions as SatoriOptions)
 }
 
 export async function createPng(element: string | Component, imageOptions: ImageOptions, componentOptions?: ComponentOptions) {

@@ -1,4 +1,5 @@
 import type { SatoriOptions } from 'satori/wasm';
+import type { EmojiType } from './helpers/emoji.js';
 
 export type ImageOptions = {
     /**
@@ -15,7 +16,7 @@ export type ImageOptions = {
      * Emoji provider
      * @default twemoji
      * */
-    emoji?: 'twemoji' | 'blobmoji' | 'noto' | 'openmoji' | 'fluent' | 'fluentFlat',
+    emoji?: EmojiType,
     /**
      * Fonts used for your text
      * @default `helpers/defaults.js`

@@ -1,6 +1,7 @@
 import type { SatoriOptions } from 'satori';
 
 import type { ImageOptions } from '../types.js';
+import type { EmojiType } from './emoji.js';
 
 export async function default_fonts(): Promise<SatoriOptions['fonts']> {
 	const [noto_sans_regular_font_resp, noto_sans_bold_font_reps] = await Promise.all([
@@ -33,7 +34,7 @@ export async function default_fonts(): Promise<SatoriOptions['fonts']> {
 export const DEFAULT_FORMAT = 'png';
 export const DEFAULT_WIDTH = 1200;
 export const DEFAULT_HEIGHT = 630;
-export const DEFAULT_EMOJI_PROVIDER = 'twemoji';
+export const DEFAULT_EMOJI_PROVIDER: EmojiType = 'twemoji';
 export const DEFAULT_STATUS_CODE = 200;
 export const DEFAULT_STATUS_TEXT = 'Success';
 

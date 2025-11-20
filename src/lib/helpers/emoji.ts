@@ -3,11 +3,11 @@ import { DEFAULT_EMOJI_PROVIDER } from '../helpers/defaults.js';
 const U200D = String.fromCharCode(8205);
 const UFE0Fg = /\uFE0F/g;
 
-function getIconCode(char) {
+function getIconCode(char: string) {
 	return toCodePoint(char.indexOf(U200D) < 0 ? char.replace(UFE0Fg, "") : char);
 }
 
-function toCodePoint(unicodeSurrogates) {
+function toCodePoint(unicodeSurrogates: string) {
 	const r = []
 	let c = 0, p = 0, i = 0;
 	while (i < unicodeSurrogates.length) {
@@ -25,19 +25,20 @@ function toCodePoint(unicodeSurrogates) {
 }
 
 const emoji_apis = {
-	twemoji: (code) => "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/" + code.toLowerCase() + ".svg",
+	twemoji: (code: string) => "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/" + code.toLowerCase() + ".svg",
 	openmoji: "https://cdn.jsdelivr.net/npm/@svgmoji/openmoji@2.0.0/svg/",
 	blobmoji: "https://cdn.jsdelivr.net/npm/@svgmoji/blob@2.0.0/svg/",
 	noto: "https://cdn.jsdelivr.net/gh/svgmoji/svgmoji/packages/svgmoji__noto/svg/",
-	fluent: (code) => "https://cdn.jsdelivr.net/gh/shuding/fluentui-emoji-unicode/assets/" + code.toLowerCase() + "_color.svg",
-	fluentFlat: (code) => "https://cdn.jsdelivr.net/gh/shuding/fluentui-emoji-unicode/assets/" + code.toLowerCase() + "_flat.svg"
-};
+	fluent: (code: string) => "https://cdn.jsdelivr.net/gh/shuding/fluentui-emoji-unicode/assets/" + code.toLowerCase() + "_color.svg",
+	fluentFlat: (code: string) => "https://cdn.jsdelivr.net/gh/shuding/fluentui-emoji-unicode/assets/" + code.toLowerCase() + "_flat.svg"
+} as const;
 
-function loadEmoji(code, type) {
-	if (!type || !apis[type]) {
+
+function loadEmoji(code: string, type: EmojiType) {
+	if (!type || !emoji_apis[type]) {
 		type = DEFAULT_EMOJI_PROVIDER;
 	}
-	const api = apis[type];
+	const api = emoji_apis[type];
 	if (typeof api === "function") {
 		return fetch(api(code));
 	}
@@ -45,14 +46,18 @@ function loadEmoji(code, type) {
 }
 
 
-export const loadDynamicAsset = ({ emoji }) => {
-	const fn = async (code, text) => {
+export const loadDynamicAsset = ({ emoji }: {emoji: EmojiType}) => {
+	const fn = async (code: string, text: string) => {
 		if (code === "emoji") {
 			return `data:image/svg+xml;base64,` + btoa(await (await loadEmoji(getIconCode(text), emoji)).text());
 		}
 	};
 
-	return async (...args) => {
+	return async (...args: any[]) => {
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		return await fn(...args);
 	};
 }
+
+export type EmojiType = keyof typeof emoji_apis;
