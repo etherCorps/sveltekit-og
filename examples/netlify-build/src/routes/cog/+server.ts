@@ -12,6 +12,7 @@ export const GET: RequestHandler = async ({fetch}) => {
 		{
 			height: 250,
 			width: 500,
+			debug: true,
 			fonts: [
 				{
 					name: 'Inter Latin',

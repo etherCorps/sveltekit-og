@@ -5,7 +5,9 @@ const config = {
 	plugins: [sveltekit()],
 	build: {
 		rollupOptions:{
-			plugins: [rollupWasm()]
+			plugins: [rollupWasm({
+				esmImport: false
+			})]
 		}
 	}
 };
