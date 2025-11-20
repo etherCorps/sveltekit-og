@@ -1,11 +1,10 @@
-import type { Component } from 'svelte';
+import type { Component, ComponentProps } from 'svelte';
 import type { ImageResponseOptions } from './types.js';
 import { DEFAULT_OPTIONS, DEFAULT_STATUS_CODE, DEFAULT_STATUS_TEXT } from './helpers/defaults.js';
 import { createPng, createSvg } from './helpers/create.js';
 
-export class ImageResponse extends Response {
-	constructor(element: string | Component, options?: ImageResponseOptions, props?: Record<string, any>) {
-
+export class ImageResponse<T extends string | Component<any>> extends Response {
+	constructor(element: T, options?: ImageResponseOptions, props?: T extends Component<any> ?  ComponentProps<T> : never) {
 		const extended_options = Object.assign({ ...DEFAULT_OPTIONS }, options)
 		const create_image_function = extended_options.format === 'png' ? createPng : createSvg;
 		const body = new ReadableStream({
