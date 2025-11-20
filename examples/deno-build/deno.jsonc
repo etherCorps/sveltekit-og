@@ -1,0 +1,6 @@
+{
+  "deploy": {
+    "org": "ethercorps",
+    "app": "sveltekit-og"
+  }
+}

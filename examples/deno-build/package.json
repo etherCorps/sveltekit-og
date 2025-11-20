@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
+		"build": "vite build && deno deploy --prod",
 		"preview": "vite preview",
 		"test": "playwright test",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
