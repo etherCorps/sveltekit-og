@@ -81,8 +81,8 @@ By default, `@ethercorps/sveltekit-og` includes only 'Noto Sans' font. If you ne
 
 ## Examples
 
-- `ImageResponse` · [_source_](/src/routes/+server.ts) · [_demo_](https://sveltekit-og-five.vercel.app)
-- `Component Rendering` · [_source_](/src/routes/sc/+server.ts) · [_demo_](https://sveltekit-og-five.vercel.app/sc)
+- `ImageResponse` · [_source_](/src/routes/+server.ts) · [_demo_](https://vercel.sveltekit-og.dev)
+- `Component Rendering` · [_source_](/src/routes/sc/+server.ts) · [_demo_](https://vercel.sveltekit-og.dev/sc)
 
 ## API Reference
 
@@ -92,9 +92,8 @@ The package exposes an `ImageResponse` constructors, with the following options 
 import {ImageResponse} from '@ethercorps/sveltekit-og'
 import {SvelteComponent} from "svelte";
 
-// ...
 ImageResponse(
-    element : string,
+    element : string | Component,
     options : {
       width ? : number = 1200
       height ? : number = 630,
@@ -106,16 +105,26 @@ ImageResponse(
           style: 'normal' | 'italic'
       }[]
       debug ? : boolean = false
-      graphemeImages ? : Record<string, string>;
-      loadAdditionalAsset ? : (languageCode: string, segment: string) => Promise<SatoriOptions["fonts"] | string | undefined>;
       // Options that will be passed to the HTTP response
       status ? : number = 200
       statusText ? : string
       headers ? : Record<string, string>
-    } {props})
+    },
+    // Component props if components. 
+    ComponentProps<Component>
+  )
 ```
 
 ## Changelog
+
+### v4.0.0 (Breaking Changes)
+
+> Just install @ethercorps/sveltekit-og
+
+> Support for NodeJS, Deno, Cloudflare Pages, Cloudflare Workers, Vercel and Netlify.
+
+> No support for Bun tried and failed.
+
 
 ### v3.0.0 (Breaking Changes)
 
@@ -158,8 +167,6 @@ This project will not be possible without the following projects:
 
 - [Satori & @vercel/og](https://github.com/vercel/satori)
 - [Noto by Google Fonts](https://fonts.google.com/noto)
-
-[//]: # (- [svg2png-wasm]&#40;https://github.com/ssssota/svg2png-wasm&#41;)
 
 ## Authors
 
