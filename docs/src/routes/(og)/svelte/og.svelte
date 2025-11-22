@@ -1,5 +1,5 @@
+<svelte:options css="injected" />
 <script lang="ts">
-	import Logo from "../(assets)/logo.png?inline"
 	import Star from "phosphor-svelte/lib/Star";
 	import Contributors from "phosphor-svelte/lib/Users";
 	import Fork from "phosphor-svelte/lib/GitFork";
@@ -7,6 +7,7 @@
 	import GithubLogo from "phosphor-svelte/lib/GithubLogo";
 
 	type Props = {
+		logo: string;
 		owner: string;
 		repo: string;
 		description: string;
@@ -16,7 +17,7 @@
 		forks: number;
 	}
 
-	const {open_issues, owner, forks, repo, stars, description, contributors}: Props = $props();
+	const {open_issues, owner, forks, repo, stars, description, contributors, logo}: Props = $props();
 
 	const details = [
 		{
@@ -45,7 +46,7 @@
 				<span class="text-gray-800 text-7xl leading-1.5">{owner}/</span>
 				<span class="text-7xl font-bold">{repo}</span>
 			</div>
-			<img class="h-full" src={Logo}>
+			<img class="h-full" src={logo}>
 		</div>
 		<div class="flex flex-row w-[55%] mt-2">
 			<span class="text-xl text-gray-600 leading-1.5 tracking-wide">{description}</span>

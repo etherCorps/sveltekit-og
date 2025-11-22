@@ -3,7 +3,7 @@ import { Octokit } from 'octokit';
 export const cache = new Map<string, RepoDetailsResponse["data"] & {contributors_count: number}>()
 
 export type RequestDetailsParams =  {
-	name: string
+	repo: string
 	owner: string
 }
 
@@ -24,7 +24,7 @@ export type RepoDetailsError = {
 export async function getRepoDetails(details: Required<RequestDetailsParams>) {
 	const repoRequest = octokit.request(`GET /repos/{owner}/{repo}`, {
 		owner: details.owner,
-		repo: details.name,
+		repo: details.repo,
 		headers: {
 			'X-GitHub-Api-Version': '2022-11-28'
 		}
@@ -32,7 +32,7 @@ export async function getRepoDetails(details: Required<RequestDetailsParams>) {
 
 	const repoContributors = octokit.request(`GET /repos/{owner}/{repo}/contributors`, {
 		owner: details.owner,
-		repo: details.name,
+		repo: details.repo,
 		headers: {
 			'X-GitHub-Api-Version': '2022-11-28'
 		}

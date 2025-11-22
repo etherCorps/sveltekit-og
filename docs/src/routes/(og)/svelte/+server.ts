@@ -17,10 +17,10 @@ import type { ComponentProps } from 'svelte';
 export const GET: RequestHandler = async ({url}) => {
 	const details = {
 		owner: url.searchParams.get('owner') ?? 'etherCorps',
-		name: url.searchParams.get('name') ?? 'sveltekit-og'
+		repo: url.searchParams.get('repo') ?? 'sveltekit-og'
 	}
 
-	const cacheKey = `${details.owner}/${details.name}`
+	const cacheKey = `${details.owner}/${details.repo}`
 	let data = cache.get(cacheKey)
 
 	if (!data) {
@@ -33,7 +33,7 @@ export const GET: RequestHandler = async ({url}) => {
 		}
 		if (response && response.repo.data) {
 			data = {...response.repo.data, contributors_count: response.contributors.data.length}
-			cache.set(`${details.owner}/${details.name}`, data)
+			cache.set(`${details.owner}/${details.repo}`, data)
 		}
 	}
 
@@ -44,7 +44,8 @@ export const GET: RequestHandler = async ({url}) => {
 		'contributors': data?.contributors_count as number,
 		'forks': data?.forks as number,
 		'open_issues': data?.open_issues as number,
-		'stars': data?.stargazers_count as number
+		'stars': data?.stargazers_count as number,
+		logo: data?.owner.avatar_url as string
 	}
 
 	const imageOptions: ImageResponseOptions = {
