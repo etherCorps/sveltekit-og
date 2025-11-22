@@ -42,7 +42,7 @@ Add vite plugin to `vite.config.ts`.
 <Callout type="warning" title="Warning">
 Vite plugin is available from sveltekit-og@v4.1.0. If you are using v4.0.0 use <a href="#rollup">Rollup</a>
 
-If you add plugin while dev server is running, you might see no generated image, so stop the server and re-start it.
+> If you add plugin while dev server is running, you might see no generated image, so stop the server and re-start it.
 
 </Callout>
 
@@ -126,6 +126,14 @@ export const GET: RequestHandler = async () => {
 ### Svelte Components
 
 We can create images with svelte components too.
+
+<Callout type="note" title="Svelte options">
+  Always add svelte options on top of the component. It will include the generated `styles` from style tag.
+
+```svelte
+<svelte:options css="injected" />
+```
+</Callout>
 
 - Svelte Component
 
