@@ -1,14 +1,11 @@
 import { Octokit } from 'octokit';
-import { s } from "velite"
 
 export const cache = new Map<string, RepoDetailsResponse["data"] & {contributors_count: number}>()
 
-export const RequestDetailsParamsSchema = s.object({
-	name: s.string().default('sveltekit-og'),
-	owner: s.string().default('etherCorps'),
-})
-
-export type RequestDetailsParams =  typeof RequestDetailsParamsSchema._input
+export type RequestDetailsParams =  {
+	name: string
+	owner: string
+}
 
 const octokit = new Octokit()
 

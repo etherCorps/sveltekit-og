@@ -55,7 +55,7 @@
 				<div class="flex flex-row">
 					<detail.icon class="w-8 h-8"/>
 					<div class="flex flex-col ml-2">
-						<span class="text-gray-950 text-2xl">{detail.count}</span>
+						<span class="text-gray-900 text-2xl">{detail.count}</span>
 						<span class="text-gray-600 text-xl">{detail.title}</span>
 					</div>
 				</div>

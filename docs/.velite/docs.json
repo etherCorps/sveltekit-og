@@ -73,6 +73,28 @@
     "slugFull": "/index"
   },
   {
+    "title": "HTML",
+    "description": "How to use Raw to generate the image",
+    "path": "usage/html",
+    "content": "",
+    "raw": "",
+    "toc": [],
+    "section": "Usage",
+    "slug": "usage/html",
+    "slugFull": "/usage/html"
+  },
+  {
+    "title": "Svelte Component",
+    "description": "How to use svelte component to generate the image",
+    "path": "usage/svelte",
+    "content": "",
+    "raw": "",
+    "toc": [],
+    "section": "Usage",
+    "slug": "usage/svelte",
+    "slugFull": "/usage/svelte"
+  },
+  {
     "title": "Cloudflare",
     "description": "How to use Sveltekit OG with cloudflare adapter",
     "path": "runtime/cloudflare",
@@ -126,27 +148,5 @@
     "section": "Runtime",
     "slug": "runtime/vercel",
     "slugFull": "/runtime/vercel"
-  },
-  {
-    "title": "HTML",
-    "description": "How to use Raw to generate the image",
-    "path": "usage/html",
-    "content": "",
-    "raw": "",
-    "toc": [],
-    "section": "Usage",
-    "slug": "usage/html",
-    "slugFull": "/usage/html"
-  },
-  {
-    "title": "Svelte Component",
-    "description": "How to use svelte component to generate the image",
-    "path": "usage/svelte",
-    "content": "",
-    "raw": "",
-    "toc": [],
-    "section": "Usage",
-    "slug": "usage/svelte",
-    "slugFull": "/usage/svelte"
   }
 ]
