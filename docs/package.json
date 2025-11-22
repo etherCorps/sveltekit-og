@@ -29,6 +29,7 @@
 		"vite": "^7.2.4"
 	},
 	"dependencies": {
-		"@ethercorps/sveltekit-og": "^4.1.0"
+		"@ethercorps/sveltekit-og": "^4.1.0",
+		"octokit": "^5.0.5"
 	}
 }

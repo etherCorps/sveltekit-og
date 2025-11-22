@@ -121,7 +121,7 @@ export const GET: RequestHandler = async () => {
 ```
 #### Preview
 
-<img class="mt-4" src="/api/preview" alt="Raw HTML Image">
+<img class="mt-4" src="/preview" alt="Raw HTML Image">
 
 ### Svelte Components
 
@@ -185,4 +185,4 @@ export const GET: RequestHandler = async () => {
 
 #### Preview
 
-<img class="mt-4" src="/api/og.png" alt="Svelte Component Preview">
+<img class="mt-4" src="/og.png" alt="Svelte Component Preview">

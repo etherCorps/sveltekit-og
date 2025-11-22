@@ -7,8 +7,5 @@ export const GET: RequestHandler = async () => {
 		width: 1200,
 		height: 630,
 		debug: false
-	}, {
-		text: 'Hello',
-		spanText: 'World'
 	})
 }

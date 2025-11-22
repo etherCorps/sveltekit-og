@@ -1,5 +1,5 @@
 import { ImageResponse } from '@ethercorps/sveltekit-og';
-import type { RequestHandler } from './$types';
+import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async () => {
 	const html = `

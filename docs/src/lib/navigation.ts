@@ -18,7 +18,7 @@ const usage = allDocs
 	.map((doc) => ({
 		title: doc.title,
 		href: `/docs/${doc.slug}`,
-	}));
+	})).reverse();
 
 export const navigation = defineNavigation({
 	anchors: [

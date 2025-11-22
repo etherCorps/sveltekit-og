@@ -1,21 +1,7 @@
 <svelte:options css="injected" />
 <script lang="ts">
-	import Logo from "./logo.png?inline"
-	import SvelteLogo from "./svelte-logo.svg?raw"
-
-	// console.log(Logo);
-	interface Props {
-		/**
-		 * @type string
-		 * */
-		text: any;
-		/**
-		 * @type string
-		 * */
-		spanText: any;
-	}
-
-	let { text, spanText }: Props = $props();
+	import Logo from "../(assets)/logo.png?inline"
+	import SvelteLogo from "../(assets)/svelte-logo.svg?raw"
 </script>
 
 <div class="flex flex-col bg-gradient w-full h-full p-5">
@@ -29,7 +15,7 @@
 			<p class="text-5xl font-bold text-teal-400 tracking-widest">VERSION 4 ✨</p>
 			<p class="-mt-2 text-lg text-gray-300">Sveltekit OG v4 with support for Node, Deno, Cloudflare Workers, Pages, Vercel and Netlify</p>
 		</div>
-		<div class="flex flex-row items-center justify-center w-full w-1/2">
+		<div class="flex flex-row items-center justify-center w-1/2">
 			{@html SvelteLogo}
 		</div>
 	</div>

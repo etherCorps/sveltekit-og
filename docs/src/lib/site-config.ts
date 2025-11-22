@@ -4,7 +4,7 @@ export const siteConfig = defineSiteConfig({
 	name: "Sveltekit OG",
 	url: "https://sveltekit-og.dev",
 	ogImage: {
-		url: "https://sveltekit-og.dev/api/og.png",
+		url: "https://sveltekit-og.dev/og.png",
 		height: "630",
 		width: "1200",
 	},
