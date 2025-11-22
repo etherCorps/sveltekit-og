@@ -1,0 +1,152 @@
+[
+  {
+    "title": "Getting Started",
+    "description": "A quick guide to get started using Sveltekit OG",
+    "path": "getting-started",
+    "content": "<script>\n\timport { Callout } from \"@svecodocs/kit\";\n\timport { Steps, Step } from \"@svecodocs/kit\";\n</script>\n<h2>Setup</h2>\n<p>Setting up SvelteKit OG is a two-step process: install the package and plugin.</p>\n<steps>\n<p><step>Installation</step></p>\n<p>Install the package using your preferred package manager:</p>\n<pre><code class=\"language-bash\">pnpm add @ethercorps/sveltekit-og\n</code></pre>\n<pre><code class=\"language-bash\">npm install @ethercorps/sveltekit-og\n</code></pre>\n<pre><code class=\"language-bash\">yarn add @ethercorps/sveltekit-og\n</code></pre>\n<pre><code class=\"language-bash\">deno add npm:@ethercorps/sveltekit-og\n</code></pre>\n<p><step>Plugins</step></p>\n<p>Sveltekit OG provides two plugins (use one of them)</p>\n<ol>\n<li><a href=\"#vite\">Vite</a> - Available from v4.1.x</li>\n<li><a href=\"#rollup\">Rollup</a> - Available for v4.x.x - will be deprecated in v5.</li>\n</ol>\n<h3>Vite</h3>\n<p>Add vite plugin to <code>vite.config.ts</code>.</p>\n<callout type=\"warning\" title=\"Warning\">\nVite plugin is available from sveltekit-og@v4.1.0. If you are using v4.0.0 use <a href=\"#rollup\">Rollup</a>\n<p>If you add plugin while dev server is running, you might see no generated image, so stop the server and re-start it.</p>\n</callout>\n<pre><code class=\"language-js\">// vite.config.{ts,js}\nimport { sveltekit } from '@sveltejs/kit/vite';\nimport { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';\nconst config = {\n\tplugins: [sveltekit(), sveltekitOG()]\n};\n\nexport default config;\n</code></pre>\n<h3>Rollup</h3>\n<p>Add rollup plugin to <code>vite.config.ts</code>.</p>\n<callout type=\"note\" title=\"Warning\">\nRollup plugin is available from sveltekit-og@v4\n</callout>\n<callout type=\"danger\" title=\"Deprecation\">\nRollup plugin will be deprecated in v5\n</callout>\n<pre><code class=\"language-ts\">// vite.config.{ts,js}\nimport { sveltekit } from '@sveltejs/kit/vite';\nimport { rollupWasm } from '@ethercorps/sveltekit-og/plugin';\nconst config = {\n\tplugins: [sveltekit()],\n\tbuild: {\n\t\trollupOptions: {\n\t\t\tplugins: [rollupWasm()],\n\t\t}\n\t}\n};\n\nexport default config;\n\n</code></pre>\n</steps>\n<h2>Basic Usage</h2>\n<p>SvelteKit OG works by returning an ImageResponse from a standard SvelteKit server route.</p>\n<ul>\n<li>Create a new file at src/routes/og/+server.ts.</li>\n</ul>\n<h3>Raw HTML string</h3>\n<p>Creating images with html and css.</p>\n<pre><code class=\"language-typescript\">// src/routes/og/+server.ts\nimport { ImageResponse } from '@ethercorps/sveltekit-og';\nimport type { RequestHandler } from './$types';\n\nexport const GET: RequestHandler = async () => {\n  // 1. Define your HTML template\n  // You can use the 'tw' attribute for Tailwind classes\n  const html = `\n    &#x3C;div tw=\"flex w-full h-full bg-white items-center justify-center\">\n      &#x3C;div tw=\"flex flex-col items-center justify-center\">\n        &#x3C;h1 tw=\"text-6xl font-bold text-gray-900\">Hello SvelteKit OG!&#x3C;/h1>\n        &#x3C;p tw=\"text-2xl text-gray-500 mt-4\">Dynamic images made easy&#x3C;/p>\n      &#x3C;/div>\n    &#x3C;/div>\n  `;\n\n  // 2. Return the ImageResponse\n  return new ImageResponse(html, {\n    width: 1200,\n    height: 630,\n    // The library uses 'Noto Sans' by default if no fonts are provided\n  });\n};\n</code></pre>\n<h4>Preview</h4>\n<img class=\"mt-4\" src=\"/api/preview\" alt=\"Raw HTML Image\">\n<h3>Svelte Components</h3>\n<p>We can create images with svelte components too.</p>\n<ul>\n<li>Svelte Component</li>\n</ul>\n<pre><code class=\"language-svelte\">&#x3C;svelte:options css=\"injected\" />\n&#x3C;script lang=\"ts\">\n\timport Logo from \"./logo.png?inline\"\n\timport SvelteLogo from \"./svelte-logo.svg?raw\"\n&#x3C;/script>\n\n&#x3C;div class=\"flex flex-col bg-gradient w-full h-full p-5\">\n\t&#x3C;div class=\"flex flex-row justify-normal items-center\">\n\t\t&#x3C;img src={Logo} class=\"w-8\" />\n\t\t&#x3C;span class=\"ml-2 font-semibold text-xl text-gray-100\">@ethercorps/sveltekit-og&#x3C;/span>\n\t&#x3C;/div>\n\t&#x3C;div class=\"flex flex-row items-center justify-between w-full h-[90%] px-10\">\n\t\t&#x3C;div class=\"flex flex-col justify-center h-full w-1/2\">\n\t\t\t&#x3C;p class=\"text-lg -mb-3 text-teal-200 font-bold tracking-wider\">SVELTEKIT OG&#x3C;/p>\n\t\t\t&#x3C;p class=\"text-5xl font-bold text-teal-400 tracking-widest\">VERSION 4 ✨&#x3C;/p>\n\t\t\t&#x3C;p class=\"-mt-2 text-lg text-gray-300\">Sveltekit OG v4 with support for Node, Deno, Cloudflare Workers, Pages, Vercel and Netlify&#x3C;/p>\n\t\t&#x3C;/div>\n\t\t&#x3C;div class=\"flex flex-row items-center justify-center w-full w-1/2\">\n\t\t\t{@html SvelteLogo}\n\t\t&#x3C;/div>\n\t&#x3C;/div>\n\t&#x3C;div class=\"flex flex-row text-gray-400\">sveltekit-og.dev&#x3C;/div>\n&#x3C;/div>\n\n&#x3C;style>\n\t.bg-gradient {\n\t\tbackground: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */\n\t}\n&#x3C;/style>\n</code></pre>\n<ul>\n<li>og/+server.ts</li>\n</ul>\n<pre><code class=\"language-typescript\">import type { RequestHandler } from '@sveltejs/kit';\nimport { ImageResponse } from '@ethercorps/sveltekit-og';\nimport OG from './OG.svelte';\n\nexport const GET: RequestHandler = async () => {\n\treturn new ImageResponse(OG, {\n\t\twidth: 1200,\n\t\theight: 630,\n\t\tdebug: false\n\t})\n}\n</code></pre>\n<h4>Preview</h4>\n<img class=\"mt-4\" src=\"/api/og.png\" alt=\"Svelte Component Preview\">",
+    "raw": "<script>\n\timport { Callout } from \"@svecodocs/kit\";\n\timport { Steps, Step } from \"@svecodocs/kit\";\n</script>\n\n## Setup\nSetting up SvelteKit OG is a two-step process: install the package and plugin.\n\n<Steps>\n\n<Step>Installation</Step>\n\nInstall the package using your preferred package manager:\n```bash\npnpm add @ethercorps/sveltekit-og\n```\n```bash\nnpm install @ethercorps/sveltekit-og\n``` \n```bash\nyarn add @ethercorps/sveltekit-og\n```\n```bash\ndeno add npm:@ethercorps/sveltekit-og\n```\n\n<Step>Plugins</Step>\n\nSveltekit OG provides two plugins (use one of them)\n1. [Vite](#vite) - Available from v4.1.x\n2. [Rollup](#rollup) - Available for v4.x.x - will be deprecated in v5.\n\n### Vite\nAdd vite plugin to `vite.config.ts`.\n\n<Callout type=\"warning\" title=\"Warning\">\nVite plugin is available from sveltekit-og@v4.1.0. If you are using v4.0.0 use <a href=\"#rollup\">Rollup</a>\n\nIf you add plugin while dev server is running, you might see no generated image, so stop the server and re-start it.\n\n</Callout>\n\n```js\n// vite.config.{ts,js}\nimport { sveltekit } from '@sveltejs/kit/vite';\nimport { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';\nconst config = {\n\tplugins: [sveltekit(), sveltekitOG()]\n};\n\nexport default config;\n```\n\n### Rollup\n\nAdd rollup plugin to `vite.config.ts`.\n\n<Callout type=\"note\" title=\"Warning\">\nRollup plugin is available from sveltekit-og@v4\n</Callout>\n\n<Callout type=\"danger\" title=\"Deprecation\">\nRollup plugin will be deprecated in v5\n</Callout>\n\n```ts\n// vite.config.{ts,js}\nimport { sveltekit } from '@sveltejs/kit/vite';\nimport { rollupWasm } from '@ethercorps/sveltekit-og/plugin';\nconst config = {\n\tplugins: [sveltekit()],\n\tbuild: {\n\t\trollupOptions: {\n\t\t\tplugins: [rollupWasm()],\n\t\t}\n\t}\n};\n\nexport default config;\n\n```\n</Steps>\n\n## Basic Usage\n\nSvelteKit OG works by returning an ImageResponse from a standard SvelteKit server route. \n- Create a new file at src/routes/og/+server.ts.\n\n### Raw HTML string\nCreating images with html and css.\n```typescript\n// src/routes/og/+server.ts\nimport { ImageResponse } from '@ethercorps/sveltekit-og';\nimport type { RequestHandler } from './$types';\n\nexport const GET: RequestHandler = async () => {\n  // 1. Define your HTML template\n  // You can use the 'tw' attribute for Tailwind classes\n  const html = `\n    <div tw=\"flex w-full h-full bg-white items-center justify-center\">\n      <div tw=\"flex flex-col items-center justify-center\">\n        <h1 tw=\"text-6xl font-bold text-gray-900\">Hello SvelteKit OG!</h1>\n        <p tw=\"text-2xl text-gray-500 mt-4\">Dynamic images made easy</p>\n      </div>\n    </div>\n  `;\n\n  // 2. Return the ImageResponse\n  return new ImageResponse(html, {\n    width: 1200,\n    height: 630,\n    // The library uses 'Noto Sans' by default if no fonts are provided\n  });\n};\n```\n#### Preview\n\n<img class=\"mt-4\" src=\"/api/preview\" alt=\"Raw HTML Image\">\n\n### Svelte Components\n\nWe can create images with svelte components too.\n\n- Svelte Component\n\n```svelte\n<svelte:options css=\"injected\" />\n<script lang=\"ts\">\n\timport Logo from \"./logo.png?inline\"\n\timport SvelteLogo from \"./svelte-logo.svg?raw\"\n</script>\n\n<div class=\"flex flex-col bg-gradient w-full h-full p-5\">\n\t<div class=\"flex flex-row justify-normal items-center\">\n\t\t<img src={Logo} class=\"w-8\" />\n\t\t<span class=\"ml-2 font-semibold text-xl text-gray-100\">@ethercorps/sveltekit-og</span>\n\t</div>\n\t<div class=\"flex flex-row items-center justify-between w-full h-[90%] px-10\">\n\t\t<div class=\"flex flex-col justify-center h-full w-1/2\">\n\t\t\t<p class=\"text-lg -mb-3 text-teal-200 font-bold tracking-wider\">SVELTEKIT OG</p>\n\t\t\t<p class=\"text-5xl font-bold text-teal-400 tracking-widest\">VERSION 4 ✨</p>\n\t\t\t<p class=\"-mt-2 text-lg text-gray-300\">Sveltekit OG v4 with support for Node, Deno, Cloudflare Workers, Pages, Vercel and Netlify</p>\n\t\t</div>\n\t\t<div class=\"flex flex-row items-center justify-center w-full w-1/2\">\n\t\t\t{@html SvelteLogo}\n\t\t</div>\n\t</div>\n\t<div class=\"flex flex-row text-gray-400\">sveltekit-og.dev</div>\n</div>\n\n<style>\n\t.bg-gradient {\n\t\tbackground: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */\n\t}\n</style>\n```\n- og/+server.ts\n```typescript\nimport type { RequestHandler } from '@sveltejs/kit';\nimport { ImageResponse } from '@ethercorps/sveltekit-og';\nimport OG from './OG.svelte';\n\nexport const GET: RequestHandler = async () => {\n\treturn new ImageResponse(OG, {\n\t\twidth: 1200,\n\t\theight: 630,\n\t\tdebug: false\n\t})\n}\n```\n\n#### Preview\n\n<img class=\"mt-4\" src=\"/api/og.png\" alt=\"Svelte Component Preview\">",
+    "toc": [
+      {
+        "title": "Setup",
+        "url": "#setup",
+        "items": [
+          {
+            "title": "Vite",
+            "url": "#vite",
+            "items": []
+          },
+          {
+            "title": "Rollup",
+            "url": "#rollup",
+            "items": []
+          }
+        ]
+      },
+      {
+        "title": "Basic Usage",
+        "url": "#basic-usage",
+        "items": [
+          {
+            "title": "Raw HTML string",
+            "url": "#raw-html-string",
+            "items": [
+              {
+                "title": "Preview",
+                "url": "#preview",
+                "items": []
+              }
+            ]
+          },
+          {
+            "title": "Svelte Components",
+            "url": "#svelte-components",
+            "items": [
+              {
+                "title": "Preview",
+                "url": "#preview-1",
+                "items": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "section": "Overview",
+    "slug": "getting-started",
+    "slugFull": "/getting-started"
+  },
+  {
+    "title": "Introduction",
+    "description": "What exactly is Sveltekit OG?",
+    "path": "index",
+    "content": "<script>\n\timport { Callout } from '@svecodocs/kit'\n</script>\n<p>SvelteKit OG is a utility library for generating dynamic Open Graph (OG) images within SvelteKit applications.</p>\n<p>Social media platforms (like Twitter, Facebook, and LinkedIn) rely on Open Graph tags to display preview cards when links are shared. SvelteKit OG allows you to define these images using standard HTML/CSS or Svelte components, and renders them into static PNGs on the fly.</p>\n<p>It is powered by Satori (Vercel's engine for converting HTML/CSS to SVG) and Resvg (for SVG to PNG conversion). This combination allows for high-performance image generation without the overhead of a headless browser.</p>\n<h2>Features</h2>\n<ul>\n<li>\n<p>🚀 Fast &#x26; Lightweight: Unlike Puppeteer or Playwright, sveltekit-og does not launch a browser instance. It runs efficiently in serverless and edge environments (like Vercel Edge or Cloudflare Workers).</p>\n</li>\n<li>\n<p>🎨 Easy Styling: Style your images using standard CSS (Flexbox) or built-in Tailwind CSS support. If you know how to center a div, you know how to design an OG image.</p>\n</li>\n<li>\n<p>🧩 Svelte Component Support: You aren't limited to raw HTML strings. You can import and render actual .svelte components inside your image templates.</p>\n</li>\n<li>\n<p>Typography:</p>\n<ul>\n<li>Support for custom fonts and Google Fonts.</li>\n<li>Support for Emojis.</li>\n</ul>\n</li>\n<li>\n<p>🛠️ Developer Experience:</p>\n<ul>\n<li>TypeScript Ready: Fully typed for a better development experience.</li>\n<li>Debug Mode: Inspect the generated layout bounding boxes to fine-tune your designs.</li>\n</ul>\n</li>\n</ul>",
+    "raw": "<script>\n\timport { Callout } from '@svecodocs/kit'\n</script>\n\nSvelteKit OG is a utility library for generating dynamic Open Graph (OG) images within SvelteKit applications.\n\nSocial media platforms (like Twitter, Facebook, and LinkedIn) rely on Open Graph tags to display preview cards when links are shared. SvelteKit OG allows you to define these images using standard HTML/CSS or Svelte components, and renders them into static PNGs on the fly.\n\nIt is powered by Satori (Vercel's engine for converting HTML/CSS to SVG) and Resvg (for SVG to PNG conversion). This combination allows for high-performance image generation without the overhead of a headless browser.\n\n## Features\n\n- 🚀 Fast & Lightweight: Unlike Puppeteer or Playwright, sveltekit-og does not launch a browser instance. It runs efficiently in serverless and edge environments (like Vercel Edge or Cloudflare Workers).\n\n- 🎨 Easy Styling: Style your images using standard CSS (Flexbox) or built-in Tailwind CSS support. If you know how to center a div, you know how to design an OG image.\n\n- 🧩 Svelte Component Support: You aren't limited to raw HTML strings. You can import and render actual .svelte components inside your image templates.\n\n- Typography:\n  - Support for custom fonts and Google Fonts.\n  - Support for Emojis.\n\n- 🛠️ Developer Experience:\n  - TypeScript Ready: Fully typed for a better development experience.\n  - Debug Mode: Inspect the generated layout bounding boxes to fine-tune your designs.",
+    "toc": [
+      {
+        "title": "Features",
+        "url": "#features",
+        "items": []
+      }
+    ],
+    "section": "Overview",
+    "slug": "index",
+    "slugFull": "/index"
+  },
+  {
+    "title": "Cloudflare",
+    "description": "How to use Sveltekit OG with cloudflare adapter",
+    "path": "runtime/cloudflare",
+    "content": "",
+    "raw": "",
+    "toc": [],
+    "section": "Runtime",
+    "slug": "runtime/cloudflare",
+    "slugFull": "/runtime/cloudflare"
+  },
+  {
+    "title": "Deno Deploy",
+    "description": "How to use Sveltekit OG with deno adapter",
+    "path": "runtime/deno",
+    "content": "",
+    "raw": "",
+    "toc": [],
+    "section": "Runtime",
+    "slug": "runtime/deno",
+    "slugFull": "/runtime/deno"
+  },
+  {
+    "title": "Netlify",
+    "description": "How to use Sveltekit OG with netlify adapter",
+    "path": "runtime/netlify",
+    "content": "",
+    "raw": "",
+    "toc": [],
+    "section": "Runtime",
+    "slug": "runtime/netlify",
+    "slugFull": "/runtime/netlify"
+  },
+  {
+    "title": "Node JS",
+    "description": "How to use Sveltekit OG with node adapter",
+    "path": "runtime/node",
+    "content": "",
+    "raw": "",
+    "toc": [],
+    "section": "Runtime",
+    "slug": "runtime/node",
+    "slugFull": "/runtime/node"
+  },
+  {
+    "title": "Vercel",
+    "description": "How to use Sveltekit OG with vercel adapter",
+    "path": "runtime/vercel",
+    "content": "",
+    "raw": "",
+    "toc": [],
+    "section": "Runtime",
+    "slug": "runtime/vercel",
+    "slugFull": "/runtime/vercel"
+  },
+  {
+    "title": "HTML",
+    "description": "How to use Raw to generate the image",
+    "path": "usage/html",
+    "content": "",
+    "raw": "",
+    "toc": [],
+    "section": "Usage",
+    "slug": "usage/html",
+    "slugFull": "/usage/html"
+  },
+  {
+    "title": "Svelte Component",
+    "description": "How to use svelte component to generate the image",
+    "path": "usage/svelte",
+    "content": "",
+    "raw": "",
+    "toc": [],
+    "section": "Usage",
+    "slug": "usage/svelte",
+    "slugFull": "/usage/svelte"
+  }
+]
