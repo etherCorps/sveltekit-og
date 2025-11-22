@@ -1,6 +1,5 @@
-import SpaceRegularFont from '../fonts/SpaceMono-Regular.ttf';
-import SpaceBoldFont from '../fonts/SpaceMono-Bold.ttf';
-import { read } from '$app/server';
+import SpaceRegularFont from '../fonts/SpaceMono-Regular.ttf?inline';
+import SpaceBoldFont from '../fonts/SpaceMono-Bold.ttf?inline';
 import type { ImageResponseOptions } from '@ethercorps/sveltekit-og';
 
 export type FontWeight = 'regular' | 'bold';
@@ -10,15 +9,18 @@ const fonts: Record<FontWeight, string> = {
 	bold: SpaceBoldFont
 };
 
-
 const fontWeight: Record<FontWeight, number> = {
 	regular: 400,
 	bold: 700,
 } as const;
 
 const fetchFont = async (weight: FontWeight, file: string) => {
+	const font = await fetch(file);
+	if (!font.ok) {
+		return undefined
+	}
 	return {
-		data: await read(file).arrayBuffer(),
+		data: await font.arrayBuffer(),
 		name: 'Neon',
 		weight: fontWeight[weight],
 		style: 'normal'
