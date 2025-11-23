@@ -1,6 +1,12 @@
 {
 	"compilerOptions": {
 		"paths": {
+			"$lib": [
+				"../src/lib"
+			],
+			"$lib/*": [
+				"../src/lib/*"
+			],
 			"$app/types": [
 				"./types/index.d.ts"
 			]

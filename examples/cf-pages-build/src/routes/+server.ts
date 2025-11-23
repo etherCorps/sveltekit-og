@@ -1,5 +1,8 @@
 import { ImageResponse } from '@ethercorps/sveltekit-og';
 import type { RequestHandler } from '@sveltejs/kit';
+import JetbrainsRegular from "$lib/fonts/JetBrainsMono-Regular.ttf?url"
+import { GoogleFont, CustomFont, resolveFonts } from '@ethercorps/sveltekit-og/fonts';
+import { read } from '$app/server';
 
 const template = `
  <div tw="bg-gray-50 flex w-full h-full items-center justify-center">
@@ -19,22 +22,19 @@ const template = `
     </div>
   </div>
 `;
+const jetbrainsMonoBoldURL = 'https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Bold.ttf'
 
-export const GET: RequestHandler = async ({fetch}) => {
+const fonts = [
+	new CustomFont('JetBrains Mono', () => read(JetbrainsRegular).arrayBuffer(), {weight: 400}),
+	new GoogleFont('JetBrains Mono', { weight: 500 }),
+	new CustomFont('JetBrains Mono', () => fetch(jetbrainsMonoBoldURL).then((res) => res.arrayBuffer()), { weight: 700 }),
+];
 
-	const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
-	const fontData: ArrayBuffer = await fontFile.arrayBuffer();
-
+export const GET: RequestHandler = async () => {
 	return new ImageResponse(template, {
 		height: 400,
 		width: 800,
-		debug: true,
-		fonts: [
-			{
-				name: 'Inter',
-				data: fontData,
-				weight: 400
-			}
-		]
+		debug: false,
+		fonts: await resolveFonts(fonts)
 	});
 };
