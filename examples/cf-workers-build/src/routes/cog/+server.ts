@@ -1,24 +1,17 @@
 import OG from './OG.svelte';
 import type { RequestHandler } from '@sveltejs/kit';
 import { ImageResponse } from '@ethercorps/sveltekit-og';
+import { resolveFonts } from '@ethercorps/sveltekit-og/fonts';
+import { fonts } from '../../lib/utils/helper.js';
 
 export const GET: RequestHandler = async ({fetch}) => {
-
-	const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-700-normal.woff');
-	const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 	return new ImageResponse(
 		OG,
 		{
-			debug: true,
-			height: 250,
-			width: 500,
-			fonts: [
-				{
-					name: 'Inter Latin',
-					data: fontData,
-					weight: 700
-				}
-			]
+			debug: false,
+			height: 600,
+			width: 1200,
+			fonts: await resolveFonts(fonts)
 		},
 		{ text: 'Ready to dive in?', spanText: 'Start your free trial today.' }
 	);

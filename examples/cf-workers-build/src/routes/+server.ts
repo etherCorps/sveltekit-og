@@ -28,7 +28,7 @@ export const GET: RequestHandler = async ({fetch}) => {
 	return new ImageResponse(template, {
 		height: 400,
 		width: 800,
-		debug: true,
+		debug: false,
 		fonts: [
 			{
 				name: 'Inter',
