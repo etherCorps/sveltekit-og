@@ -2,8 +2,8 @@
 
 Dynamically generate Open Graph images from an HTML+CSS template or Svelte component using fast and efficient conversion from HTML > SVG > PNG. Based on [Satori](https://github.com/vercel/satori#documentation). No headless browser required.
 
-## Disclaimer
-This project doesn't support edge services like vercel edge and cloudflare workers.
+## Docs
+- With sveltekit-og@4, we have [official documentation](https://sveltekit-og.dev). 
 
 ## Installation
 
@@ -13,9 +13,25 @@ pnpm install @ethercorps/sveltekit-og
 
 ## Usage
 
+### Vite (Recommended)
+
+- Add vite plugin
+
+```typescript title="vite.cofig.js"
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+const config = {
+	plugins: [sveltekit(), sveltekitOG()]
+};
+ 
+export default config;
+```
+
+### Rollup (will be deprecated in v5)
 - Add `rollupWasm` to `build.rollupOptions.plugins` in `vite.cofig.js` file.
-- 
-```ts
+- For more information, check [docs](https://sveltekit-og.dev/docs/getting-started)
+
+```ts title="vite.cofig.js"
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
 import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
@@ -31,8 +47,9 @@ export default defineConfig({
 ```
 
 - For node adapter update config with `rollupWasm`
+- Check node runtime [docs](https://sveltekit-og.dev/docs/runtime/node)
 
-```ts
+```ts title="vite.cofig.js"
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
 import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
@@ -97,7 +114,7 @@ Then run `npm dev` and visit `localhost:5173/og` to view your generated PNG. Rem
 
 ## Example Output
 
-![Rendered OG image](static/demo.png)
+![Rendered OG image](https://vercel.sveltekit-og.dev)
 
 ## Headers
 
@@ -203,6 +220,7 @@ This project will not be possible without the following projects:
 
 - [Satori & @vercel/og](https://github.com/vercel/satori)
 - [Noto by Google Fonts](https://fonts.google.com/noto)
+- [fineshopdesign](https://github.com/fineshopdesign/cf-wasm)
 
 ## Authors
 
