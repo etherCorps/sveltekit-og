@@ -76,6 +76,11 @@ export default config;
 ```
 </Steps>
 
+<Callout type="warning" title="Use sveltekit OG v4">
+    We suggest you to use sveltekit-og v4, as older versions are not maintained and developed.
+    v4 only supports Svelte v5. We are not planning to support Svelte v4 onwards.
+</Callout>
+
 ## Basic Usage
 
 SvelteKit OG works by returning an ImageResponse from a standard SvelteKit server route. 

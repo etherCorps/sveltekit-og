@@ -41,7 +41,8 @@ export const navigation = defineNavigation({
 		},
 		{
 			title: "Releases",
-			href: "https://www.npmjs.com/package/@ethercorps/sveltekit-og?activeTab=versions",
+			// href: "https://www.npmjs.com/package/@ethercorps/sveltekit-og?activeTab=versions",
+			href: "/docs/release",
 			icon: Tag,
 		},
 	],
