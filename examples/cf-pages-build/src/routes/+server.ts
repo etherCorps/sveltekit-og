@@ -22,6 +22,7 @@ const template = `
     </div>
   </div>
 `;
+
 const jetbrainsMonoBoldURL = 'https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Bold.ttf'
 
 const fonts = [
