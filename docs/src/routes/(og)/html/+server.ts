@@ -14,10 +14,10 @@ import { fontsData } from '../(helpers)/fonts';
 export const GET: RequestHandler = async ({url}) => {
 	const details = {
 		owner: url.searchParams.get('owner') ?? 'etherCorps',
-		name: url.searchParams.get('name') ?? 'sveltekit-og'
+		repo: url.searchParams.get('repo') ?? 'sveltekit-og'
 	}
 
-	const cacheKey = `${details.owner}/${details.name}`
+	const cacheKey = `${details.owner}/${details.repo}`
 	let data = cache.get(cacheKey)
 
 	if (!data) {
@@ -30,7 +30,7 @@ export const GET: RequestHandler = async ({url}) => {
 		}
 		if (response && response.repo.data) {
 			data = {...response.repo.data, contributors_count: response.contributors.data.length}
-			cache.set(`${details.owner}/${details.name}`, data)
+			cache.set(`${details.owner}/${details.repo}`, data)
 		}
 	}
 

@@ -20,6 +20,13 @@ const usage = allDocs
 		href: `/docs/${doc.slug}`,
 	})).reverse();
 
+const utilities = allDocs
+	.filter((doc) => doc.section === "Utilities")
+	.map((doc) => ({
+		title: doc.title,
+		href: `/docs/${doc.slug}`,
+	})).reverse();
+
 export const navigation = defineNavigation({
 	anchors: [
 		{
@@ -46,6 +53,10 @@ export const navigation = defineNavigation({
 		{
 			title: "Runtime",
 			items: runtime,
+		},
+		{
+			title: "Utilities",
+			items: utilities,
 		}
 	],
 });
