@@ -18,7 +18,7 @@ pnpm install @ethercorps/sveltekit-og
 ```ts
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
-import { rollupWasm } from './src/lib/plugin.js';
+import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
 
 export default defineConfig({
 	plugins: [sveltekit()],
@@ -33,6 +33,10 @@ export default defineConfig({
 - For node adapter update config with `rollupWasm`
 
 ```ts
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vitest/config';
+import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
+
 export default defineConfig({
 	plugins: [sveltekit()],
 	build: {
