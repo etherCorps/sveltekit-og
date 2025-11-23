@@ -1,11 +1,11 @@
 {
   "name": "@ethercorps/sveltekit-og",
-  "latestVersion": "4.1.0",
+  "latestVersion": "4.2.0",
   "weeklyDownloads": 4040,
-  "versionCount": 43,
+  "versionCount": 46,
   "time": {
     "created": "2022-10-20T09:31:29.163Z",
-    "modified": "2025-11-22T05:42:49.891Z",
+    "modified": "2025-11-23T16:12:31.880Z",
     "0.0.3": "2022-10-20T09:31:29.480Z",
     "0.0.4": "2022-10-20T09:35:25.137Z",
     "0.0.5": "2022-10-20T09:47:52.338Z",
@@ -48,12 +48,15 @@
     "4.0.0-next.3": "2025-11-20T08:56:09.220Z",
     "4.0.0-next.4": "2025-11-20T09:24:02.303Z",
     "4.0.0": "2025-11-21T03:36:52.441Z",
-    "4.1.0": "2025-11-22T05:42:49.694Z"
+    "4.1.0": "2025-11-22T05:42:49.694Z",
+    "4.2.0-next.1": "2025-11-23T12:17:25.481Z",
+    "4.2.0-next.2": "2025-11-23T12:39:33.568Z",
+    "4.2.0": "2025-11-23T16:12:31.638Z"
   },
   "latestRelease": {
-    "date": "2025-11-22T05:42:49.694Z",
-    "tarball": "https://registry.npmjs.org/@ethercorps/sveltekit-og/-/sveltekit-og-4.1.0.tgz",
-    "shasum": "1ab6bfc097e927ebb7136541b67bada20673f22b",
+    "date": "2025-11-23T16:12:31.638Z",
+    "tarball": "https://registry.npmjs.org/@ethercorps/sveltekit-og/-/sveltekit-og-4.2.0.tgz",
+    "shasum": "af13d04549b45c8424a6f1e06faed3fcee3c742f",
     "dependencies": {
       "@resvg/resvg-wasm": "^2.6.2",
       "satori": "^0.10.14",
@@ -65,7 +68,7 @@
   "distTags": {
     "aplha": "3.0.0-alpha.1",
     "next": "4.0.0-next.1",
-    "beta": "4.0.0-next.4",
-    "latest": "4.1.0"
+    "latest": "4.2.0",
+    "beta": "4.2.0-next.2"
   }
 }
