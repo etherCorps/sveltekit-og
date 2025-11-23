@@ -16,10 +16,6 @@ const fontWeight: Record<FontWeight, number> = {
 } as const;
 
 const fetchFont = async (weight: FontWeight, file: string) => {
-	// const font = await fetch(file);
-	// if (!font.ok) {
-	// 	return undefined
-	// }
 	return {
 		data: await read(file).arrayBuffer(),
 		name: 'Neon',

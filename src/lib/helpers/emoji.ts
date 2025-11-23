@@ -1,5 +1,5 @@
 import { DEFAULT_EMOJI_PROVIDER } from '../helpers/defaults.js';
-// Code stolen from @vercel/og
+// Code stolen from @vercel/og and https://github.com/fineshopdesign/cf-wasm
 const U200D = String.fromCharCode(8205);
 const UFE0Fg = /\uFE0F/g;
 

@@ -1,6 +1,13 @@
 import type { SatoriOptions } from 'satori/wasm';
 import type { EmojiType } from './helpers/emoji.js';
 
+export type Font = SatoriOptions['fonts'][number];
+export type Fonts = Font[]
+export type FontStyle = Font['style'];
+export type FontWeight = Font['weight'];
+
+export type FinalFontOptions = NonNullable<Fonts>;
+
 export type ImageOptions = {
     /**
      * Width of the image
@@ -21,7 +28,7 @@ export type ImageOptions = {
      * Fonts used for your text
      * @default `helpers/defaults.js`
      * */
-    fonts?: SatoriOptions['fonts'];
+    fonts?: Fonts;
     /**
      * Tailwind config
      * @default provided by satori
@@ -83,3 +90,13 @@ export interface VNode {
         [prop: string]: any;
     };
 }
+
+/** utils types */
+export type MayBePromise<T> = T | Promise<T>;
+
+export type OnlyProps<T, P> = {
+	[K in keyof T as K extends P ? K : never]: T[K];
+};
+
+// permits `string` but gives hints
+export type StringWithSuggestions<S extends string> = (string & Record<never, never>) | S;

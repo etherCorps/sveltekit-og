@@ -1,6 +1,6 @@
 {
 	"name": "@ethercorps/sveltekit-og",
-	"version": "4.1.0",
+	"version": "4.2.0-next.1",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
@@ -20,6 +20,10 @@
 			"svelte": "./dist/index.js",
 			"import": "./dist/index.js"
 		},
+        "./plugin": {
+          "types": "./dist/fonts.d.ts",
+          "import": "./dist/fonts.js"
+        },
 		"./plugin": {
 			"types": "./dist/plugin.d.ts",
 			"import": "./dist/plugin.js"
@@ -35,6 +39,7 @@
 		"@sveltejs/kit": "^2.48.5",
 		"@sveltejs/package": "^2.5.4",
 		"@sveltejs/vite-plugin-svelte": "^4.0.4",
+		"@types/node": "^24.7.1",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
 		"@typescript-eslint/parser": "^5.62.0",
 		"css-tree": "^2.3.1",
