@@ -1,6 +1,6 @@
 import { GoogleFont, CustomFont } from '@ethercorps/sveltekit-og/fonts';
 import { read } from '$app/server';
-import JetbrainsRegular from "./JetBrainsMono-Regular.ttf?url"
+import JetbrainsRegular from "./JetBrainsMono-Regular.ttf"
 
 const jetbrainsMonoBoldURL = 'https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Bold.ttf'
 
