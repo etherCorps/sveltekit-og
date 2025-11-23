@@ -4,7 +4,7 @@ import { ImageResponse } from '@ethercorps/sveltekit-og';
 import { resolveFonts } from '@ethercorps/sveltekit-og/fonts';
 import { fonts } from '../../lib/utils/helper.js';
 
-export const GET: RequestHandler = async ({fetch}) => {
+export const GET: RequestHandler = async () => {
 	return new ImageResponse(
 		OG,
 		{
