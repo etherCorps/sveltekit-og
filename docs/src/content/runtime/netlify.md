@@ -5,7 +5,7 @@ section: Runtime
 ---
 
 <script>
-    import { Callout} from '@svecodocs/kit';
+    import { Callout, Collapsible } from '@svecodocs/kit';
     import NodePackageInstallerTabs from "$lib/components/add-ons/installer-tabs.svelte"; 
     import InstallNetlifyAdapter from "$lib/components/add-ons/packages/sveltekit-adapter/netlify.md"; 
 </script>
@@ -102,3 +102,15 @@ Once configured, the usage remains the same as any other SvelteKit environment.
 
 Source: https://github.com/etherCorps/sveltekit-og/tree/main/examples/netlify-build <br/>
 Live: https://netlify.sveltekit-og.dev/cog
+
+## Known Issues
+
+<Collapsible title="Vite ?url import error">
+
+Netlify throws error when we use [vite url imports](/docs/utilities/local-assets#vite-url-import)
+
+```typescript
+import imagePath from '$lib/assets/large_image.jpg?url';
+```
+
+</Collapsible>
