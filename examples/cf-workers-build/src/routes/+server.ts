@@ -56,7 +56,7 @@ const template = `
   </div>
 `;
 
-export const GET: RequestHandler = async ({fetch}) => {
+export const GET: RequestHandler = async () => {
 	return new ImageResponse(template, {
 		height: 600,
 		width: 1200,
