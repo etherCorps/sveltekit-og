@@ -1,6 +1,6 @@
 <svelte:options css="injected" />
 <script lang="ts">
-	import Logo from "../(assets)/logo.png?inline"
+	import Logo from "../(assets)/ethercorps-logo.png?inline"
 	import SvelteLogo from "../(assets)/svelte-logo.svg?raw"
 </script>
 

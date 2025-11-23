@@ -7,6 +7,8 @@ section: Overview
 <script>
 	import { Callout } from "@svecodocs/kit";
 	import { Steps, Step } from "@svecodocs/kit";
+    import NodePackageInstallerTabs from "$lib/components/add-ons/installer-tabs.svelte";
+    import InstallSveltekitOg from "$lib/components/add-ons/packages/sveltekit-og.md";
 </script>
 
 ## Setup
@@ -17,18 +19,7 @@ Setting up SvelteKit OG is a two-step process: install the package and plugin.
 <Step>Installation</Step>
 
 Install the package using your preferred package manager:
-```bash
-pnpm add @ethercorps/sveltekit-og
-```
-```bash
-npm install @ethercorps/sveltekit-og
-``` 
-```bash
-yarn add @ethercorps/sveltekit-og
-```
-```bash
-deno add npm:@ethercorps/sveltekit-og
-```
+<NodePackageInstallerTabs component={InstallSveltekitOg} />
 
 <Step>Plugins</Step>
 
@@ -46,8 +37,7 @@ Vite plugin is available from sveltekit-og@v4.1.0. If you are using v4.0.0 use <
 
 </Callout>
 
-```js
-// vite.config.{ts,js}
+```js title="vite.config.js" showLineNumbers
 import { sveltekit } from '@sveltejs/kit/vite';
 import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
 const config = {
@@ -69,8 +59,7 @@ Rollup plugin is available from sveltekit-og@v4
 Rollup plugin will be deprecated in v5
 </Callout>
 
-```ts
-// vite.config.{ts,js}
+```ts title="vite.config.js" showLineNumbers
 import { sveltekit } from '@sveltejs/kit/vite';
 import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
 const config = {
@@ -94,8 +83,7 @@ SvelteKit OG works by returning an ImageResponse from a standard SvelteKit serve
 
 ### Raw HTML string
 Creating images with html and css.
-```typescript
-// src/routes/og/+server.ts
+```typescript title="src/routes/og/+server.ts" showLineNumbers
 import { ImageResponse } from '@ethercorps/sveltekit-og';
 import type { RequestHandler } from './$types';
 
