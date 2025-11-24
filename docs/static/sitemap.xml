@@ -23,6 +23,18 @@
   <lastmod>2025-11-24</lastmod>
 </url>
 <url>
+  <loc>https://sveltekit-og.dev/docs/usage/html</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-11-24</lastmod>
+</url>
+<url>
+  <loc>https://sveltekit-og.dev/docs/usage/svelte</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-11-24</lastmod>
+</url>
+<url>
   <loc>https://sveltekit-og.dev/docs/runtime/cloudflare</loc>
   <changefreq>weekly</changefreq>
   <priority>0.8</priority>
@@ -48,18 +60,6 @@
 </url>
 <url>
   <loc>https://sveltekit-og.dev/docs/runtime/vercel</loc>
-  <changefreq>weekly</changefreq>
-  <priority>0.8</priority>
-  <lastmod>2025-11-24</lastmod>
-</url>
-<url>
-  <loc>https://sveltekit-og.dev/docs/usage/html</loc>
-  <changefreq>weekly</changefreq>
-  <priority>0.8</priority>
-  <lastmod>2025-11-24</lastmod>
-</url>
-<url>
-  <loc>https://sveltekit-og.dev/docs/usage/svelte</loc>
   <changefreq>weekly</changefreq>
   <priority>0.8</priority>
   <lastmod>2025-11-24</lastmod>
