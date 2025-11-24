@@ -10,7 +10,18 @@ const config = {
 		alias: {
 			'$content/*': '.velite/*'
 		},
-		adapter: adapter()
+		adapter: adapter(),
+		prerender: {
+			handleMissingId: 'warn',
+			handleHttpError: ({ path, message }) => {
+				console.log('handleHttpError', path, message);
+				// ignore deliberate link to shiny 404 page
+				if (path.split('/').length === 2) return;
+
+				// otherwise fail the build
+				throw new Error(message);
+			},
+		}
 	},
 	extensions: ['.svelte', '.md']
 };

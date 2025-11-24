@@ -40,7 +40,7 @@ You must use one of the SvelteKit OG plugins and explicitly set the esmImport op
 
 <Callout type="warning" title="Warning">
 
-Vite plugin is available from `sveltekit-og@v4.1.0`. If you are using `v4.0.0` use [Rollup](#rollup) plugin.
+Vite plugin is available from `sveltekit-og@v4.1.0`. If you are using `v4.0.0` use [Rollup](#rollup-plugin-legacy) plugin.
 
 If you add the plugin while the dev server is running, you might see no generated image. Stop the server and re-start it.
 
