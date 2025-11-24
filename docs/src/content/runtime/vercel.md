@@ -13,6 +13,7 @@ section: Runtime
 This section details the configuration needed to use SvelteKit OG with the Vercel Adapter (@sveltejs/adapter-vercel), targeting the Vercel Edge Runtime or Serverless Functions (Node).
 
 ## Installation
+
 First, ensure you have the Vercel adapter installed:
 
 <NodePackageInstallerTabs component={InstallVercelAdapter} />
@@ -38,7 +39,7 @@ The image generation uses the @resvg/resvg-wasm, satori, yoga, which relies on a
 
 ### Vite Plugin (Recommended)
 
-<Callout type="warning" title="Warning"> 
+<Callout type="warning" title="Warning">
 
 Vite plugin is available from `sveltekit-og@v4.1.0`. If you are using `v4.0.0` use [Rollup](#rollup) plugin.
 
@@ -54,10 +55,10 @@ import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
 import { defineConfig } from 'vite';
 
 const config = defineConfig({
-    plugins: [
-        sveltekit(), 
-        sveltekitOG() // Add the Vite plugin
-    ]
+	plugins: [
+		sveltekit(),
+		sveltekitOG() // Add the Vite plugin
+	]
 });
 
 export default config;
@@ -75,13 +76,13 @@ import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
 import { defineConfig } from 'vite';
 
 const config = defineConfig({
-    plugins: [sveltekit()],
-    build: {
-       rollupOptions: {
-          // Add rollupWasm plugin for Cloudflare compatibility
-          plugins: [rollupWasm()],
-       }
-    }
+	plugins: [sveltekit()],
+	build: {
+		rollupOptions: {
+			// Add rollupWasm plugin for Cloudflare compatibility
+			plugins: [rollupWasm()]
+		}
+	}
 });
 
 export default config;
@@ -94,20 +95,22 @@ The SvelteKit Vercel adapter supports specifying the runtime on a per-route basi
 You can achieve this by adding a `+server.ts` configuration file alongside your OG image route.
 
 ### Edge
+
 This route runs on the Edge Runtime:
+
 ```typescript title="src/routes/og/+server.ts" showLineNumbers
 // 1. Specify the runtime for this route
 export const config = {
-    runtime: 'edge', // Use the Vercel Edge Runtime
-    split: true // Recommended to ensure isolation
+	runtime: 'edge', // Use the Vercel Edge Runtime
+	split: true // Recommended to ensure isolation
 };
 
 import { ImageResponse } from '@ethercorps/sveltekit-og';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
-    // Your standard ImageResponse logic here
-    return new ImageResponse(/* ... */);
+	// Your standard ImageResponse logic here
+	return new ImageResponse(/* ... */);
 };
 ```
 
@@ -125,7 +128,7 @@ import type { RequestHandler } from './$types';
 import { ImageResponse } from '@ethercorps/sveltekit-og';
 
 export const GET: RequestHandler = async () => {
-    return new ImageResponse(/* ... */);
+	return new ImageResponse(/* ... */);
 };
 ```
 
@@ -136,7 +139,6 @@ Once configured, the usage remains the same as any other SvelteKit environment.
 - Svelte Components: Refer to the [Svelte Component](/docs/usage/svelte) usage.
 
 - Raw HTML: Refer to the [Raw HTML section](/docs/usage/html) for usage with string templates.
-
 
 ## Preview
 

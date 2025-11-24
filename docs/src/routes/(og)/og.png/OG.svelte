@@ -1,7 +1,8 @@
 <svelte:options css="injected" />
+
 <script lang="ts">
-	import Logo from "../(assets)/ethercorps-logo.png?inline"
-	import SvelteLogo from "../(assets)/svelte-logo.svg?raw"
+	import Logo from '../(assets)/ethercorps-logo.png?inline';
+	import SvelteLogo from '../(assets)/svelte-logo.svg?raw';
 </script>
 
 <div class="flex flex-col bg-gradient w-full h-full p-5">
@@ -13,7 +14,9 @@
 		<div class="flex flex-col justify-center h-full w-1/2">
 			<p class="text-lg -mb-3 text-teal-200 font-bold tracking-wider">SVELTEKIT OG</p>
 			<p class="text-5xl font-bold text-teal-400 tracking-widest">VERSION 4 ✨</p>
-			<p class="-mt-2 text-lg text-gray-300">Sveltekit OG v4 with support for Node, Deno, Cloudflare Workers, Pages, Vercel and Netlify</p>
+			<p class="-mt-2 text-lg text-gray-300">
+				Sveltekit OG v4 with support for Node, Deno, Cloudflare Workers, Pages, Vercel and Netlify
+			</p>
 		</div>
 		<div class="flex flex-row items-center justify-center w-1/2">
 			{@html SvelteLogo}
@@ -24,6 +27,11 @@
 
 <style>
 	.bg-gradient {
-      background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+		background: linear-gradient(
+			to right,
+			#2c5364,
+			#203a43,
+			#0f2027
+		); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 	}
 </style>

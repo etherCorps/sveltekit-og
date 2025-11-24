@@ -1,9 +1,9 @@
-import { defineConfig } from "mdsx";
-import { baseRemarkPlugins, baseRehypePlugins } from "@svecodocs/kit/mdsxConfig";
-import { resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { defineConfig } from 'mdsx';
+import { baseRemarkPlugins, baseRehypePlugins } from '@svecodocs/kit/mdsxConfig';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const __dirname = fileURLToPath(new URL(".", import.meta.url));
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
 	remarkPlugins: [...baseRemarkPlugins],
@@ -11,8 +11,8 @@ export default defineConfig({
 	rehypePlugins: [...baseRehypePlugins],
 	blueprints: {
 		default: {
-			path: resolve(__dirname, "./src/lib/components/blueprint.svelte"),
-		},
+			path: resolve(__dirname, './src/lib/components/blueprint.svelte')
+		}
 	},
-	extensions: [".md"],
+	extensions: ['.md']
 });

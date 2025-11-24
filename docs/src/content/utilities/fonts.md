@@ -43,28 +43,23 @@ import BoldFontPath from '$lib/assets/MyFont-Bold.ttf?url';
 
 // 1. Define the CustomFont instances
 const myCustomRegular = new CustomFont(
-    'My Custom Font',
-    // The input function executes `read().arrayBuffer()` only when needed (lazy-loaded)
-    () => read(RegularFontPath).arrayBuffer(), 
-    { weight: 400 }
+	'My Custom Font',
+	// The input function executes `read().arrayBuffer()` only when needed (lazy-loaded)
+	() => read(RegularFontPath).arrayBuffer(),
+	{ weight: 400 }
 );
 
-const myCustomBold = new CustomFont(
-    'My Custom Font',
-    () => read(BoldFontPath).arrayBuffer(),
-    { weight: 700 }
-);
+const myCustomBold = new CustomFont('My Custom Font', () => read(BoldFontPath).arrayBuffer(), {
+	weight: 700
+});
 
 export const GET = async () => {
-    // 2. Resolve the promises to get the final ArrayBuffer array
-    const resolvedFontOptions = await resolveFonts([myCustomRegular, myCustomBold]);
-    
-    return new ImageResponse(
-        `<div tw="flex" style="font-family: 'My Custom Font'">...</div>`,
-        {
-            fonts: resolvedFontOptions, 
-        }
-    );
+	// 2. Resolve the promises to get the final ArrayBuffer array
+	const resolvedFontOptions = await resolveFonts([myCustomRegular, myCustomBold]);
+
+	return new ImageResponse(`<div tw="flex" style="font-family: 'My Custom Font'">...</div>`, {
+		fonts: resolvedFontOptions
+	});
 };
 ```
 
@@ -73,7 +68,7 @@ export const GET = async () => {
 Always use `resolveFonts` before passing to `fonts` as image options.
 
 ```typescript
-await resolveFonts([myCustomRegular, myCustomBold])
+await resolveFonts([myCustomRegular, myCustomBold]);
 ```
 
 </Callout>
@@ -92,26 +87,23 @@ import { ImageResponse, GoogleFont, resolveFonts } from '@ethercorps/sveltekit-o
 
 // 1. Define the GoogleFont instances
 const interRegular = new GoogleFont('Inter', {
-    weight: 400,
-    name: 'Inter',
-    // Optional: Only fetches characters needed for better performance
-    text: 'Hello World! 123', 
+	weight: 400,
+	name: 'Inter',
+	// Optional: Only fetches characters needed for better performance
+	text: 'Hello World! 123'
 });
 
 const interBold = new GoogleFont('Inter', {
-    weight: 700,
+	weight: 700
 });
 
 export const GET = async () => {
-    // 2. Await the resolution (which triggers the fetch/cache lookup)
-    const resolvedFontOptions = await resolveFonts([interRegular, interBold]);
-    
-    return new ImageResponse(
-        `<div tw="flex" style="font-family: 'Inter'">...</div>`,
-        {
-            fonts: resolvedFontOptions, 
-        }
-    );
+	// 2. Await the resolution (which triggers the fetch/cache lookup)
+	const resolvedFontOptions = await resolveFonts([interRegular, interBold]);
+
+	return new ImageResponse(`<div tw="flex" style="font-family: 'Inter'">...</div>`, {
+		fonts: resolvedFontOptions
+	});
 };
 ```
 
@@ -120,7 +112,7 @@ export const GET = async () => {
 Always use `resolveFonts` before passing to `fonts` as image options.
 
 ```typescript
-await resolveFonts([myCustomRegular, myCustomBold])
+await resolveFonts([myCustomRegular, myCustomBold]);
 ```
 
 </Callout>
@@ -138,21 +130,18 @@ const REMOTE_FONT_URL = 'https://my-cdn.com/assets/FontAwesome-Regular.otf';
 
 // 1. Define the CustomFont instance
 const fontAwesome = new CustomFont(
-    'Font Awesome',
-    // Pass a function that returns the ArrayBuffer promise from fetch
-    () => fetch(REMOTE_FONT_URL).then((res) => res.arrayBuffer()),
-    { weight: 400 }
+	'Font Awesome',
+	// Pass a function that returns the ArrayBuffer promise from fetch
+	() => fetch(REMOTE_FONT_URL).then((res) => res.arrayBuffer()),
+	{ weight: 400 }
 );
 
 export const GET = async () => {
-    const resolvedFontOptions = await resolveFonts([fontAwesome]);
-    
-    return new ImageResponse(
-        `<div tw="flex" style="font-family: 'Font Awesome'">...</div>`,
-        {
-            fonts: resolvedFontOptions, 
-        }
-    );
+	const resolvedFontOptions = await resolveFonts([fontAwesome]);
+
+	return new ImageResponse(`<div tw="flex" style="font-family: 'Font Awesome'">...</div>`, {
+		fonts: resolvedFontOptions
+	});
 };
 ```
 
@@ -161,7 +150,7 @@ export const GET = async () => {
 Always use `resolveFonts` before passing to `fonts` as image options.
 
 ```typescript
-await resolveFonts([myCustomRegular, myCustomBold])
+await resolveFonts([myCustomRegular, myCustomBold]);
 ```
 
 </Callout>
@@ -175,50 +164,38 @@ import { ImageResponse, CustomFont, GoogleFont, resolveFonts } from '@ethercorps
 import { read } from '$app/server'; // Needed for local file reading
 
 // --- Local Font Paths (Requires Vite + SvelteKit read) ---
-import LocalRegularPath from '$lib/assets/LocalFont-R.ttf?url'; 
-import LocalBoldPath from '$lib/assets/LocalFont-B.ttf?url'; 
+import LocalRegularPath from '$lib/assets/LocalFont-R.ttf?url';
+import LocalBoldPath from '$lib/assets/LocalFont-B.ttf?url';
 
 // --- Custom Remote URL ---
 const ICON_FONT_URL = 'https://cdn.example.com/icons.ttf';
 
 export const GET = async () => {
+	// 1. Define all font instances
+	const fontsToLoad = [
+		// A. 📦 LOCAL CUSTOM FONT (Uses $app/server/read via a function)
+		new CustomFont('Local App Font', () => read(LocalRegularPath).arrayBuffer(), { weight: 400 }),
+		new CustomFont('Local App Font', () => read(LocalBoldPath).arrayBuffer(), { weight: 700 }),
 
-    // 1. Define all font instances
-    const fontsToLoad = [
-        
-        // A. 📦 LOCAL CUSTOM FONT (Uses $app/server/read via a function)
-        new CustomFont(
-            'Local App Font',
-            () => read(LocalRegularPath).arrayBuffer(), 
-            { weight: 400 }
-        ),
-        new CustomFont(
-            'Local App Font',
-            () => read(LocalBoldPath).arrayBuffer(),
-            { weight: 700 }
-        ),
+		// B. 🌐 GOOGLE FONT (Uses internal fetch/cache)
+		new GoogleFont('Roboto Mono', {
+			weight: 500,
+			name: 'Roboto Mono',
+			text: 'Code: 123' // Optimize this fetch
+		}),
 
-        // B. 🌐 GOOGLE FONT (Uses internal fetch/cache)
-        new GoogleFont('Roboto Mono', {
-            weight: 500,
-            name: 'Roboto Mono',
-            text: 'Code: 123', // Optimize this fetch
-        }),
+		// C. ☁️ CUSTOM REMOTE FONT (Uses global fetch)
+		new CustomFont('Custom Icons', () => fetch(ICON_FONT_URL).then((res) => res.arrayBuffer()), {
+			weight: 400
+		})
+	];
 
-        // C. ☁️ CUSTOM REMOTE FONT (Uses global fetch)
-        new CustomFont(
-            'Custom Icons',
-            () => fetch(ICON_FONT_URL).then(res => res.arrayBuffer()),
-            { weight: 400 }
-        ),
-    ];
+	// 2. Resolve all font buffers concurrently (local reads and network fetches)
+	const resolvedFontOptions = await resolveFonts(fontsToLoad);
 
-    // 2. Resolve all font buffers concurrently (local reads and network fetches)
-    const resolvedFontOptions = await resolveFonts(fontsToLoad);
-    
-    // 3. Render the image
-    return new ImageResponse(
-        `<div tw="flex flex-col p-10 w-full h-full bg-gray-50">
+	// 3. Render the image
+	return new ImageResponse(
+		`<div tw="flex flex-col p-10 w-full h-full bg-gray-50">
             <h1 tw="text-4xl" style="font-family: 'Local App Font'; font-weight: 700;">
                 Mixed Typography Title
             </h1>
@@ -228,12 +205,12 @@ export const GET = async () => {
             <span tw="text-4xl mt-6" style="font-family: 'Custom Icons';">
                 &#xe900; </span>
         </div>`,
-        {
-            width: 1200,
-            height: 630,
-            fonts: resolvedFontOptions, // Array of resolved ArrayBuffers
-        }
-    );
+		{
+			width: 1200,
+			height: 630,
+			fonts: resolvedFontOptions // Array of resolved ArrayBuffers
+		}
+	);
 };
 ```
 
@@ -242,7 +219,7 @@ export const GET = async () => {
 Always use `resolveFonts` before passing to `fonts` as image options.
 
 ```typescript
-await resolveFonts([myCustomRegular, myCustomBold])
+await resolveFonts([myCustomRegular, myCustomBold]);
 ```
 
 </Callout>

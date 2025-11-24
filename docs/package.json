@@ -12,7 +12,9 @@
 		"build:search": "node ./scripts/build-search-data.js",
 		"preview": "vite preview",
 		"check": "velite && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "pnpm build:content && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "pnpm build:content && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"format": "prettier --write .",
+		"lint": "prettier --check ."
 	},
 	"devDependencies": {
 		"@svecodocs/kit": "latest",
@@ -23,6 +25,8 @@
 		"@types/node": "^24.7.1",
 		"mdsx": "^0.0.6",
 		"phosphor-svelte": "^3.0.1",
+		"prettier": "^3.4.2",
+		"prettier-plugin-svelte": "^3.3.3",
 		"svelte": "^5.43.12",
 		"svelte-check": "^4.3.2",
 		"tailwindcss": "^4.1.17",
@@ -33,5 +37,10 @@
 	"dependencies": {
 		"@ethercorps/sveltekit-og": "^4.1.0",
 		"octokit": "^5.0.5"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild"
+		]
 	}
 }

@@ -27,22 +27,18 @@ This method uses a Vite feature to embed the image data directly into your JavaS
 The `?inline` query suffix tells Vite to process the asset and export it as a string containing the Base64 data URL (`data:image/png;base64,...`). Since this string is available directly in your server-side code, it requires no file system access or network requests at runtime.
 
 ### Example
+
 #### Svelte Component
 
 ```svelte showLineNumbers
 <script lang="ts">
-  // 1. Import the asset using the ?inline suffix
-  import myLogoData from '$lib/assets/logo.png?inline';
+	// 1. Import the asset using the ?inline suffix
+	import myLogoData from '$lib/assets/logo.png?inline';
 </script>
 
 <div tw="flex items-center">
-  <img 
-    src={myLogoData} 
-    width="128" 
-    height="128" 
-    alt="Base64 Logo" 
-  />
-  <h1>My Base64 Title</h1>
+	<img src={myLogoData} width="128" height="128" alt="Base64 Logo" />
+	<h1>My Base64 Title</h1>
 </div>
 ```
 
@@ -51,16 +47,16 @@ The `?inline` query suffix tells Vite to process the asset and export it as a st
 ```typescript showLineNumbers
 import { ImageResponse } from '@ethercorps/sveltekit-og';
 // Import the image directly as data URL
-import logoDataUrl from '$lib/assets/logo.png?inline'; 
+import logoDataUrl from '$lib/assets/logo.png?inline';
 
 export const GET = async () => {
-  const htmlToRender = `
+	const htmlToRender = `
     <div tw="flex flex-col">
       <img src="${logoDataUrl}" width="128" height="128" />
     </div>
   `;
 
-  return new ImageResponse(htmlToRender, { width: 1200, height: 630 });
+	return new ImageResponse(htmlToRender, { width: 1200, height: 630 });
 };
 ```
 
@@ -84,22 +80,22 @@ import imagePath from '$lib/assets/large_image.jpg?url';
 import { read } from '$app/server'; // 2. Import the server read utility
 
 export const GET = async ({ fetch }) => {
-  // 3. Read the content of the asset path using the utility
-  const assetResponse = await read(imagePath);
-  const imageBuffer = await assetResponse.arrayBuffer();
+	// 3. Read the content of the asset path using the utility
+	const assetResponse = await read(imagePath);
+	const imageBuffer = await assetResponse.arrayBuffer();
 
-  // 4. Convert ArrayBuffer to Base64 for Satori's consumption
-  const base64Image = Buffer.from(imageBuffer).toString('base64');
-  const mimeType = assetResponse.headers.get('content-type') || 'image/jpeg';
-  const dataUrl = `data:${mimeType};base64,${base64Image}`;
+	// 4. Convert ArrayBuffer to Base64 for Satori's consumption
+	const base64Image = Buffer.from(imageBuffer).toString('base64');
+	const mimeType = assetResponse.headers.get('content-type') || 'image/jpeg';
+	const dataUrl = `data:${mimeType};base64,${base64Image}`;
 
-  const htmlToRender = `
+	const htmlToRender = `
     <div tw="flex">
       <img src="${dataUrl}" width="500" height="500" />
     </div>
   `;
 
-  return new ImageResponse(htmlToRender, { width: 1200, height: 630 });
+	return new ImageResponse(htmlToRender, { width: 1200, height: 630 });
 };
 ```
 
@@ -120,17 +116,17 @@ import { ImageResponse } from '@ethercorps/sveltekit-og';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
-  // Construct the absolute URL using the request URL's origin
-  // Assumes logo.png is in the static folder
-  const absoluteUrl = `${url.origin}/logo.png`;
+	// Construct the absolute URL using the request URL's origin
+	// Assumes logo.png is in the static folder
+	const absoluteUrl = `${url.origin}/logo.png`;
 
-  const htmlToRender = `
+	const htmlToRender = `
     <div tw="flex">
       <img src="${absoluteUrl}" width="100" height="100" />
     </div>
   `;
 
-  return new ImageResponse(htmlToRender, { width: 1200, height: 630 });
+	return new ImageResponse(htmlToRender, { width: 1200, height: 630 });
 };
 ```
 

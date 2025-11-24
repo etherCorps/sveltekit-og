@@ -12,6 +12,7 @@ section: Overview
 </script>
 
 ## Setup
+
 Setting up SvelteKit OG is a two-step process: install the package and plugin.
 
 <Steps>
@@ -24,10 +25,12 @@ Install the package using your preferred package manager:
 <Step>Plugins</Step>
 
 Sveltekit OG provides two plugins (use one of them)
+
 1. [Vite](#vite) - Available from v4.1.x
 2. [Rollup](#rollup) - Available for v4.x.x - will be deprecated in v5.
 
 ### Vite
+
 Add vite plugin to `vite.config.ts`.
 
 <Callout type="warning" title="Warning">
@@ -66,14 +69,14 @@ const config = {
 	plugins: [sveltekit()],
 	build: {
 		rollupOptions: {
-			plugins: [rollupWasm()],
+			plugins: [rollupWasm()]
 		}
 	}
 };
 
 export default config;
-
 ```
+
 </Steps>
 
 <Callout type="warning" title="Use sveltekit OG v4">
@@ -83,19 +86,22 @@ export default config;
 
 ## Basic Usage
 
-SvelteKit OG works by returning an ImageResponse from a standard SvelteKit server route. 
+SvelteKit OG works by returning an ImageResponse from a standard SvelteKit server route.
+
 - Create a new file at src/routes/og/+server.ts.
 
 ### Raw HTML string
+
 Creating images with html and css.
+
 ```typescript title="src/routes/og/+server.ts" showLineNumbers
 import { ImageResponse } from '@ethercorps/sveltekit-og';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
-  // 1. Define your HTML template
-  // You can use the 'tw' attribute for Tailwind classes
-  const html = `
+	// 1. Define your HTML template
+	// You can use the 'tw' attribute for Tailwind classes
+	const html = `
     <div tw="flex w-full h-full bg-white items-center justify-center">
       <div tw="flex flex-col items-center justify-center">
         <h1 tw="text-6xl font-bold text-gray-900">Hello SvelteKit OG!</h1>
@@ -104,14 +110,15 @@ export const GET: RequestHandler = async () => {
     </div>
   `;
 
-  // 2. Return the ImageResponse
-  return new ImageResponse(html, {
-    width: 1200,
-    height: 630,
-    // The library uses 'Noto Sans' by default if no fonts are provided
-  });
+	// 2. Return the ImageResponse
+	return new ImageResponse(html, {
+		width: 1200,
+		height: 630
+		// The library uses 'Noto Sans' by default if no fonts are provided
+	});
 };
 ```
+
 #### Preview
 
 <img class="mt-4 rounded-lg" src="/preview" alt="Raw HTML Image">
@@ -126,15 +133,17 @@ We can create images with svelte components too.
 ```svelte
 <svelte:options css="injected" />
 ```
+
 </Callout>
 
 - Svelte Component
 
 ```svelte
 <svelte:options css="injected" />
+
 <script lang="ts">
-	import Logo from "./logo.png?inline"
-	import SvelteLogo from "./svelte-logo.svg?raw"
+	import Logo from './logo.png?inline';
+	import SvelteLogo from './svelte-logo.svg?raw';
 </script>
 
 <div class="flex flex-col bg-gradient w-full h-full p-5">
@@ -146,7 +155,9 @@ We can create images with svelte components too.
 		<div class="flex flex-col justify-center h-full w-1/2">
 			<p class="text-lg -mb-3 text-teal-200 font-bold tracking-wider">SVELTEKIT OG</p>
 			<p class="text-5xl font-bold text-teal-400 tracking-widest">VERSION 4 ✨</p>
-			<p class="-mt-2 text-lg text-gray-300">Sveltekit OG v4 with support for Node, Deno, Cloudflare Workers, Pages, Vercel and Netlify</p>
+			<p class="-mt-2 text-lg text-gray-300">
+				Sveltekit OG v4 with support for Node, Deno, Cloudflare Workers, Pages, Vercel and Netlify
+			</p>
 		</div>
 		<div class="flex flex-row items-center justify-center w-full w-1/2">
 			{@html SvelteLogo}
@@ -157,11 +168,18 @@ We can create images with svelte components too.
 
 <style>
 	.bg-gradient {
-		background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+		background: linear-gradient(
+			to right,
+			#2c5364,
+			#203a43,
+			#0f2027
+		); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 	}
 </style>
 ```
+
 - og/+server.ts
+
 ```typescript
 import type { RequestHandler } from '@sveltejs/kit';
 import { ImageResponse } from '@ethercorps/sveltekit-og';
@@ -172,8 +190,8 @@ export const GET: RequestHandler = async () => {
 		width: 1200,
 		height: 630,
 		debug: false
-	})
-}
+	});
+};
 ```
 
 #### Preview

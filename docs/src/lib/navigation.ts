@@ -1,63 +1,65 @@
-import { defineNavigation } from "@svecodocs/kit";
-import ChalkboardTeacher from "phosphor-svelte/lib/ChalkboardTeacher";
-import RocketLaunch from "phosphor-svelte/lib/RocketLaunch";
-import Tag from "phosphor-svelte/lib/Tag";
-import { getAllDocs } from "./utils.js";
+import { defineNavigation } from '@svecodocs/kit';
+import ChalkboardTeacher from 'phosphor-svelte/lib/ChalkboardTeacher';
+import RocketLaunch from 'phosphor-svelte/lib/RocketLaunch';
+import Tag from 'phosphor-svelte/lib/Tag';
+import { getAllDocs } from './utils.js';
 
 const allDocs = getAllDocs();
 
 const runtime = allDocs
-	.filter((doc) => doc.section === "Runtime")
+	.filter((doc) => doc.section === 'Runtime')
 	.map((doc) => ({
 		title: doc.title,
-		href: `/docs/${doc.slug}`,
+		href: `/docs/${doc.slug}`
 	}));
 
 const usage = allDocs
-	.filter((doc) => doc.section === "Usage")
+	.filter((doc) => doc.section === 'Usage')
 	.map((doc) => ({
 		title: doc.title,
-		href: `/docs/${doc.slug}`,
-	})).reverse();
+		href: `/docs/${doc.slug}`
+	}))
+	.reverse();
 
 const utilities = allDocs
-	.filter((doc) => doc.section === "Utilities")
+	.filter((doc) => doc.section === 'Utilities')
 	.map((doc) => ({
 		title: doc.title,
-		href: `/docs/${doc.slug}`,
-	})).reverse();
+		href: `/docs/${doc.slug}`
+	}))
+	.reverse();
 
 export const navigation = defineNavigation({
 	anchors: [
 		{
-			title: "Introduction",
-			href: "/docs",
-			icon: ChalkboardTeacher,
+			title: 'Introduction',
+			href: '/docs',
+			icon: ChalkboardTeacher
 		},
 		{
-			title: "Getting Started",
-			href: "/docs/getting-started",
-			icon: RocketLaunch,
+			title: 'Getting Started',
+			href: '/docs/getting-started',
+			icon: RocketLaunch
 		},
 		{
-			title: "Releases",
+			title: 'Releases',
 			// href: "https://www.npmjs.com/package/@ethercorps/sveltekit-og?activeTab=versions",
-			href: "/docs/release",
-			icon: Tag,
-		},
+			href: '/docs/release',
+			icon: Tag
+		}
 	],
 	sections: [
 		{
-			title: "Usage",
-			items: usage,
+			title: 'Usage',
+			items: usage
 		},
 		{
-			title: "Runtime",
-			items: runtime,
+			title: 'Runtime',
+			items: runtime
 		},
 		{
-			title: "Utilities",
-			items: utilities,
+			title: 'Utilities',
+			items: utilities
 		}
-	],
+	]
 });

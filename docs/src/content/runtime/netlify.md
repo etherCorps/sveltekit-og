@@ -15,6 +15,7 @@ This section details the configuration needed to use SvelteKit OG with the Netli
 Netlify Functions, similar to Vercel Serverless Functions, are a Node.js-based environment that generally supports the Wasm module dependencies required by the image generation engine. However, the SvelteKit OG plugins ensure the Wasm files are correctly bundled and available within the function context.
 
 ## Installation
+
 First, ensure you have the Netlify adapter installed:
 <NodePackageInstallerTabs component={InstallNetlifyAdapter}/>
 
@@ -39,7 +40,7 @@ The image generation uses the @resvg/resvg-wasm, satori, yoga, which relies on a
 
 ### Vite Plugin (Recommended)
 
-<Callout type="warning" title="Warning"> 
+<Callout type="warning" title="Warning">
 
 Vite plugin is available from `sveltekit-og@v4.1.0`. If you are using `v4.0.0` use [Rollup](#rollup) plugin.
 
@@ -55,10 +56,10 @@ import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
 import { defineConfig } from 'vite';
 
 const config = defineConfig({
-    plugins: [
-        sveltekit(), 
-        sveltekitOG() // Add the Vite plugin
-    ]
+	plugins: [
+		sveltekit(),
+		sveltekitOG() // Add the Vite plugin
+	]
 });
 
 export default config;
@@ -76,13 +77,13 @@ import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
 import { defineConfig } from 'vite';
 
 const config = defineConfig({
-    plugins: [sveltekit()],
-    build: {
-       rollupOptions: {
-          // Add rollupWasm plugin for Cloudflare compatibility
-          plugins: [rollupWasm()],
-       }
-    }
+	plugins: [sveltekit()],
+	build: {
+		rollupOptions: {
+			// Add rollupWasm plugin for Cloudflare compatibility
+			plugins: [rollupWasm()]
+		}
+	}
 });
 
 export default config;

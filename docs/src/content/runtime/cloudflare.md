@@ -13,6 +13,7 @@ section: Runtime
 This section details the necessary configuration to ensure the SvelteKit OG's image generation engine, which relies on **WebAssembly (Wasm)**, is correctly bundled and executed within the **Cloudflare Workers** or **Pages** runtime environment.
 
 ## Installation
+
 To deploy with Cloudflare, you must first install the necessary SvelteKit adapter:
 
 <NodePackageInstallerTabs component={InstallCloudflareAdapter} />
@@ -38,7 +39,7 @@ The image generation uses the @resvg/resvg-wasm, satori, yoga, which relies on a
 
 ### Vite Plugin (Recommended)
 
-<Callout type="warning" title="Warning"> 
+<Callout type="warning" title="Warning">
 
 Vite plugin is available from `sveltekit-og@v4.1.0`. If you are using `v4.0.0` use [Rollup](#rollup) plugin.
 
@@ -54,10 +55,10 @@ import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
 import { defineConfig } from 'vite';
 
 const config = defineConfig({
-    plugins: [
-        sveltekit(), 
-        sveltekitOG() // Add the Vite plugin
-    ]
+	plugins: [
+		sveltekit(),
+		sveltekitOG() // Add the Vite plugin
+	]
 });
 
 export default config;
@@ -75,13 +76,13 @@ import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
 import { defineConfig } from 'vite';
 
 const config = defineConfig({
-    plugins: [sveltekit()],
-    build: {
-       rollupOptions: {
-          // Add rollupWasm plugin for Cloudflare compatibility
-          plugins: [rollupWasm()],
-       }
-    }
+	plugins: [sveltekit()],
+	build: {
+		rollupOptions: {
+			// Add rollupWasm plugin for Cloudflare compatibility
+			plugins: [rollupWasm()]
+		}
+	}
 });
 
 export default config;

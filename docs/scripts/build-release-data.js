@@ -1,13 +1,13 @@
-import { fileURLToPath } from "node:url";
-import { writeFile } from "node:fs/promises"; // Changed to writeFile (async) from promises module
-import { resolve } from "node:path";
+import { fileURLToPath } from 'node:url';
+import { writeFile } from 'node:fs/promises'; // Changed to writeFile (async) from promises module
+import { resolve } from 'node:path';
 
 // Get the directory name for path resolution
 // Note: In an ES module environment, resolve paths relative to import.meta.url
-const __dirname = fileURLToPath(new URL(".", import.meta.url));
-const PACKAGE_NAME = "@ethercorps/sveltekit-og";
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+const PACKAGE_NAME = '@ethercorps/sveltekit-og';
 const NPM_REGISTRY_URL = `https://registry.npmjs.org/${PACKAGE_NAME}`;
-const TARGET_FILE_PATH = resolve(__dirname, "../src/lib/release.json");
+const TARGET_FILE_PATH = resolve(__dirname, '../src/lib/release.json');
 const NPM_DOWNLOADS_URL = `https://api.npmjs.org/downloads/point/last-week/${PACKAGE_NAME}`;
 
 /**
@@ -26,7 +26,9 @@ export async function buildNpmReleaseData() {
 
 		// 1. Process Registry Metadata Response
 		if (!registryResponse.ok) {
-			throw new Error(`Registry HTTP Error: ${registryResponse.status} ${registryResponse.statusText}`);
+			throw new Error(
+				`Registry HTTP Error: ${registryResponse.status} ${registryResponse.statusText}`
+			);
 		}
 		const data = await registryResponse.json();
 
@@ -37,17 +39,13 @@ export async function buildNpmReleaseData() {
 			// The API returns the total downloads for the package in the 'downloads' field
 			weeklyDownloads = downloadsData.downloads || 0;
 		} else {
-			console.warn(`\nWarning: Could not fetch weekly downloads. Status: ${downloadsResponse.status}`);
+			console.warn(
+				`\nWarning: Could not fetch weekly downloads. Status: ${downloadsResponse.status}`
+			);
 		}
 
-
 		// Extract key fields
-		const {
-			'dist-tags': distTags,
-			versions,
-			time,
-			name,
-		} = data;
+		const { 'dist-tags': distTags, versions, time, name } = data;
 
 		const latestVersion = distTags.latest;
 		const latestRelease = versions[latestVersion];
@@ -72,11 +70,10 @@ export async function buildNpmReleaseData() {
 				date: time[latestVersion],
 				tarball: latestRelease.dist.tarball,
 				shasum: latestRelease.dist.shasum,
-				dependencies: latestRelease.dependencies || {},
+				dependencies: latestRelease.dependencies || {}
 			},
-			distTags,
+			distTags
 		};
-
 	} catch (error) {
 		console.error(`\n--- Error fetching NPM data for ${PACKAGE_NAME} ---\n`, error.message);
 		// Return an empty object on failure to allow the script to exit gracefully
@@ -94,18 +91,14 @@ export async function buildNpmReleaseData() {
 			console.log(`\nSuccessfully fetched latest version: ${releaseData.latestVersion}`);
 
 			// Write the file asynchronously with JSON formatting (2 spaces)
-			await writeFile(
-				TARGET_FILE_PATH,
-				JSON.stringify(releaseData, null, 2),
-				{ flag: "w" }
-			);
+			await writeFile(TARGET_FILE_PATH, JSON.stringify(releaseData, null, 2), { flag: 'w' });
 
 			console.log(`\n✅ Release data successfully written to ${TARGET_FILE_PATH}`);
 		} else {
-			console.log("\n⚠️ Skipping file write due to errors or missing data.");
+			console.log('\n⚠️ Skipping file write due to errors or missing data.');
 		}
 	} catch (error) {
-		console.error("\n--- An unexpected error occurred during file operation ---\n", error);
+		console.error('\n--- An unexpected error occurred during file operation ---\n', error);
 		process.exit(1); // Exit with error code
 	}
 })();

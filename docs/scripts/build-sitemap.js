@@ -1,4 +1,4 @@
-import { writeFileSync } from "node:fs";
+import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { docs } from '../.velite/index.js';
@@ -14,8 +14,8 @@ const BASE_URL = 'https://sveltekit-og.dev';
  * 'static' is the standard directory SvelteKit serves statically.
  * @type {string}
  */
-const __dirname = fileURLToPath(new URL(".", import.meta.url));
-const OUTPUT_FILE = resolve(__dirname, "../static/sitemap.xml");
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+const OUTPUT_FILE = resolve(__dirname, '../static/sitemap.xml');
 
 // --- DATA SOURCE ---
 
@@ -36,8 +36,8 @@ function getDocumentationRoutes() {
 	return docs.map((doc) => ({
 		title: doc.title,
 		href: `/docs/${doc.slug}`,
-		lastmod: currentDate,
-	}))
+		lastmod: currentDate
+	}));
 }
 
 // --- HELPER FUNCTION ---
@@ -75,24 +75,14 @@ function generateSitemap() {
 	// 2. Documentation Routes
 	const docRoutes = getDocumentationRoutes();
 
-	docRoutes.forEach(route => {
+	docRoutes.forEach((route) => {
 		const loc = `${BASE_URL}${route.href}`;
 		const lastMod = route.lastmod;
 		if (route.href !== '/docs/index') {
-			xml += createUrlEntry(
-				loc,
-				'weekly',
-				0.8,
-				lastMod
-			);
+			xml += createUrlEntry(loc, 'weekly', 0.8, lastMod);
 		}
 	});
-	xml += createUrlEntry(
-		`${BASE_URL}/sitemap.xml`,
-		'daily',
-		1,
-		currentDate
-	);
+	xml += createUrlEntry(`${BASE_URL}/sitemap.xml`, 'daily', 1, currentDate);
 
 	xml += `</urlset>`;
 

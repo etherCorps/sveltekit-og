@@ -1,8 +1,8 @@
-import { docs, type Doc } from "$content/index.js";
-import { error } from "@sveltejs/kit";
-import type { Component } from "svelte";
+import { docs, type Doc } from '$content/index.js';
+import { error } from '@sveltejs/kit';
+import type { Component } from 'svelte';
 
-export function getDocMetadata(slug: string | "index" = "index") {
+export function getDocMetadata(slug: string | 'index' = 'index') {
 	return docs.find((doc) => doc.slug === slug);
 }
 
@@ -11,13 +11,13 @@ export function getAllDocs() {
 }
 
 function slugFromPath(path: string) {
-	return path.replace("/src/content/", "").replace(".md", "");
+	return path.replace('/src/content/', '').replace('.md', '');
 }
 
 export type DocResolver = () => Promise<{ default: Component; metadata: Doc }>;
 
-export async function getDoc(slug: string | "index" = "index") {
-	const modules = import.meta.glob("/src/content/**/*.md");
+export async function getDoc(slug: string | 'index' = 'index') {
+	const modules = import.meta.glob('/src/content/**/*.md');
 
 	let match: { path?: string; resolver?: DocResolver } = {};
 
@@ -30,11 +30,11 @@ export async function getDoc(slug: string | "index" = "index") {
 	const doc = await match?.resolver?.();
 	const metadata = getDocMetadata(slug);
 	if (!doc || !metadata) {
-		error(404, "Could not find the document.");
+		error(404, 'Could not find the document.');
 	}
 
 	return {
 		component: doc.default,
-		metadata,
+		metadata
 	};
 }

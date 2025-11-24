@@ -12,7 +12,7 @@ const fonts: Record<FontWeight, string> = {
 
 const fontWeight: Record<FontWeight, number> = {
 	regular: 400,
-	bold: 700,
+	bold: 700
 } as const;
 
 const fetchFont = async (weight: FontWeight, file: string) => {
@@ -21,17 +21,17 @@ const fetchFont = async (weight: FontWeight, file: string) => {
 		name: 'Neon',
 		weight: fontWeight[weight],
 		style: 'normal'
-	}
-}
+	};
+};
 
 export const fontsData = async () => {
-	let fontsData: ImageResponseOptions["fonts"] = []
-	const fontsPromise = []
+	let fontsData: ImageResponseOptions['fonts'] = [];
+	const fontsPromise = [];
 	for (const [key, value] of Object.entries(fonts)) {
-		fontsPromise.push(fetchFont(key as FontWeight, value))
+		fontsPromise.push(fetchFont(key as FontWeight, value));
 	}
 
-	const fontsResponse = await Promise.all(fontsPromise)
-	fontsData = fontsResponse.filter((font) => font !==undefined) as ImageResponseOptions["fonts"]
-	return fontsData
-}
+	const fontsResponse = await Promise.all(fontsPromise);
+	fontsData = fontsResponse.filter((font) => font !== undefined) as ImageResponseOptions['fonts'];
+	return fontsData;
+};

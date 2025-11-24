@@ -1,17 +1,14 @@
 <script lang="ts">
-	import { Tabs, TabItem } from "@svecodocs/kit";
-	const managers = ["pnpm", "npm", "yarn", 'deno'];
+	import { Tabs, TabItem } from '@svecodocs/kit';
+	const managers = ['pnpm', 'npm', 'yarn', 'deno'];
 	import type { Component } from 'svelte';
 
 	type Props = {
-		component: Component
-		selected?: string
-	}
+		component: Component;
+		selected?: string;
+	};
 
-	const {component: CommandComponent, selected}: Props = $props();
-
-
-
+	const { component: CommandComponent, selected }: Props = $props();
 </script>
 
 <Tabs value={selected ?? 'pnpm'} items={managers}>

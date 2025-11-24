@@ -13,6 +13,6 @@ export const GET: RequestHandler = async () => {
 
 	return new ImageResponse(html, {
 		width: 1200,
-		height: 630,
+		height: 630
 	});
 };

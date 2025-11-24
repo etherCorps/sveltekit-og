@@ -1,7 +1,7 @@
 <script lang="ts">
-	import LogoDark from "$lib/components/logos/dark.svelte";
-	import { DocsLayout } from "@svecodocs/kit";
-	import { navigation } from "$lib/navigation";
+	import LogoDark from '$lib/components/logos/dark.svelte';
+	import { DocsLayout } from '@svecodocs/kit';
+	import { navigation } from '$lib/navigation';
 
 	let { children } = $props();
 </script>

@@ -13,6 +13,7 @@ section: Runtime
 This section details the configuration needed to deploy SvelteKit OG using the Deno adapter (svelte-adapter-deno), targeting the Deno Runtime (Deno Deploy).
 
 ## Installation
+
 To deploy with deno, you must first install the necessary SvelteKit adapter:
 
 <NodePackageInstallerTabs component={InstallDenoAdapter} selected="deno"/>
@@ -31,13 +32,14 @@ const config = {
 };
 export default config;
 ```
+
 ## Plugin Configuration
 
 The image generation uses the @resvg/resvg-wasm, satori, yoga, which relies on a Wasm module. The official SvelteKit OG plugins handle the complex Wasm bundling required for the build/runtime. You must choose one of the following plugins based on your sveltekit-og version.
 
 ### Vite Plugin (Recommended)
 
-<Callout type="warning" title="Warning"> 
+<Callout type="warning" title="Warning">
 
 Vite plugin is available from `sveltekit-og@v4.1.0`. If you are using `v4.0.0` use [Rollup](#rollup) plugin.
 
@@ -53,10 +55,10 @@ import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
 import { defineConfig } from 'vite';
 
 const config = defineConfig({
-    plugins: [
-        sveltekit(), 
-        sveltekitOG() // Add the Vite plugin
-    ]
+	plugins: [
+		sveltekit(),
+		sveltekitOG() // Add the Vite plugin
+	]
 });
 
 export default config;
@@ -74,13 +76,13 @@ import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
 import { defineConfig } from 'vite';
 
 const config = defineConfig({
-    plugins: [sveltekit()],
-    build: {
-       rollupOptions: {
-          // Add rollupWasm plugin for Cloudflare compatibility
-          plugins: [rollupWasm()],
-       }
-    }
+	plugins: [sveltekit()],
+	build: {
+		rollupOptions: {
+			// Add rollupWasm plugin for Cloudflare compatibility
+			plugins: [rollupWasm()]
+		}
+	}
 });
 
 export default config;

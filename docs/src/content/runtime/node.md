@@ -4,7 +4,6 @@ description: How to use Sveltekit OG with the node adapter (@sveltejs/adapter-no
 section: Runtime
 ---
 
-
 <script>
     import { Callout} from '@svecodocs/kit';
     import NodePackageInstallerTabs from "$lib/components/add-ons/installer-tabs.svelte"; 
@@ -13,8 +12,8 @@ section: Runtime
 
 This section details the necessary configuration to use SvelteKit OG with the Node Adapter (@sveltejs/adapter-node), targeting a standard self-hosted Node.js server environment.
 
-
 ## Installation
+
 First, ensure you have the Node adapter installed:
 <NodePackageInstallerTabs component={InstallNodeAdapter}/>
 
@@ -34,11 +33,12 @@ export default config;
 ```
 
 ## Plugin Configuration
+
 You must use one of the SvelteKit OG plugins and explicitly set the esmImport option to false. This configuration ensures the Wasm module is loaded using Node's standard functions, providing reliable execution in the Node environment.
 
 ### Vite Plugin (Recommended)
 
-<Callout type="warning" title="Warning"> 
+<Callout type="warning" title="Warning">
 
 Vite plugin is available from `sveltekit-og@v4.1.0`. If you are using `v4.0.0` use [Rollup](#rollup) plugin.
 
@@ -54,12 +54,12 @@ import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
 import { defineConfig } from 'vite';
 
 const config = defineConfig({
-    plugins: [
-        sveltekit(), 
-        sveltekitOG({
-            esmImport: false // Crucial for reliable Wasm loading in Node.js
-        }) 
-    ]
+	plugins: [
+		sveltekit(),
+		sveltekitOG({
+			esmImport: false // Crucial for reliable Wasm loading in Node.js
+		})
+	]
 });
 
 export default config;
@@ -81,10 +81,12 @@ import { defineConfig } from 'vite';
 const config = defineConfig({
 	plugins: [sveltekit()],
 	build: {
-		rollupOptions:{
-			plugins: [rollupWasm({
-				esmImport: false // Crucial for reliable Wasm loading in Node.js
-			})]
+		rollupOptions: {
+			plugins: [
+				rollupWasm({
+					esmImport: false // Crucial for reliable Wasm loading in Node.js
+				})
+			]
 		}
 	}
 });
@@ -114,6 +116,7 @@ To verify the Node setup works correctly, you can clone and run the dedicated ex
 git clone https://github.com/etherCorps/sveltekit-og.git
 cd sveltekit-og/examples/node-build
 ```
+
 - Install Dependencies:
 
 ```shell title="Bash"
