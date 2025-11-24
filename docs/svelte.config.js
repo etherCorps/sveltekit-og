@@ -18,7 +18,7 @@ const config = {
 				// ignore deliberate link to shiny 404 page
 				if (path.split('/').length === 2) return;
 
-				if (path.startsWith('/api/og/prerendered')) return;
+				if (path.startsWith('/api/og/image')) return;
 
 				// otherwise fail the build
 				throw new Error(message);
