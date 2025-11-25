@@ -3,4 +3,8 @@
     "org": "ethercorps",
     "app": "sveltekit-og"
   },
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "extends": "./.svelte-kit/tsconfig.json"
+  }
 }
