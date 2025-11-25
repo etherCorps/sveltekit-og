@@ -29,7 +29,13 @@ export async function getRepoDetails(details: Required<RequestDetailsParams>) {
 		owner: details.owner,
 		repo: details.repo,
 		headers: {
-			'X-GitHub-Api-Version': '2022-11-28'
+			'X-GitHub-Api-Version': '2022-11-28',
+		},
+		...{
+			cf: {
+				cacheTtl: 60 * 60, // 1 hour,
+				cacheEverything: true,
+			}
 		}
 	});
 
@@ -38,6 +44,12 @@ export async function getRepoDetails(details: Required<RequestDetailsParams>) {
 		repo: details.repo,
 		headers: {
 			'X-GitHub-Api-Version': '2022-11-28'
+		},
+		...{
+			cf: {
+				cacheTtl: 60 * 60, // 1 hour,
+				cacheEverything: true,
+			}
 		}
 	});
 
