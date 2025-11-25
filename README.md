@@ -114,7 +114,7 @@ Then run `npm dev` and visit `localhost:5173/og` to view your generated PNG. Rem
 
 ## Example Output
 
-![Rendered OG image](https://vercel.sveltekit-og.dev/og.png)
+![Rendered OG image](https://github.com/etherCorps/sveltekit-og/blob/main/static/og.png)
 
 ## Headers
 
