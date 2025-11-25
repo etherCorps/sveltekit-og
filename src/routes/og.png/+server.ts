@@ -4,6 +4,8 @@ import { CustomFont, GoogleFont, resolveFonts } from '$lib/fonts.js';
 import RegularFont from "../(components)/SpaceMono-Regular.ttf?url";
 import { read } from '$app/server';
 
+export const prerender = true;
+
 const spaceMonoBold = new GoogleFont('Space Mono', {
 	weight: 700
 });
