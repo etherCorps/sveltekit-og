@@ -18,8 +18,7 @@ const usage = allDocs
 	.map((doc) => ({
 		title: doc.title,
 		href: `/docs/${doc.slug}`
-	}))
-	.reverse();
+	}));
 
 const utilities = allDocs
 	.filter((doc) => doc.section === 'Utilities')

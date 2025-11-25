@@ -5,6 +5,7 @@
 	"scripts": {
 		"dev": "pnpm \"/dev:/\"",
 		"dev:content": "velite dev --watch",
+        "dev:generate": " pnpm build:release",
 		"dev:svelte": "vite dev",
 		"build": "velite && node ./scripts/update-velite-output.js && pnpm build:search && pnpm build:release && pnpm build:sitemap && vite build",
 		"build:sitemap": "node ./scripts/build-sitemap.js",

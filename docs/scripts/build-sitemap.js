@@ -36,7 +36,7 @@ function getDocumentationRoutes() {
 	return docs.map((doc) => ({
 		title: doc.title,
 		href: `/docs/${doc.slug}`,
-		lastmod: currentDate
+		lastmod: doc.timestamp?.split('T')[0] ?? currentDate,
 	}));
 }
 
@@ -70,17 +70,14 @@ function generateSitemap() {
 
 	// 1. Static Routes
 	const currentDate = new Date().toISOString().split('T')[0];
-	xml += createUrlEntry(`${BASE_URL}/docs`, 'daily', 1.0, currentDate);
-
 	// 2. Documentation Routes
 	const docRoutes = getDocumentationRoutes();
 
 	docRoutes.forEach((route) => {
-		const loc = `${BASE_URL}${route.href}`;
+		const isBaseDoc = route.href === '/docs/index';
+		const loc = isBaseDoc ? `${BASE_URL}/docs` : `${BASE_URL}${route.href}`;
 		const lastMod = route.lastmod;
-		if (route.href !== '/docs/index') {
-			xml += createUrlEntry(loc, 'weekly', 0.8, lastMod);
-		}
+			xml += createUrlEntry(loc, 'weekly', isBaseDoc ? 1 : 0.8, lastMod);
 	});
 	xml += createUrlEntry(`${BASE_URL}/sitemap.xml`, 'daily', 1, currentDate);
 
