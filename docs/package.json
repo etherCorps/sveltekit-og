@@ -6,7 +6,7 @@
 		"dev": "pnpm \"/dev:/\"",
 		"dev:content": "velite dev --watch",
 		"dev:svelte": "vite dev",
-		"build": "velite && node ./scripts/update-velite-output.js && pnpm build:search && pnpm build:search && pnpm build:sitemap && vite build",
+		"build": "velite && node ./scripts/update-velite-output.js && pnpm build:search && pnpm build:release && pnpm build:sitemap && vite build",
 		"build:sitemap": "node ./scripts/build-sitemap.js",
 		"build:release": "node ./scripts/build-release-data.js",
 		"build:search": "node ./scripts/build-search-data.js",
