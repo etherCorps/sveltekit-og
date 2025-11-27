@@ -132,5 +132,8 @@ export const GET: RequestHandler = async ({ url }) => {
 ```
 
 <Callout type="warning" title="Warning for Edge Runtimes"> 
-    In Edge Runtimes (Cloudflare, Vercel Edge, Deno), using fetch() to retrieve an asset from your own server (url.origin) can sometimes result in deployment loops or slow cold starts. <br /> Method 1 (?inline) or Method 2 ($app/server/read) is strongly preferred in these environments.
+    
+In `Edge Runtimes` (`Cloudflare`, `Vercel Edge`, `Deno`), using `fetch()` to retrieve an `asset` from your own server (`url.origin`) can sometimes `slow cold starts`. <br /> 
+- Method 1 (`?inline`) or Method 2 (`$app/server/read`) is strongly preferred in these environments.
+
 </Callout>
