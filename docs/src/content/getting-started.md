@@ -20,6 +20,7 @@ Setting up SvelteKit OG is a two-step process: install the package and plugin.
 <Step>Installation</Step>
 
 Install the package using your preferred package manager:
+
 <NodePackageInstallerTabs component={InstallSveltekitOg} />
 
 <Step>Plugins</Step>

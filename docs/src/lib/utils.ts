@@ -38,3 +38,45 @@ export async function getDoc(slug: string | 'index' = 'index') {
 		metadata
 	};
 }
+
+function titleLocaleCompare(a: string, b: string) {
+	return a.localeCompare(b);
+}
+
+const sortDocs = (a: Doc, b: Doc) => {
+	const aHasPriority = a.priority != null;
+	const bHasPriority = b.priority != null;
+
+	if (a?.priority && b?.priority) {
+		const priorityComparison = a.priority! - b.priority!;
+		if (priorityComparison !== 0) {
+			return priorityComparison;
+		}
+		return titleLocaleCompare(a.title, b.title);
+	}
+
+	if (aHasPriority) {
+		return -1;
+	}
+
+	if (bHasPriority) {
+		return 1;
+	}
+
+	return titleLocaleCompare(a.title, b.title);
+};
+
+export function getSectionItems (sectionName: Doc['section'], doSort = true): Record<'title' | 'href', string>[] {
+	let items = getAllDocs()
+		.filter((doc) => doc.section === sectionName);
+
+	if (doSort) {
+		items = items.sort(sortDocs);
+	}
+
+	// Map the filtered/sorted documents to the navigation item structure
+	return items.map((doc) => ({
+		title: doc.navLabel || doc.title,
+		href: `/docs/${doc.slug}`
+	}));
+}

@@ -2,6 +2,7 @@
 title: Svelte Component
 description: How to use svelte component to generate image
 section: Usage
+priority: 1
 ---
 
 <script>

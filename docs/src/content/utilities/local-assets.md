@@ -2,6 +2,7 @@
 title: Using Local Assets
 description: Guide to hwo to handle assets in a SvelteKit server environment
 section: Utilities
+priority: 2
 ---
 
 <script>

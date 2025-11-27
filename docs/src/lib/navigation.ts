@@ -2,31 +2,19 @@ import { defineNavigation } from '@svecodocs/kit';
 import ChalkboardTeacher from 'phosphor-svelte/lib/ChalkboardTeacher';
 import RocketLaunch from 'phosphor-svelte/lib/RocketLaunch';
 import Tag from 'phosphor-svelte/lib/Tag';
-import { getAllDocs } from './utils.js';
+import { getAllDocs, getSectionItems } from './utils.js';
 
 const allDocs = getAllDocs();
 
-const runtime = allDocs
-	.filter((doc) => doc.section === 'Runtime')
-	.map((doc) => ({
-		title: doc.title,
-		href: `/docs/${doc.slug}`
-	}));
+const runtime = getSectionItems("Runtime");
 
-const usage = allDocs
-	.filter((doc) => doc.section === 'Usage')
-	.map((doc) => ({
-		title: doc.title,
-		href: `/docs/${doc.slug}`
-	}));
+const usage = getSectionItems("Usage");
 
-const utilities = allDocs
-	.filter((doc) => doc.section === 'Utilities')
-	.map((doc) => ({
-		title: doc.title,
-		href: `/docs/${doc.slug}`
-	}))
-	.reverse();
+const utilities = getSectionItems("Utilities");
+
+const advancedUsage = getSectionItems("Examples");
+
+const types = getSectionItems("Types");
 
 export const navigation = defineNavigation({
 	anchors: [
@@ -42,7 +30,6 @@ export const navigation = defineNavigation({
 		},
 		{
 			title: 'Releases',
-			// href: "https://www.npmjs.com/package/@ethercorps/sveltekit-og?activeTab=versions",
 			href: '/docs/release',
 			icon: Tag
 		}
@@ -59,6 +46,10 @@ export const navigation = defineNavigation({
 		{
 			title: 'Utilities',
 			items: utilities
+		},
+		{
+			title: 'Examples',
+			items: advancedUsage
 		}
 	]
 });

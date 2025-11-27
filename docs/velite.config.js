@@ -22,8 +22,9 @@ const baseSchema = s.object({
 	navLabel: s.string().optional(),
 	raw: s.raw(),
 	toc: s.toc(),
-	section: s.enum(['Overview', 'Runtime', 'Usage', 'Utilities']),
-	timestamp: timestamp(),
+	section: s.enum(['Overview', 'Runtime', 'Usage', 'Utilities', 'Examples', 'Types']),
+	lastModified: timestamp(),
+	priority: s.number().optional()
 });
 
 const docSchema = baseSchema.transform((data) => {

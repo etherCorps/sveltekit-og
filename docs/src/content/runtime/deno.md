@@ -2,6 +2,7 @@
 title: Deno Deploy
 description: How to use Sveltekit OG with the Deno adapter (svelte-adapter-deno)
 section: Runtime
+priority: 5
 ---
 
 <script>

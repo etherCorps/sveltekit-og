@@ -2,6 +2,7 @@
 title: Netlify
 description: How to use Sveltekit OG with netlify adapter (@sveltejs/adapter-netlify)
 section: Runtime
+priority: 4
 ---
 
 <script>

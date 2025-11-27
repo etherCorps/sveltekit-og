@@ -2,6 +2,7 @@
 title: Vercel
 description: How to use Sveltekit OG with the vercel adapter (@sveltejs/adapter-vercel)
 section: Runtime
+priority: 2
 ---
 
 <script>

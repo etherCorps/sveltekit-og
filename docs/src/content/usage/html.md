@@ -2,6 +2,7 @@
 title: Raw HTML
 description: How to use raw HTML strings to generate images
 section: Usage
+priority: 2
 ---
 
 <script>

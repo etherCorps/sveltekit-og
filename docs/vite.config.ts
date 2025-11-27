@@ -3,11 +3,17 @@ import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'node:path';
 import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+// import { ogRouteGenerator } from './vite-plugin';
 
 const __dirname = new URL('.', import.meta.url).pathname;
 
 export default defineConfig({
-	plugins: [sveltekit(), tailwindcss(), sveltekitOG()],
+	plugins: [
+		sveltekit(),
+		tailwindcss(),
+		sveltekitOG(),
+		// ogRouteGenerator()
+	],
 	server: {
 		fs: {
 			allow: [resolve(__dirname, './.velite')]

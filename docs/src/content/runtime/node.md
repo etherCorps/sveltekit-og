@@ -2,6 +2,7 @@
 title: Node JS
 description: How to use Sveltekit OG with the node adapter (@sveltejs/adapter-node)
 section: Runtime
+priority: 3
 ---
 
 <script>

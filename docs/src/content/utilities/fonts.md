@@ -2,6 +2,7 @@
 title: Fonts
 description: How to use self hosted, custom and google fonts with sveltekit-og.
 section: Utilities
+priority: 1
 ---
 
 <script>

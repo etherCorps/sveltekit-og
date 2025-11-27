@@ -2,6 +2,7 @@
 title: Cloudflare
 description: How to use Sveltekit OG with cloudflare adapter (@sveltejs/cloudflare-adapter)
 section: Runtime
+priority: 1
 ---
 
 <script>
