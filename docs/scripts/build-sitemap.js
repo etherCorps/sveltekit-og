@@ -36,7 +36,7 @@ function getDocumentationRoutes() {
 	return docs.map((doc) => ({
 		title: doc.title,
 		href: `/docs/${doc.slug}`,
-		lastmod: doc.timestamp?.split('T')[0] ?? currentDate,
+		lastmod: doc.lastModified?.split('T')[0] ?? currentDate,
 	}));
 }
 
