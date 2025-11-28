@@ -1,9 +1,13 @@
+[![npm version](https://flat.badgen.net/npm/v/@ethercorps/sveltekit-og?color=pink)](https://npmjs.com/package/bits-ui)
+[![npm downloads](https://flat.badgen.net/npm/dm/@ethercorps/sveltekit-og?color=pink)](https://npmjs.com/package/@ethercorps/sveltekit-og)
+[![license](https://flat.badgen.net/github/license/ethercorps/sveltekit-og?color=pink)](https://github.com/ethercorps/sveltekit-og/blob/main/LICENSE)
+
 # SvelteKit Open Graph Image Generation
 
 Dynamically generate Open Graph images from an HTML+CSS template or Svelte component using fast and efficient conversion from HTML > SVG > PNG. Based on [Satori](https://github.com/vercel/satori#documentation). No headless browser required.
 
 ## Docs
-- With sveltekit-og@4, we have [official documentation](https://sveltekit-og.dev). 
+- With `sveltekit-og@4`, we have [official documentation](https://sveltekit-og.dev). 
 
 ## Installation
 
