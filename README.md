@@ -1,6 +1,6 @@
-[![npm version](https://flat.badgen.net/npm/v/@ethercorps/sveltekit-og?color=pink)](https://npmjs.com/package/bits-ui)
-[![npm downloads](https://flat.badgen.net/npm/dm/@ethercorps/sveltekit-og?color=pink)](https://npmjs.com/package/@ethercorps/sveltekit-og)
-[![license](https://flat.badgen.net/github/license/ethercorps/sveltekit-og?color=pink)](https://github.com/ethercorps/sveltekit-og/blob/main/LICENSE)
+[![npm version](https://flat.badgen.net/npm/v/@ethercorps/sveltekit-og?color=orange)](https://npmjs.com/package/bits-ui)
+[![npm downloads](https://flat.badgen.net/npm/dm/@ethercorps/sveltekit-og?color=orange)](https://npmjs.com/package/@ethercorps/sveltekit-og)
+[![license](https://flat.badgen.net/github/license/ethercorps/sveltekit-og?color=orange)](https://github.com/ethercorps/sveltekit-og/blob/main/LICENSE)
 
 # SvelteKit Open Graph Image Generation
 
