@@ -24,6 +24,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@ethercorps/sveltekit-og": "4.2.0-next.2"
+		"@ethercorps/sveltekit-og": "4.2.1"
 	}
 }
