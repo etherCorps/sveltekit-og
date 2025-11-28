@@ -6,7 +6,7 @@ priority: 5
 ---
 
 <script>
-    import { Callout} from '@svecodocs/kit';
+    import { Callout, Collapsible } from '@svecodocs/kit';
     import NodePackageInstallerTabs from "$lib/components/add-ons/installer-tabs.svelte"; 
     import InstallDenoAdapter from "$lib/components/add-ons/packages/sveltekit-adapter/deno.md"; 
 </script>
@@ -103,3 +103,35 @@ Once configured, the usage remains the same as any other SvelteKit environment.
 
 Source: https://github.com/etherCorps/sveltekit-og/tree/main/examples/deno-build <br/>
 Live: https://deno.sveltekit-og.dev/cog
+
+## Known Issues
+
+<Collapsible title="Vite asset import error">
+
+Deno throws error when we use [vite url imports](/docs/utilities/local-assets)
+
+```typescript
+import imagePath from '$lib/assets/JetBrainsMono-Regular.ttf?url';
+
+or
+
+import imagePath from '$lib/assets/JetBrainsMono-Regular.ttf';
+```
+
+Error:
+
+```shell
+NotFound: No such file or directory (os error 2): open '_app/immutable/assets/JetBrainsMono-Regular.Dh36KTnx.ttf'
+    at Object.openSync (ext:deno_fs/30_fs.js:543:15)
+    at read (file:///app/src/.deno-deploy/handler.ts:55:25)
+    at wrapped_read (file:///app/src/.deno-deploy/server/index.js:4390:24)
+    at read (file:///app/src/.deno-deploy/server/entries/endpoints/_server.ts.js:142:25)
+    at CustomFont.weight [as input] (file:///app/src/.deno-deploy/server/entries/endpoints/_server.ts.js:154:42)
+    at fallback (file:///app/src/.deno-deploy/server/entries/endpoints/_server.ts.js:40:74)
+    at eventLoopTick (ext:core/01_core.js:179:7)
+    at async file:///app/src/.deno-deploy/server/entries/endpoints/_server.ts.js:97:24
+    at async Promise.all (index 0)
+    at async resolveFonts (file:///app/src/.deno-deploy/server/entries/endpoints/_server.ts.js:96:25)
+```
+
+</Collapsible>
