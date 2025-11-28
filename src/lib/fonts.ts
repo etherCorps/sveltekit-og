@@ -32,17 +32,9 @@ export class BaseFont {
 	}
 }
 
-/** * A helper class to load Custom fonts, typically from local files.
- * The input must be a function provided by the user (e.g., using $app/server/read).
- */
 export class CustomFont extends BaseFont {
 	private promise?: Promise<Buffer | ArrayBuffer>;
 
-	/**
-	 * Creates an instance of CustomFont.
-	 * @param name The name of the font (for CSS font-family).
-	 * @param input Font data as ArrayBuffer or a function that resolves to ArrayBuffer (user must provide the loading logic).
-	 */
 	constructor(
 		name: string,
 		input: MayBePromise<Buffer | ArrayBuffer> | (() => MayBePromise<Buffer | ArrayBuffer>),
@@ -51,12 +43,23 @@ export class CustomFont extends BaseFont {
 		super(name, input, options);
 	}
 
-	/** A promise which resolves to font data as `ArrayBuffer` (Lazy load) */
+	/** A promise which resolves to font data as `ArrayBuffer` (Lazy load and CACHED) */
 	get data(): Promise<Buffer | ArrayBuffer> {
-		// Defines the loading mechanism: execute the input function or resolve the promise/buffer.
-		const fallback = async () => (typeof this.input === 'function' ? this.input() : this.input);
+		const cacheKey = `${this.name}-${this.weight}-${this.style}`;
 
-		// Memoization: ensures the input function is executed only once.
+		const cachedData = FONT_CACHE_MAP.get(cacheKey);
+		if (cachedData) {
+			return Promise.resolve(cachedData);
+		}
+
+		const fallback = async () => {
+			const buffer = typeof this.input === 'function' ? this.input() : this.input;
+			const resolvedBuffer = await buffer;
+
+			FONT_CACHE_MAP.set(cacheKey, resolvedBuffer);
+			return resolvedBuffer;
+		};
+
 		this.promise = this.promise?.then(null, fallback) ?? fallback();
 		return this.promise;
 	}
