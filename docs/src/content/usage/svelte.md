@@ -12,7 +12,7 @@ priority: 1
 
 ## Prerequisites
 
-Ensure you have configured the **Vite/Rollup Plugin** as described in the [Getting Started](/docs/getting-started).
+Ensure, **Vite/Rollup Plugin** configuration as described in the [Getting Started](/docs/getting-started).
 
 ## Guide
 
@@ -48,7 +48,7 @@ Create a SvelteKit server route (a `+server.ts` file) and use the `ImageResponse
 Visit the URL corresponding to route in browser (e.g. `http://localhost:5173/images/simple.png`).
 
 <a target="_blank" rel="external" no-referrer="no-referrer" href="https://sveltekit-og.dev/images/simple.png">
-    <img src="/images/simple.png" class="mt-4 rounded-lg border border-gray-200" alt="Simple OG Image">
+    <img src="/images/simple.png" class="mt-4 rounded-lg" alt="Simple OG Image">
 </a>
 
 ## Using Vanilla CSS
