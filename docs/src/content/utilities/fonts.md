@@ -11,33 +11,70 @@ priority: 1
 
 <Callout type="note" title="Feature available from v4.2.0">
 
-The `GoogleFont`, `CustomFont`, and `resolveFonts` utilities have been introduced in `sveltekit-og@v4.2.0`.
+The `GoogleFont`, `CustomFont`, and `resolveFonts` utilities were introduced in <br /> `sveltekit-og@v4.2.0`.
 
 </Callout>
 
-To ensure consistent and high-quality typography in your generated images, you must provide the font files to the rendering engine (Satori) as raw binary data. You cannot rely on standard CSS @font-face rules.
+To ensure consistent and high-quality typography in your generated images, you must provide the font files to the rendering engine (Satori) as raw binary data. You cannot rely on standard CSS `@font-face` rules.
 
-The SvelteKit OG library provides the `CustomFont`, and `GoogleFont` classes, along with the `resolveFonts` utility, to handle loading, caching, and preparing the font data.
+The SvelteKit OG provides `CustomFont`, and `GoogleFont` classes, along with the `resolveFonts` utility, to handle loading, caching, and preparing the font data.
+
+<Callout type="tip" title="Always use resolveFonts">
+
+The `ImageResponse` options expects an array of resolved font data. You must always pass your font instances to `await resolveFonts([...])` before passing the result to the `fonts` option.
+
+</Callout>
+
+
+## 🌐 Using Google Fonts
+
+The `GoogleFont` class is the easiest way to get started. It abstracts away the network logic, fetches the correct CSS, parses the font URL, and applies an internal cache to prevent redundant requests.
+
+```typescript showLineNumbers title="+server.ts"
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+import { GoogleFont, resolveFonts } from '@ethercorps/sveltekit-og/fonts';
+
+// 1. Define the GoogleFont instances
+const interRegular = new GoogleFont('Inter', {
+	weight: 400,
+	name: 'Inter',
+});
+
+const interBold = new GoogleFont('Inter', {
+	weight: 700
+});
+
+export const GET = async () => {
+	// 2. Await the resolution (which triggers the fetch/cache lookup)
+	const resolvedFontOptions = await resolveFonts([interRegular, interBold]);
+
+	return new ImageResponse(
+		`<div tw="flex" style="font-family: 'Inter'">Hello World</div>`,
+		{
+			fonts: resolvedFontOptions
+		}
+	);
+};
+```
 
 ## 📂 Using Local Custom Fonts
 
-This method involves placing your TrueType (`.ttf`) or OpenType (`.otf`) files in the static or a private asset folder and reading them directly from the file system using SvelteKit's built-in `$app/server/read` utility.
+This method involves placing TrueType (`.ttf`) or OpenType (`.otf`) files in the project and reading them directly from the file system.
 
-### Example
+### Steps
+1.  **Import**: Use the Vite `?url` suffix to get the build-time path of your local font file.
+2.  **Load**: Use SvelteKit's `$app/server` `read` function to retrieve the file.
+3.  **Wrap**: Pass a **function** that returns the `ArrayBuffer` to `CustomFont`.
 
-- Import: Use the Vite ?url suffix to get the build-time path of your local font file.
+<Callout type="warning" title="Netlify Adapter">
 
-<Callout type="warning" title="Netlify issue">
-
-Vite `?url` import is not working in netlify deployment.
+Vite's `?url` import combined with `read` may encounter issues on specific adapters like Netlify. In those cases, you may need to use Node's `fs` module or fetch the font from a public URL.
 
 </Callout>
 
-- **Load**: Use `$app/server/read` to retrieve the file as an `ArrayBuffer`.
-- **Wrap**: Pass a **function** that performs the reading into the `CustomFont`.
-
 ```typescript showLineNumbers title="+server.ts"
-import { ImageResponse, CustomFont, resolveFonts } from '@ethercorps/sveltekit-og';
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+import { CustomFont, resolveFonts } from '@ethercorps/sveltekit-og/fonts';
 import { read } from '$app/server'; // SvelteKit Runtime Dependency
 import RegularFontPath from '$lib/assets/MyFont-Regular.ttf?url';
 import BoldFontPath from '$lib/assets/MyFont-Bold.ttf?url';
@@ -50,89 +87,41 @@ const myCustomRegular = new CustomFont(
 	{ weight: 400 }
 );
 
-const myCustomBold = new CustomFont('My Custom Font', () => read(BoldFontPath).arrayBuffer(), {
-	weight: 700
-});
+const myCustomBold = new CustomFont(
+	'My Custom Font',
+	() => read(BoldFontPath).arrayBuffer(),
+	{ weight: 700 }
+);
 
 export const GET = async () => {
 	// 2. Resolve the promises to get the final ArrayBuffer array
 	const resolvedFontOptions = await resolveFonts([myCustomRegular, myCustomBold]);
 
-	return new ImageResponse(`<div tw="flex" style="font-family: 'My Custom Font'">...</div>`, {
-		fonts: resolvedFontOptions
-	});
+	return new ImageResponse(
+		`<div tw="flex" style="font-family: 'My Custom Font'">Hello World</div>`,
+		{
+			width: 1200,
+			height: 630,
+			fonts: resolvedFontOptions
+		}
+	);
 };
 ```
-
-<Callout type="tip" title="Use resolveFonts">
-
-Always use `resolveFonts` before passing to `fonts` as image options.
-
-```typescript
-await resolveFonts([myCustomRegular, myCustomBold]);
-```
-
-</Callout>
-
-## 🌐 Using Google Fonts
-
-The `GoogleFont` class abstracts away all network logic, including fetching the CSS, parsing the `.ttf` file URL, and applying the internal cache.
-
-### Example
-
-- **Define**: Create instances of **GoogleFont**, specifying the family name and desired weight.
-- **Resolve**: Pass the instances to **resolveFonts**.
-
-```typescript showLineNumbers title="+server.ts"
-import { ImageResponse, GoogleFont, resolveFonts } from '@ethercorps/sveltekit-og';
-
-// 1. Define the GoogleFont instances
-const interRegular = new GoogleFont('Inter', {
-	weight: 400,
-	name: 'Inter',
-	// Optional: Only fetches characters needed for better performance
-	text: 'Hello World! 123'
-});
-
-const interBold = new GoogleFont('Inter', {
-	weight: 700
-});
-
-export const GET = async () => {
-	// 2. Await the resolution (which triggers the fetch/cache lookup)
-	const resolvedFontOptions = await resolveFonts([interRegular, interBold]);
-
-	return new ImageResponse(`<div tw="flex" style="font-family: 'Inter'">...</div>`, {
-		fonts: resolvedFontOptions
-	});
-};
-```
-
-<Callout type="tip" title="Use resolveFonts">
-
-Always use `resolveFonts` before passing to `fonts` as image options.
-
-```typescript
-await resolveFonts([myCustomRegular, myCustomBold]);
-```
-
-</Callout>
 
 ## ☁️ Using Remote Fonts
 
-If your font file is hosted on an external CDN or public URL, you can fetch it directly using the global fetch API. This is similar to Google Fonts but uses the CustomFont class, passing the fetch promise as the input.
-
-### Example
+If font file is hosted on an external CDN (e.g., AWS S3, generic file host), fetch it directly using the global `fetch` API.
 
 ```typescript showLineNumbers title="+server.ts"
-import { ImageResponse, CustomFont, resolveFonts } from '@ethercorps/sveltekit-og';
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+import { CustomFont, resolveFonts } from '@ethercorps/sveltekit-og/fonts';
 
 const REMOTE_FONT_URL = 'https://my-cdn.com/assets/FontAwesome-Regular.otf';
 
 // 1. Define the CustomFont instance
 const fontAwesome = new CustomFont(
 	'Font Awesome',
-	// Pass a function that returns the ArrayBuffer promise from fetch
+	// Pass a function that returns the ArrayBuffer promise via fetch
 	() => fetch(REMOTE_FONT_URL).then((res) => res.arrayBuffer()),
 	{ weight: 400 }
 );
@@ -140,33 +129,26 @@ const fontAwesome = new CustomFont(
 export const GET = async () => {
 	const resolvedFontOptions = await resolveFonts([fontAwesome]);
 
-	return new ImageResponse(`<div tw="flex" style="font-family: 'Font Awesome'">...</div>`, {
-		fonts: resolvedFontOptions
-	});
+	return new ImageResponse(
+		`<div tw="flex" style="font-family: 'Font Awesome'">Icon</div>`,
+		{
+			fonts: resolvedFontOptions
+		}
+	);
 };
 ```
 
-<Callout type="tip" title="Use resolveFonts">
-
-Always use `resolveFonts` before passing to `fonts` as image options.
-
-```typescript
-await resolveFonts([myCustomRegular, myCustomBold]);
-```
-
-</Callout>
-
 ## 🔢 Multiple Font Sources
 
-This example assumes you have two local files (`$lib/assets/LocalFont-R.ttf`, `$lib/assets/LocalFont-B.ttf`) and one custom remote font (`https://cdn.example.com/icons.ttf`).
+Mix and match multiple font sources `local fonts`, `Google Fonts`, and `remote fonts` URLs in a single request.
 
 ```typescript
-import { ImageResponse, CustomFont, GoogleFont, resolveFonts } from '@ethercorps/sveltekit-og';
-import { read } from '$app/server'; // Needed for local file reading
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+import { CustomFont, GoogleFont, resolveFonts } from '@ethercorps/sveltekit-og/fonts';
+import { read } from '$app/server';
 
-// --- Local Font Paths (Requires Vite + SvelteKit read) ---
+// --- Local Font Paths ---
 import LocalRegularPath from '$lib/assets/LocalFont-R.ttf?url';
-import LocalBoldPath from '$lib/assets/LocalFont-B.ttf?url';
 
 // --- Custom Remote URL ---
 const ICON_FONT_URL = 'https://cdn.example.com/icons.ttf';
@@ -174,53 +156,33 @@ const ICON_FONT_URL = 'https://cdn.example.com/icons.ttf';
 export const GET = async () => {
 	// 1. Define all font instances
 	const fontsToLoad = [
-		// A. 📦 LOCAL CUSTOM FONT (Uses $app/server/read via a function)
+		// A. 📦 LOCAL CUSTOM FONT
 		new CustomFont('Local App Font', () => read(LocalRegularPath).arrayBuffer(), { weight: 400 }),
-		new CustomFont('Local App Font', () => read(LocalBoldPath).arrayBuffer(), { weight: 700 }),
 
-		// B. 🌐 GOOGLE FONT (Uses internal fetch/cache)
-		new GoogleFont('Roboto Mono', {
-			weight: 500,
-			name: 'Roboto Mono',
-			text: 'Code: 123' // Optimize this fetch
-		}),
+		// B. 🌐 GOOGLE FONT
+		new GoogleFont('Roboto Mono', { weight: 500 }),
 
-		// C. ☁️ CUSTOM REMOTE FONT (Uses global fetch)
+		// C. ☁️ REMOTE FONT
 		new CustomFont('Custom Icons', () => fetch(ICON_FONT_URL).then((res) => res.arrayBuffer()), {
 			weight: 400
 		})
 	];
 
-	// 2. Resolve all font buffers concurrently (local reads and network fetches)
+	// 2. Resolve all concurrently
 	const resolvedFontOptions = await resolveFonts(fontsToLoad);
 
-	// 3. Render the image
+	// 3. Render
 	return new ImageResponse(
-		`<div tw="flex flex-col p-10 w-full h-full bg-gray-50">
-            <h1 tw="text-4xl" style="font-family: 'Local App Font'; font-weight: 700;">
-                Mixed Typography Title
-            </h1>
-            <p tw="text-2xl mt-4" style="font-family: 'Roboto Mono';">
-                const data = 'fetched data';
-            </p>
-            <span tw="text-4xl mt-6" style="font-family: 'Custom Icons';">
-                &#xe900; </span>
+		`<div tw="flex flex-col p-10 bg-gray-50">
+            <h1 style="font-family: 'Local App Font'">Title</h1>
+            <p style="font-family: 'Roboto Mono'">Code</p>
+            <span style="font-family: 'Custom Icons'">Icon</span>
         </div>`,
 		{
 			width: 1200,
 			height: 630,
-			fonts: resolvedFontOptions // Array of resolved ArrayBuffers
+			fonts: resolvedFontOptions
 		}
 	);
 };
 ```
-
-<Callout type="tip" title="Use resolveFonts">
-
-Always use `resolveFonts` before passing to `fonts` as image options.
-
-```typescript
-await resolveFonts([myCustomRegular, myCustomBold]);
-```
-
-</Callout>

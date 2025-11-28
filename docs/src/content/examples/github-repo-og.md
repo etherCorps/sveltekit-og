@@ -1,196 +1,105 @@
 ---
 title: GitHub Repository OG Image
-description: How to dynamically generate GitHub Repo like Open Graph images for repositories using Svelte components.
+description: Recreate the iconic GitHub repository social card using dynamic data and Svelte components.
 section: Examples
 ---
 
 <script>
-	import { Callout, DemoContainer } from "@svecodocs/kit";
+	import { Callout, DemoContainer, Tabs, TabItem } from "@svecodocs/kit";
     import SvelteComponentPlayground from "$lib/components/playground/svelte-component.svelte";
+    import {page} from "$app/state";
+
+	const serverFiles = ["github-repo.svelte", "+server.ts", "api.ts", "fonts-utils.ts"];
+    const tabHashMapping = {
+      "#the-visual-component": "github-repo.svelte",
+      "#the-api-route": "+server.ts",
+      "#data-fetching-helper": "api.ts",
+      "#fonts-config": "fonts-utils.ts"
+    };
+    const currentTab = $derived(page.url.hash ? tabHashMapping[page.url.hash] : '#the-visual-component');
 </script>
 
-## Prerequisites
+## Overview
 
-Ensure you have configured the **Vite/Rollup Plugin** as described in the [Getting Started](/docs/getting-started) section.
+In this example, we will recreate the iconic GitHub repository Open Graph image. This involves:
+1.  **Fetching live data** from the GitHub API.
+2.  **Loading custom fonts** (Inter) to match the brand.
+3.  **Rendering a Svelte component** that visually mimics the design.
 
-<Callout type="note" title="Dependencies">
-
-This guide uses [phosphor-svelte](https://github.com/haruaki07/phosphor-svelte) for icons and Svelte 5 Runes syntax.
-
-</Callout>
-
-## Guide
-
-In this guide, we will recreate the GitHub repository Open Graph image. We will create a reusable Svelte component and render it dynamically via an API endpoint.
-
-#### GitHub OG Image:
+**Target Design:**
 <a target="_blank" rel="external" no-referrer="no-referrer" href="https://opengraph.githubassets.com/b127930b7d5e9d97f1321c31d6f1e42ad9a17cf649423ad26c9bfb2dee71fe5d/etherCorps/sveltekit-og">
-<img src="https://opengraph.githubassets.com/b127930b7d5e9d97f1321c31d6f1e42ad9a17cf649423ad26c9bfb2dee71fe5d/etherCorps/sveltekit-og" class="mt-4 rounded-lg" alt="GitHub OG image">
+<img src="https://opengraph.githubassets.com/b127930b7d5e9d97f1321c31d6f1e42ad9a17cf649423ad26c9bfb2dee71fe5d/etherCorps/sveltekit-og" class="mt-4 rounded-lg shadow-md border border-gray-200" alt="GitHub OG target image">
 </a>
 
-### Component
+---
 
-Create a standard Svelte component. You can use props to make it dynamic.
+## Code Implementation
+
+<Tabs value={currentTab} items={serverFiles}>
+
+<TabItem id="#the-visual-component" value="github-repo.svelte">
+
+### The Visual Component
+
+Svelte component handles the layout. It receives data via props and uses Tailwind classes (via `class` attribute) for styling.
 
 ```svelte showLineNumbers title="github-repo.svelte" file=../../lib/components/og/github-repo.svelte
 
+
 ```
 
-### Create API route
+</TabItem>
 
-Create a server route to generate and serve the image.
-You can pass the Svelte component directly to `ImageResponse`. The third argument accepts the `props` object.
+<TabItem value="+server.ts">
 
-`src/routes/og/+server.ts`
+### The API Route
 
-```typescript showLineNumbers title="github-repo.svelte"
-import { ImageResponse } from '@ethercorps/sveltekit-og';
-import { error, type RequestHandler } from '@sveltejs/kit';
-import {
-	getRepoDetails,
-	type RepoDetailsError,
-	type RepoDetailsResponse,
-	cache,
-	type RepoContributorsResponse
-} from '../(github)/api';
-import { tryCatch } from '$lib/try-catch';
-import type { ImageResponseOptions } from '@ethercorps/sveltekit-og';
-import OgComponent from './og.svelte';
-import { fontsData } from '../(helpers)/fonts';
-import type { ComponentProps } from 'svelte';
+Server endpoint ties everything together. It handles the request, fetches the data, loads the fonts, and returns the generated image.
 
-export const GET: RequestHandler = async ({ url }) => {
-	const details = {
-		owner: url.searchParams.get('owner') ?? 'etherCorps',
-		repo: url.searchParams.get('repo') ?? 'sveltekit-og'
-	};
+```ts showLineNumbers file=../../routes/(examples)/images/github/+server.ts title="github-repo/+server.ts"
 
-	const cacheKey = `${details.owner}/${details.repo}`;
-	let data = cache.get(cacheKey);
-
-	if (!data) {
-		const { data: response, error: githubError } = await tryCatch<
-			{ repo: RepoDetailsResponse; contributors: RepoContributorsResponse },
-			RepoDetailsError
-		>(getRepoDetails(details));
-		if (githubError) {
-			error(githubError?.response?.data?.status || 500, {
-				message: githubError?.response?.data?.message
-			});
-		}
-		if (response && response.repo.data) {
-			data = { ...response.repo.data, contributors_count: response.contributors.data.length };
-			cache.set(`${details.owner}/${details.repo}`, data);
-		}
-	}
-
-	const props: ComponentProps<typeof OgComponent> = {
-		owner: data?.owner.login as string,
-		repo: data?.name as string,
-		description: String(data?.description),
-		contributors: data?.contributors_count as number,
-		forks: data?.forks as number,
-		open_issues: data?.open_issues as number,
-		stars: data?.stargazers_count as number,
-		logo: data?.owner.avatar_url as string
-	};
-
-	const imageOptions: ImageResponseOptions = {
-		width: 1200,
-		height: 630,
-		debug: false,
-		fonts: await fontsData(),
-		headers: {
-			'Cache-Control': 'no-cache, no-store'
-		}
-	};
-
-	return new ImageResponse(OgComponent, imageOptions, props);
-};
 ```
 
-## Preview
+</TabItem>
 
-Start development server and visit the URL. You can change the query parameters to see the image update instantly in [playground](#playground).
+<TabItem value="api.ts">
 
-<a target="_blank" rel="external" no-referrer="no-referrer" href="https://sveltekit-og.dev/svelte">
-    <img src="/svelte?owner=etherCorps&repo=sveltekit-og" class="mt-4 rounded-lg border border-gray-200" alt="Generated OG Image">
+### Data Fetching Helper
+
+A simple utility to fetch repository details (stars, forks, issues) from the GitHub API.
+
+```ts showLineNumbers file=../../routes/(examples)/images/github/api.ts title="github/api.ts"
+
+```
+
+</TabItem>
+
+<TabItem value="fonts-utils.ts">
+
+### Fonts Config
+
+To get the authentic look, we load the `Inter` font family (`Regular` and `Bold`) using Google Fonts.
+
+```ts showLineNumbers file=../../lib/fonts-utils.ts title="lib/fonts-utils.ts"
+
+```
+
+</TabItem>
+</Tabs>
+
+
+## Live Preview
+
+Start your development server and visit the URL below. Change the `owner` and `repo` query parameters to generate cards for different repositories instantly in [playground](#playground).
+
+
+<a target="_blank" rel="external" no-referrer="no-referrer" href="https://sveltekit-og.dev/images/github?owner=etherCorps&repo=sveltekit-og">
+    <img src="/images/github?owner=etherCorps&repo=sveltekit-og" class="mt-4 rounded-lg" alt="Github Repos OG Image">
 </a>
 
-## Using Vanilla CSS
-
-The examples above use Tailwind CSS (via the `tw` prop or class names automatically handled by the library). However, you can also use standard CSS within your Svelte `<style>` blocks.
-
-<Callout type="warning" title="Important">
-  If using `style` blocks, you must enable CSS injection in your component options.
-
-```svelte
-<svelte:options css="injected" />
-```
-
-</Callout>
-
-```svelte
-<svelte:options css="injected" />
-
-<script>
-	// component logic
-</script>
-
-<div class="card">
-	<h1>Hello World</h1>
-</div>
-
-<style>
-	.card {
-		display: flex;
-		background-color: white;
-		height: 100%;
-		align-items: center;
-		justify-content: center;
-	}
-	h1 {
-		font-size: 60px;
-		color: black;
-	}
-</style>
-```
-
-## Using Local Assets
-
-When generating OG images, you cannot use relative paths (e.g., src="./logo.png") because the image generation happens on the server, not in a browser. The Satori engine cannot "see" your file system or resolve relative client-side paths.
-
-To use local images, you must convert them into Base64 Data URLs. Fortunately, Vite makes this easy.
-
-### The `?inline` Suffix
-
-You can import any image file with the `?inline` suffix. This tells Vite to ignore its usual asset handling and instead provide the file's content as a Base64 string at build time.
-
-#### usage in Svelte Components
-
-```svelte
-<script>
-	// 1. Import with ?inline
-	import myLogo from '$lib/assets/logo.png?inline';
-</script>
-
-<div tw="flex flex-col w-full h-full bg-white items-center justify-center">
-	<img src={myLogo} width="100" height="100" alt="Logo" />
-	<h1>My Website</h1>
-</div>
-```
-
-### Using Public Folder Images
-
-Technically, you can use images from your static folder, but you must provide the full absolute URL (e.g., https://your-site.com/logo.png).
-
-Dev: http://localhost:5173/logo.png
-
-Prod: https://example.com/logo.png
-
-Since you likely don't know the absolute domain at build time (or in preview environments), we strongly recommend using the ?inline method described above.
-
 ## Playground
+
+Experiment with the component props directly in the browser:
 
 <DemoContainer class="flex flex-wrap gap-4">
 	<SvelteComponentPlayground />

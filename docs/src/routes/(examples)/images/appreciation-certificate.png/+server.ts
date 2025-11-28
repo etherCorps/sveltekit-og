@@ -26,9 +26,6 @@ const fonts = [
 	)
 ];
 
-
-
-
 export const GET: RequestHandler = async () => {
 	return new ImageResponse(
 		AppreciationCertificate,

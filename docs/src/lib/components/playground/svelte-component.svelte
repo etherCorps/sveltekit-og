@@ -6,10 +6,10 @@
 		repo: 'kit'
 	});
 
-	let imageSrc = $state(`/svelte?owner=sveltejs&repo=kit`);
+	let imageSrc = $state(`/images/github?owner=sveltejs&repo=kit`);
 
 	function newOg() {
-		imageSrc = `/svelte?owner=${githubDetails.owner}&repo=${githubDetails.repo}`;
+		imageSrc = `/images/github?owner=${githubDetails.owner}&repo=${githubDetails.repo}`;
 	}
 </script>
 
