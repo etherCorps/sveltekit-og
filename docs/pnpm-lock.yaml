@@ -16,8 +16,8 @@ importers:
         version: 5.0.5
     devDependencies:
       '@svecodocs/kit':
-        specifier: latest
-        version: 0.5.1(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(bits-ui@2.11.8(@internationalized/date@3.8.2)(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12))(svelte@5.43.12)(tailwindcss@4.1.17)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0))
+        specifier: npm:@ethercorps/svecodocs@0.5.3
+        version: '@ethercorps/svecodocs@0.5.3(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(bits-ui@2.11.8(@internationalized/date@3.8.2)(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12))(svelte@5.43.12)(tailwindcss@4.1.17)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0))'
       '@sveltejs/adapter-cloudflare':
         specifier: ^7.2.4
         version: 7.2.4(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(wrangler@4.49.0)
@@ -66,6 +66,9 @@ importers:
       rehype-remove-comments:
         specifier: ^6.1.1
         version: 6.1.1
+      remark-code-import:
+        specifier: ^1.2.0
+        version: 1.2.0
       remark-gfm:
         specifier: ^4.0.1
         version: 4.0.1
@@ -501,6 +504,14 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@ethercorps/svecodocs@0.5.3':
+    resolution: {integrity: sha512-nXJcs4RILq+hmGp+mLk9ZTtMg8Kp8FTO8h2tpxwPZIbTynuoJMo/HC05rjIWZN5UiCE7Hao+WXH7sBXbCDQzPg==}
+    peerDependencies:
+      '@sveltejs/kit': ^2.0.0
+      bits-ui: ^2.11.0
+      svelte: ^5.0.0
+      tailwindcss: ^4.0.0
 
   '@ethercorps/sveltekit-og@4.2.0':
     resolution: {integrity: sha512-58fldA2XwdnIB7KFeDag7Tz670xADi5eAM/ZsYEKypKwkRX6qWmSxnR6tyR5AycjDqF4TnuG8N1FJ045+Ez7xg==}
@@ -1029,14 +1040,6 @@ packages:
 
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
-
-  '@svecodocs/kit@0.5.1':
-    resolution: {integrity: sha512-+4LHoOR6/XcOmt/lwkMkfjciezYqzwb8wGQK2unkVjVX4IC0U0mJFWL80VRH+3YcqLWhsj+MSD1kPjk5cMY2Kw==}
-    peerDependencies:
-      '@sveltejs/kit': ^2.0.0
-      bits-ui: ^2.11.0
-      svelte: ^5.0.0
-      tailwindcss: ^4.0.0
 
   '@sveltejs/acorn-typescript@1.0.5':
     resolution: {integrity: sha512-IwQk4yfwLdibDlrXVE04jTZYlLnwsTT2PIOQQGNLWfjavGifnk1JD1LcZjZaBTRcxZu2FfPfNLOE04DSu9lqtQ==}
@@ -1608,6 +1611,10 @@ packages:
   is-arrayish@0.3.2:
     resolution: {integrity: sha512-eVRqCvVlZbuw3GrM63ovNSNAeA1K16kaR/LRY/92w0zxQ5/1YzwblUX652i4Xs9RwAGjW9d9y6X88t8OaAJfWQ==}
 
+  is-buffer@2.0.5:
+    resolution: {integrity: sha512-i2R6zNFDwgEHJyQUtJEk0XFi1i0dPFn/oqjK3/vPCcDeJvW5NQ83V8QbicfF1SupOaB0h8ntgBC2YiE7dfyctQ==}
+    engines: {node: '>=4'}
+
   is-decimal@2.0.1:
     resolution: {integrity: sha512-AAB9hiomQs5DXWcRB1rqsxGUstbRroFOPPVAomNk/3XHR5JyEZChOyTWe2oayKnsSsr/kcGqF+z6yuH6HHpN0A==}
 
@@ -1907,6 +1914,10 @@ packages:
     engines: {node: '>=10.0.0'}
     hasBin: true
 
+  min-indent@1.0.1:
+    resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
+    engines: {node: '>=4'}
+
   miniflare@4.20251113.0:
     resolution: {integrity: sha512-uaNiBJu8JQY27pcM7Q/E+hLggClmJCQji9uOOBdlZV+aJ7rk7tFnyIvjpLxYJRpryrMjm3aKNeMvE8ham01DtA==}
     engines: {node: '>=18.0.0'}
@@ -2075,6 +2086,10 @@ packages:
   rehype-stringify@10.0.1:
     resolution: {integrity: sha512-k9ecfXHmIPuFVI61B9DeLPN0qFHfawM6RsuX48hoqlaKSF61RskNjSm1lI8PhBEM0MRdLxVVm4WmTqJQccH9mA==}
 
+  remark-code-import@1.2.0:
+    resolution: {integrity: sha512-fgwLruqlZbVOIhCJFjY+JDwPZhA4/eK3InJzN8Ox8UDdtudpG212JwtRj6la+lAzJU7JmSEyewZSukVZdknt3Q==}
+    engines: {node: '>= 12'}
+
   remark-gfm@4.0.1:
     resolution: {integrity: sha512-1quofZ2RQ9EWdeN34S79+KExV1764+wCUGop5CPL1WGdD0ocPpu91lzPGbwWMECpEpd42kJGQwzRfyov9j4yNg==}
 
@@ -2196,6 +2211,10 @@ packages:
   stringify-entities@4.0.4:
     resolution: {integrity: sha512-IwfBptatlO+QCJUo19AqvrPNqlVMpW9YEL2LIVY+Rpv2qsjCGxaDLNRgeGsQWJhfItebuJhsGSLjaBbNSQ+ieg==}
 
+  strip-indent@4.0.0:
+    resolution: {integrity: sha512-mnVSV2l+Zv6BLpSD/8V87CW/y9EmmbYzGCIavsnsI6/nwn26DwffM/yztm30Z/I2DY9wdS3vXVCMnHDgZaVNoA==}
+    engines: {node: '>=12'}
+
   style-to-js@1.1.17:
     resolution: {integrity: sha512-xQcBGDxJb6jjFCTzvQtfiPn6YvvP2O8U1MDIPNfJQlWMYfktPy+iGsHE7cssjs7y84d9fQaK4UF3RIJaAHSoYA==}
 
@@ -2274,6 +2293,12 @@ packages:
     resolution: {integrity: sha512-8PWx8tvC4jDB39BQw1m4x8y5MH1BcQ5xHeL2n7UVFulMPH/3Q0uiamahFJ3lXA0zO2SUyRXuVVbWSDmstlt9YA==}
     hasBin: true
 
+  to-gatsby-remark-plugin@0.1.0:
+    resolution: {integrity: sha512-blmhJ/gIrytWnWLgPSRCkhCPeki6UBK2daa3k9mGahN7GjwHu8KrS7F70MvwlsG7IE794JLgwAdCbi4hU4faFQ==}
+
+  to-vfile@6.1.0:
+    resolution: {integrity: sha512-BxX8EkCxOAZe+D/ToHdDsJcVI4HqQfmw0tCkp31zf3dNP/XWIAjU4CmeuSwsSoOzOTqHPOL0KUzyZqJplkD0Qw==}
+
   toad-cache@3.7.0:
     resolution: {integrity: sha512-/m8M+2BJUpoJdgAHoG+baCwBT+tf2VraSfkBgl0Y00qIWt41DJ8R5B8nsEw0I58YwF5IZH6z24/2TobDKnqSWw==}
     engines: {node: '>=12'}
@@ -2335,6 +2360,9 @@ packages:
   unist-util-find-after@5.0.0:
     resolution: {integrity: sha512-amQa0Ep2m6hE2g72AugUItjbuM8X8cGQnFoHk0pGfrFeT9GZhzN5SW8nRsiGKK7Aif4CrACPENkA6P/Lw6fHGQ==}
 
+  unist-util-is@5.2.1:
+    resolution: {integrity: sha512-u9njyyfEh43npf1M+yGKDGVPbY/JWEemg5nH05ncKPfi+kBbKBJoTdsogMu33uhytuLlv9y0O7GH7fEdwLdLQw==}
+
   unist-util-is@6.0.0:
     resolution: {integrity: sha512-2qCTHimwdxLfz+YzdGfkqNlH0tLi9xjTnHddPmJwtIG9MGsdbutfTc4P+haPD7l7Cjxf/WZj+we5qfVPvvxfYw==}
 
@@ -2344,11 +2372,20 @@ packages:
   unist-util-position@5.0.0:
     resolution: {integrity: sha512-fucsC7HjXvkB5R3kTCO7kUjRdrS0BJt3M/FPxmHMBOm8JQi2BsHAHFsy27E0EolP8rp0NzXsJ+jNPyDWvOJZPA==}
 
+  unist-util-stringify-position@2.0.3:
+    resolution: {integrity: sha512-3faScn5I+hy9VleOq/qNbAd6pAx7iH5jYBMS9I1HgQVijz/4mv5Bvw5iw1sC/90CODiKo81G/ps8AJrISn687g==}
+
   unist-util-stringify-position@4.0.0:
     resolution: {integrity: sha512-0ASV06AAoKCDkS2+xw5RXJywruurpbC4JZSm7nr7MOt1ojAzvyyaO+UxZf18j8FCF6kmzCZKcAgN/yu2gm2XgQ==}
 
+  unist-util-visit-parents@5.1.3:
+    resolution: {integrity: sha512-x6+y8g7wWMyQhL1iZfhIPhDAs7Xwbn9nRosDXl7qoPTSCy0yNxnKc+hWokFifWQIDGi154rdUqKvbCa4+1kLhg==}
+
   unist-util-visit-parents@6.0.1:
     resolution: {integrity: sha512-L/PqWzfTP9lzzEa6CKs0k2nARxTdZduw3zyh8d2NVBnsyvHjSX4TWse388YrrQKbvI8w20fGjGlhgT96WwKykw==}
+
+  unist-util-visit@4.1.2:
+    resolution: {integrity: sha512-MSd8OUGISqHdVvfY9TPhyK2VdUrPgxkUtWSuMHF6XAAFuL4LokseigBnZtPnJMu+FbynTkFNnFlyjxpVKujMRg==}
 
   unist-util-visit@5.0.0:
     resolution: {integrity: sha512-MR04uvD+07cwl/yhVuVWAtw+3GOR/knlL55Nd/wAdblk27GCVt3lqpTivy/tkJcZoNPzTwS1Y+KMojlLDhoTzg==}
@@ -2370,8 +2407,14 @@ packages:
   vfile-location@5.0.3:
     resolution: {integrity: sha512-5yXvWDEgqeiYiBe1lbxYF7UMAIm/IcopxMHrMQDq3nvKcjPKIhZklUKL+AE7J7uApI4kwe2snsK+eI6UTj9EHg==}
 
+  vfile-message@2.0.4:
+    resolution: {integrity: sha512-DjssxRGkMvifUOJre00juHoP9DPWuzjxKuMDrhNbk2TdaYYBNMStsNhEOt3idrtI12VQYM/1+iM0KOzXi4pxwQ==}
+
   vfile-message@4.0.2:
     resolution: {integrity: sha512-jRDZ1IMLttGj41KcZvlrYAaI3CfqpLpfpf+Mfig13viT6NKvRzWZ+lXz0Y5D60w6uJIBAOGq9mSHf0gktF0duw==}
+
+  vfile@4.2.1:
+    resolution: {integrity: sha512-O6AE4OskCG5S1emQ/4gl8zK586RqA3srz3nfK/Viy0UPToBc5Trp9BVFb1u0CjsKrAWwnpr4ifM/KBXPWwJbCA==}
 
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
@@ -2752,6 +2795,31 @@ snapshots:
 
   '@esbuild/win32-x64@0.25.8':
     optional: true
+
+  '@ethercorps/svecodocs@0.5.3(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(bits-ui@2.11.8(@internationalized/date@3.8.2)(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12))(svelte@5.43.12)(tailwindcss@4.1.17)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0))':
+    dependencies:
+      '@sveltejs/kit': 2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0))
+      bits-ui: 2.11.8(@internationalized/date@3.8.2)(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)
+      clsx: 2.1.1
+      flexsearch: 0.7.43
+      mode-watcher: 1.1.0(svelte@5.43.12)
+      phosphor-svelte: 3.0.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0))
+      rehype-autolink-headings: 7.1.0
+      rehype-pretty-code: 0.14.1(shiki@1.29.2)
+      rehype-slug: 6.0.0
+      remark-gfm: 4.0.1
+      remove-markdown: 0.5.5
+      shiki: 1.29.2
+      svelte: 5.43.12
+      svelte-toolbelt: 0.10.6(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)
+      tailwind-merge: 3.3.1
+      tailwind-variants: 1.0.0(tailwindcss@4.1.17)
+      tailwindcss: 4.1.17
+      tw-animate-css: 1.3.4
+      unist-util-visit: 5.0.0
+    transitivePeerDependencies:
+      - supports-color
+      - vite
 
   '@ethercorps/sveltekit-og@4.2.0(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))':
     dependencies:
@@ -3265,31 +3333,6 @@ snapshots:
   '@speed-highlight/core@1.2.7': {}
 
   '@standard-schema/spec@1.0.0': {}
-
-  '@svecodocs/kit@0.5.1(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(bits-ui@2.11.8(@internationalized/date@3.8.2)(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12))(svelte@5.43.12)(tailwindcss@4.1.17)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0))':
-    dependencies:
-      '@sveltejs/kit': 2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0))
-      bits-ui: 2.11.8(@internationalized/date@3.8.2)(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)
-      clsx: 2.1.1
-      flexsearch: 0.7.43
-      mode-watcher: 1.1.0(svelte@5.43.12)
-      phosphor-svelte: 3.0.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0))
-      rehype-autolink-headings: 7.1.0
-      rehype-pretty-code: 0.14.1(shiki@1.29.2)
-      rehype-slug: 6.0.0
-      remark-gfm: 4.0.1
-      remove-markdown: 0.5.5
-      shiki: 1.29.2
-      svelte: 5.43.12
-      svelte-toolbelt: 0.10.6(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)(vite@7.2.4(@types/node@24.7.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.0)))(svelte@5.43.12)
-      tailwind-merge: 3.3.1
-      tailwind-variants: 1.0.0(tailwindcss@4.1.17)
-      tailwindcss: 4.1.17
-      tw-animate-css: 1.3.4
-      unist-util-visit: 5.0.0
-    transitivePeerDependencies:
-      - supports-color
-      - vite
 
   '@sveltejs/acorn-typescript@1.0.5(acorn@8.15.0)':
     dependencies:
@@ -3958,6 +4001,8 @@ snapshots:
 
   is-arrayish@0.3.2: {}
 
+  is-buffer@2.0.5: {}
+
   is-decimal@2.0.1: {}
 
   is-hexadecimal@2.0.1: {}
@@ -4522,6 +4567,8 @@ snapshots:
 
   mime@3.0.0: {}
 
+  min-indent@1.0.1: {}
+
   miniflare@4.20251113.0:
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
@@ -4765,6 +4812,12 @@ snapshots:
       hast-util-to-html: 9.0.5
       unified: 11.0.5
 
+  remark-code-import@1.2.0:
+    dependencies:
+      strip-indent: 4.0.0
+      to-gatsby-remark-plugin: 0.1.0
+      unist-util-visit: 4.1.2
+
   remark-gfm@4.0.1:
     dependencies:
       '@types/mdast': 4.0.4
@@ -4986,6 +5039,10 @@ snapshots:
       character-entities-html4: 2.1.0
       character-entities-legacy: 3.0.0
 
+  strip-indent@4.0.0:
+    dependencies:
+      min-indent: 1.0.1
+
   style-to-js@1.1.17:
     dependencies:
       style-to-object: 1.0.9
@@ -5078,6 +5135,15 @@ snapshots:
     dependencies:
       tldts-core: 7.0.19
 
+  to-gatsby-remark-plugin@0.1.0:
+    dependencies:
+      to-vfile: 6.1.0
+
+  to-vfile@6.1.0:
+    dependencies:
+      is-buffer: 2.0.5
+      vfile: 4.2.1
+
   toad-cache@3.7.0: {}
 
   totalist@3.0.1: {}
@@ -5134,6 +5200,10 @@ snapshots:
       '@types/unist': 3.0.3
       unist-util-is: 6.0.0
 
+  unist-util-is@5.2.1:
+    dependencies:
+      '@types/unist': 2.0.11
+
   unist-util-is@6.0.0:
     dependencies:
       '@types/unist': 3.0.3
@@ -5146,14 +5216,29 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
+  unist-util-stringify-position@2.0.3:
+    dependencies:
+      '@types/unist': 2.0.11
+
   unist-util-stringify-position@4.0.0:
     dependencies:
       '@types/unist': 3.0.3
+
+  unist-util-visit-parents@5.1.3:
+    dependencies:
+      '@types/unist': 2.0.11
+      unist-util-is: 5.2.1
 
   unist-util-visit-parents@6.0.1:
     dependencies:
       '@types/unist': 3.0.3
       unist-util-is: 6.0.0
+
+  unist-util-visit@4.1.2:
+    dependencies:
+      '@types/unist': 2.0.11
+      unist-util-is: 5.2.1
+      unist-util-visit-parents: 5.1.3
 
   unist-util-visit@5.0.0:
     dependencies:
@@ -5189,10 +5274,22 @@ snapshots:
       '@types/unist': 3.0.3
       vfile: 6.0.3
 
+  vfile-message@2.0.4:
+    dependencies:
+      '@types/unist': 2.0.11
+      unist-util-stringify-position: 2.0.3
+
   vfile-message@4.0.2:
     dependencies:
       '@types/unist': 3.0.3
       unist-util-stringify-position: 4.0.0
+
+  vfile@4.2.1:
+    dependencies:
+      '@types/unist': 2.0.11
+      is-buffer: 2.0.5
+      unist-util-stringify-position: 2.0.3
+      vfile-message: 2.0.4
 
   vfile@6.0.3:
     dependencies:
