@@ -2,22 +2,12 @@ import type { Component } from 'svelte';
 
 import type { SatoriOptions } from 'satori';
 import type { ResvgRenderOptions } from '@resvg/resvg-wasm';
-import { html } from 'satori-html';
 
 import { type EmojiType, loadDynamicAsset } from './emoji.js';
 import { default_fonts, DEFAULT_WIDTH } from '../helpers/defaults.js';
 import { useResvg, useSatori } from '../providers/instances.js';
-import type { ComponentOptions, ImageOptions, VNode } from '../types.js';
-import { render } from 'svelte/server';
-
-function svelteComponentToJsx(component: Component<any>, props: Record<string, any> = {}) {
-	const { body, head} = render(component, { props });
-	return html(body+head)
-}
-
-export async function createVNode(element: string | Component, componentOptions?: ComponentOptions): Promise<VNode> {
-	return typeof element === 'string' ? html(element.replaceAll('\n', '').trim()) : svelteComponentToJsx(element, componentOptions?.props)
-}
+import type { ComponentOptions, ImageOptions } from '../types.js';
+import { createVNode } from './toJSX.js';
 
 export async function createSvg(element: string | Component, imageOptions: ImageOptions, componentOptions?: ComponentOptions): Promise<string> {
 	const [satori, vnodes] = await Promise.all([useSatori(), createVNode(element, componentOptions)]);

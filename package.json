@@ -20,10 +20,10 @@
 			"svelte": "./dist/index.js",
 			"import": "./dist/index.js"
 		},
-        "./fonts": {
-          "types": "./dist/fonts.d.ts",
-          "import": "./dist/fonts.js"
-        },
+		"./fonts": {
+			"types": "./dist/fonts.d.ts",
+			"import": "./dist/fonts.js"
+		},
 		"./plugin": {
 			"types": "./dist/plugin.d.ts",
 			"import": "./dist/plugin.js"
@@ -63,6 +63,9 @@
 	"type": "module",
 	"dependencies": {
 		"@resvg/resvg-wasm": "^2.6.2",
+		"@takumi-rs/helpers": "^0.55.0",
+		"@takumi-rs/image-response": "^0.55.0",
+		"@takumi-rs/wasm": "^0.55.0",
 		"satori": "^0.10.14",
 		"satori-html": "0.3.2",
 		"std-env": "^3.9.0",
