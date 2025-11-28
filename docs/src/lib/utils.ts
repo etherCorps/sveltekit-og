@@ -77,6 +77,7 @@ export function getSectionItems (sectionName: Doc['section'], doSort = true): Re
 	// Map the filtered/sorted documents to the navigation item structure
 	return items.map((doc) => ({
 		title: doc.navLabel || doc.title,
-		href: `/docs/${doc.slug}`
+		href: `/docs/${doc.slug}`,
+		description: doc.description || ''
 	}));
 }

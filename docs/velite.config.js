@@ -22,7 +22,7 @@ const baseSchema = s.object({
 	navLabel: s.string().optional(),
 	raw: s.raw(),
 	toc: s.toc(),
-	section: s.enum(['Overview', 'Runtime', 'Usage', 'Utilities', 'Examples', 'Types']),
+	section: s.enum(['Overview', 'Runtime', 'Usage', 'Utilities', 'Examples', 'Advanced Usage']),
 	lastModified: timestamp(),
 	priority: s.number().optional()
 });
