@@ -15,7 +15,7 @@
 					Latest Version: {latestVersion}
 				</h2>
 				<h1 class="text-base font-semibold text-gray-900 dark:text-white">
-					Weekly Downloads: {packageInfo.weeklyDownloads}
+					Monthly Downloads: {packageInfo.monthlyDownloads}
 				</h1>
 			</div>
 			<p class="mt-2 text-sm text-gray-700 dark:text-gray-300">

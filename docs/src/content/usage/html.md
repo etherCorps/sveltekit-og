@@ -25,7 +25,7 @@ This guide shows the most basic functionality: rendering a static image directly
 
 Define the HTML string directly in `+server.ts` file. Remember to use **inline styles** or utility classes, as the image renderer does not process external CSS files.
 
-```typescript title="src/routes/images/raw-html/+server.ts"
+```typescript title="src/routes/images/raw-html/+server.ts" showLineNumbers
 const htmlString = `
 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; background-color: #101011;">
 	<h1 style="color: gray; font-size: 80px; margin: 0;">@ethercorps/sveltekit-og</h1>
@@ -38,7 +38,7 @@ const htmlString = `
 
 The key difference here is that you pass the string as the first argument to ImageResponse. The third argument (for Svelte component props) is not used.
 
-```typescript file=../../routes/(examples)/images/raw-html.png/+server.ts title="routes/images/raw-html.png/+server.ts" showLineNumbers
+```typescript title="routes/images/raw-html.png/+server.ts" showLineNumbers file=../../routes/(examples)/images/raw-html.png/+server.ts
 // Auto added by remark-code-import
 ```
 

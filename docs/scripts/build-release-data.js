@@ -8,7 +8,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const PACKAGE_NAME = '@ethercorps/sveltekit-og';
 const NPM_REGISTRY_URL = `https://registry.npmjs.org/${PACKAGE_NAME}`;
 const TARGET_FILE_PATH = resolve(__dirname, '../src/lib/release.json');
-const NPM_DOWNLOADS_URL = `https://api.npmjs.org/downloads/point/last-week/${PACKAGE_NAME}`;
+const NPM_DOWNLOADS_URL = `https://api.npmjs.org/downloads/point/last-month/${PACKAGE_NAME}`;
 
 /**
  * Fetches the npm release data for the target package.
@@ -33,11 +33,11 @@ export async function buildNpmReleaseData() {
 		const data = await registryResponse.json();
 
 		// 2. Process Downloads Response
-		let weeklyDownloads = 0;
+		let monthlyDownloads = 0;
 		if (downloadsResponse.ok) {
 			const downloadsData = await downloadsResponse.json();
 			// The API returns the total downloads for the package in the 'downloads' field
-			weeklyDownloads = downloadsData.downloads || 0;
+			monthlyDownloads = downloadsData.downloads || 0;
 		} else {
 			console.warn(
 				`\nWarning: Could not fetch weekly downloads. Status: ${downloadsResponse.status}`
@@ -60,7 +60,7 @@ export async function buildNpmReleaseData() {
 		return {
 			name,
 			latestVersion,
-			weeklyDownloads,
+			monthlyDownloads,
 			// NEW: Total count of all published versions
 			versionCount: Object.keys(versions).length,
 			// NEW: Full time map, containing timestamp for every version published
