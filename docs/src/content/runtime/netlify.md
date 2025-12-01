@@ -109,7 +109,7 @@ Live: https://netlify.sveltekit-og.dev/cog
 
 <Collapsible title="Vite ?url import error">
 
-Netlify throws error when we use [vite url imports](/docs/utilities/local-assets#vite-url-import)
+Netlify throws error when we use [vite url imports](/docs/advanced-usage/local-assets#vite-url-import)
 
 ```typescript
 import imagePath from '$lib/assets/large_image.jpg?url';

@@ -108,7 +108,7 @@ Live: https://deno.sveltekit-og.dev/cog
 
 <Collapsible title="Vite asset import error">
 
-Deno throws error when we use [vite url imports](/docs/utilities/local-assets)
+Deno throws error when we use [vite url imports](/docs/advanced-usage/local-assets)
 
 ```typescript
 import imagePath from '$lib/assets/JetBrainsMono-Regular.ttf?url';
