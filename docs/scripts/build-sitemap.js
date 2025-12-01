@@ -17,8 +17,6 @@ const BASE_URL = 'https://sveltekit-og.dev';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const OUTPUT_FILE = resolve(__dirname, '../static/sitemap.xml');
 
-// --- DATA SOURCE ---
-
 /**
  * @typedef {object} RouteData
  * @property {string} href - The relative path of the route (e.g., '/docs/intro').
@@ -40,8 +38,6 @@ function getDocumentationRoutes() {
 	}));
 }
 
-// --- HELPER FUNCTION ---
-
 /**
  * Generates the XML content for a single URL entry.
  * * @param {string} loc - The full, absolute URL.
@@ -59,8 +55,6 @@ function createUrlEntry(loc, changefreq, priority, lastmod) {
 	return xml;
 }
 
-// --- MAIN GENERATION SCRIPT ---
-
 /**
  * Constructs the full sitemap XML content and writes it to the file system.
  */
@@ -68,9 +62,6 @@ function generateSitemap() {
 	let xml = `<?xml version="1.0" encoding="UTF-8" ?>\n`;
 	xml += `<urlset\n  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">\n\n`;
 
-	// 1. Static Routes
-	const currentDate = new Date().toISOString().split('T')[0];
-	// 2. Documentation Routes
 	const docRoutes = getDocumentationRoutes();
 
 	docRoutes.forEach((route) => {
@@ -79,11 +70,9 @@ function generateSitemap() {
 		const lastMod = route.lastmod;
 			xml += createUrlEntry(loc, 'weekly', isBaseDoc ? 1 : 0.8, lastMod);
 	});
-	xml += createUrlEntry(`${BASE_URL}/sitemap.xml`, 'daily', 1, currentDate);
 
 	xml += `</urlset>`;
 
-	// Write the XML content to the specified output file
 	try {
 		writeFileSync(OUTPUT_FILE, xml, 'utf-8');
 		console.log(`✅ Successfully generated sitemap: ${OUTPUT_FILE}`);
@@ -92,5 +81,4 @@ function generateSitemap() {
 	}
 }
 
-// Execute the main function
 generateSitemap();

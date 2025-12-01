@@ -1,9 +1,7 @@
 import { fileURLToPath } from 'node:url';
-import { writeFile } from 'node:fs/promises'; // Changed to writeFile (async) from promises module
+import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-// Get the directory name for path resolution
-// Note: In an ES module environment, resolve paths relative to import.meta.url
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const PACKAGE_NAME = '@ethercorps/sveltekit-og';
 const NPM_REGISTRY_URL = `https://registry.npmjs.org/${PACKAGE_NAME}`;
