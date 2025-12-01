@@ -7,7 +7,7 @@ section: Examples
 <script>
 	import { Callout, DemoContainer, Tabs, TabItem } from "@svecodocs/kit";
     import SvelteComponentPlayground from "$lib/components/playground/svelte-component.svelte";
-    import {page} from "$app/state";
+    import { page } from "$app/state";
 
 	const serverFiles = ["github-repo.svelte", "+server.ts", "api.ts", "fonts-utils.ts"];
     const tabHashMapping = {

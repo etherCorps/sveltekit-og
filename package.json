@@ -1,13 +1,13 @@
 {
-  "name": "@ethercorps/sveltekit-og",
-  "version": "4.2.1",
-  "license": "MIT",
-  "homepage": "https://sveltekit-og.dev",
-  "repository": "github:ethercorps/sveltekit-og",
-  "funding": "https://github.com/sponsors/ethercorps",
-  "author": "Shivam Meena <https://github.com/theetherGit>",
-  "description": "Dynamically generate Open Graph images from an HTML, CSS template or Svelte component using fast and efficient conversion from HTML > SVG > PNG",
-  "scripts": {
+	"name": "@ethercorps/sveltekit-og",
+	"version": "4.2.1",
+	"license": "MIT",
+	"homepage": "https://sveltekit-og.dev",
+	"repository": "github:ethercorps/sveltekit-og",
+	"funding": "https://github.com/sponsors/ethercorps",
+	"author": "Shivam Meena <https://github.com/theetherGit>",
+	"description": "Dynamically generate Open Graph images from an HTML, CSS template or Svelte component using fast and efficient conversion from HTML > SVG > PNG",
+	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
 		"preview": "vite preview",
@@ -69,9 +69,6 @@
 	"type": "module",
 	"dependencies": {
 		"@resvg/resvg-wasm": "^2.6.2",
-		"@takumi-rs/helpers": "^0.55.0",
-		"@takumi-rs/image-response": "^0.55.0",
-		"@takumi-rs/wasm": "^0.55.0",
 		"satori": "^0.10.14",
 		"satori-html": "0.3.2",
 		"std-env": "^3.9.0",

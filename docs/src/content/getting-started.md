@@ -11,9 +11,15 @@ section: Overview
     import InstallSveltekitOg from "$lib/components/add-ons/packages/sveltekit-og.md";
 </script>
 
-## Setup
+## Setup: Installation & Plugin
 
-Setting up SvelteKit OG is a two-step process: install the package and plugin.
+Setting up SvelteKit OG is a two-step process: installing the core package and adding the necessary plugin to handle `wasm` file for build.
+
+<Callout type="warning" title="Required Svelte Version">
+
+We strongly suggest using **sveltekit-og v4** as older versions are not maintained. **Sveltekit OG v4 only supports Svelte v5 (Runes)** and later. We are not planning to support Svelte v4.
+
+</Callout>
 
 <Steps>
 
@@ -23,21 +29,17 @@ Install the package using your preferred package manager:
 
 <NodePackageInstallerTabs component={InstallSveltekitOg} />
 
-<Step>Plugins</Step>
+<Step>Plugins Configuration</Step>
 
-Sveltekit OG provides two plugins (use one of them)
+Sveltekit OG requires a plugin to handle native dependencies (WASM). You must use one of the two options below.
 
-1. [Vite](#vite) - Available from v4.1.x
-2. [Rollup](#rollup) - Available for v4.x.x - will be deprecated in v5.
+### Vite Plugin
 
-### Vite
-
-Add vite plugin to `vite.config.ts`.
+This is the preferred method for SvelteKit v4.1.0 onwards. It uses the simpler `sveltekitOG` function.
 
 <Callout type="warning" title="Warning">
-Vite plugin is available from sveltekit-og@v4.1.0. If you are using v4.0.0 use <a href="#rollup">Rollup</a>
 
-> If you add plugin while dev server is running, you might see no generated image, so stop the server and re-start it.
+The Vite plugin is available from `sveltekit-og@v4.1.0`. If you are using `v4.0.0`, you must use the [Rollup plugin](#rollup-plugin) configuration below. If you add the plugin while the dev server is running, please **stop and restart the server** to ensure the plugin is applied correctly.
 
 </Callout>
 
@@ -51,16 +53,12 @@ const config = {
 export default config;
 ```
 
-### Rollup
+### Rollup Plugin
 
-Add rollup plugin to `vite.config.ts`.
+This plugin is primarily exist because of my own mistake.
 
-<Callout type="note" title="Warning">
-Rollup plugin is available from sveltekit-og@v4
-</Callout>
-
-<Callout type="danger" title="Deprecation">
-Rollup plugin will be deprecated in v5
+<Callout type="danger" title="Deprecation Notice">
+The Rollup plugin will be deprecated in v5 of SvelteKit OG. Please migrate to the Vite plugin if possible. 
 </Callout>
 
 ```ts title="vite.config.js" showLineNumbers
@@ -80,121 +78,9 @@ export default config;
 
 </Steps>
 
-<Callout type="warning" title="Use sveltekit OG v4">
-    We suggest you to use sveltekit-og v4, as older versions are not maintained and developed.
-    v4 only supports Svelte v5. We are not planning to support Svelte v4 onwards.
-</Callout>
 
-## Basic Usage
+## Next Steps
 
-SvelteKit OG works by returning an ImageResponse from a standard SvelteKit server route.
-
-- Create a new file at src/routes/og/+server.ts.
-
-### Raw HTML string
-
-Creating images with html and css.
-
-```typescript title="src/routes/og/+server.ts" showLineNumbers
-import { ImageResponse } from '@ethercorps/sveltekit-og';
-import type { RequestHandler } from './$types';
-
-export const GET: RequestHandler = async () => {
-	// 1. Define your HTML template
-	// You can use the 'tw' attribute for Tailwind classes
-	const html = `
-    <div tw="flex w-full h-full bg-white items-center justify-center">
-      <div tw="flex flex-col items-center justify-center">
-        <h1 tw="text-6xl font-bold text-gray-900">Hello SvelteKit OG!</h1>
-        <p tw="text-2xl text-gray-500 mt-4">Dynamic images made easy</p>
-      </div>
-    </div>
-  `;
-
-	// 2. Return the ImageResponse
-	return new ImageResponse(html, {
-		width: 1200,
-		height: 630
-		// The library uses 'Noto Sans' by default if no fonts are provided
-	});
-};
-```
-
-#### Preview
-
-<img class="mt-4 rounded-lg" src="/preview" alt="Raw HTML Image">
-
-### Svelte Components
-
-We can create images with svelte components too.
-
-<Callout type="note" title="Svelte options">
-  Always add svelte options on top of the component. It will include the generated `styles` from style tag.
-
-```svelte
-<svelte:options css="injected" />
-```
-
-</Callout>
-
-- Svelte Component
-
-```svelte
-<svelte:options css="injected" />
-
-<script lang="ts">
-	import Logo from './logo.png?inline';
-	import SvelteLogo from './svelte-logo.svg?raw';
-</script>
-
-<div class="flex flex-col bg-gradient w-full h-full p-5">
-	<div class="flex flex-row justify-normal items-center">
-		<img src={Logo} class="w-8" />
-		<span class="ml-2 font-semibold text-xl text-gray-100">@ethercorps/sveltekit-og</span>
-	</div>
-	<div class="flex flex-row items-center justify-between w-full h-[90%] px-10">
-		<div class="flex flex-col justify-center h-full w-1/2">
-			<p class="text-lg -mb-3 text-teal-200 font-bold tracking-wider">SVELTEKIT OG</p>
-			<p class="text-5xl font-bold text-teal-400 tracking-widest">VERSION 4 ✨</p>
-			<p class="-mt-2 text-lg text-gray-300">
-				Sveltekit OG v4 with support for Node, Deno, Cloudflare Workers, Pages, Vercel and Netlify
-			</p>
-		</div>
-		<div class="flex flex-row items-center justify-center w-full w-1/2">
-			{@html SvelteLogo}
-		</div>
-	</div>
-	<div class="flex flex-row text-gray-400">sveltekit-og.dev</div>
-</div>
-
-<style>
-	.bg-gradient {
-		background: linear-gradient(
-			to right,
-			#2c5364,
-			#203a43,
-			#0f2027
-		); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-	}
-</style>
-```
-
-- og/+server.ts
-
-```typescript
-import type { RequestHandler } from '@sveltejs/kit';
-import { ImageResponse } from '@ethercorps/sveltekit-og';
-import OG from './OG.svelte';
-
-export const GET: RequestHandler = async () => {
-	return new ImageResponse(OG, {
-		width: 1200,
-		height: 630,
-		debug: false
-	});
-};
-```
-
-#### Preview
-
-<img class="mt-4 rounded-lg" src="/og.png" alt="Svelte Component Preview">
+Once the package is installed and the plugin is configured, you are ready to create your first dynamic image by defining a SvelteKit server route and returning an ImageResponse.
+- **For Svelte Components**: If you prefer building your images using `.svelte` files, see the [Basic Image Generation](/docs/usage/svelte) guide.
+- **For Raw HTML**: If you prefer using pure HTML strings with Tailwind CSS, see the [Raw HTML](/docs/usage/html) guide.

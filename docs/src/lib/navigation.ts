@@ -42,12 +42,12 @@ export const navigation = defineNavigation({
 			items: usage
 		},
 		{
-			title: 'Utilities',
-			items: utilities
-		},
-		{
 			title: 'Advanced Usage',
 			items: advancedUsage
+		},
+		{
+			title: 'Utilities',
+			items: utilities
 		},
 		{
 			title: 'Runtime',

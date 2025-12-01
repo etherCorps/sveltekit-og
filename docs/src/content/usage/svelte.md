@@ -90,7 +90,7 @@ If using `style` blocks, you must enable CSS injection in svelte options.
 </style>
 ```
 
-## ➡️ Next Steps
+## Next Steps
 
 - **Types Reference**: For a full overview of all options and parameters for `ImageResponse`, see [Types](/docs/utilities/types) reference guide.
 - **Local Assets**: To include local images or other assets in OG images, see [Local Assets](/docs/utilities/local-assets) guide.

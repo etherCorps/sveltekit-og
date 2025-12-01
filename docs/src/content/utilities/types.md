@@ -1,12 +1,26 @@
 ---
-title: Types
-description: Deep dive into the types used in Sveltekit OG
+title: ImageResponse API Reference
+description: Reference for the ImageResponse constructor and its options.
 section: Utilities
 ---
 
 <script>
     import {Callout, PropField, Collapsible, blockquote} from '@svecodocs/kit';
 </script>
+
+## ImageResponse
+
+The ImageResponse class is the central API for generating and serving dynamic images. It extends the standard Web API Response and is designed to be returned directly from a SvelteKit server route (`+server.ts`).
+
+The constructor takes the component/HTML template, rendering options, and component props.
+
+```typescript
+new ImageResponse<T extends string | Component<any>>(
+	element: T,
+	options?: ImageResponseOptions,
+	props?: T extends Component<any> ? ComponentProps<T> : never
+): Response;
+```
 
 ## ImageResponse Parameters
 

@@ -8,13 +8,22 @@ section: Overview
 	import { Callout } from '@svecodocs/kit'
 </script>
 
-SvelteKit OG is a utility library for generating dynamic Open Graph (OG) images within SvelteKit applications.
+**SvelteKit OG** is a high-performance utility library designed for **server-side image generation** within SvelteKit applications.
 
-Social media platforms (like Twitter, Facebook, and LinkedIn) rely on Open Graph tags to display preview cards when links are shared. SvelteKit OG allows you to define these images using standard HTML/CSS or Svelte components, and renders them into static PNGs on the fly.
+While its primary use is creating **dynamic Open Graph (OG) images** for rich social media preview cards, the library is a generic tool capable of converting Svelte components or HTML/CSS into high-quality PNGs, suitable for a wide range of use cases .
 
-It is powered by Satori (Vercel's engine for converting HTML/CSS to SVG) and Resvg (for SVG to PNG conversion). This combination allows for high-performance image generation without the overhead of a headless browser.
+It allows you to define a single visual template using modern web technologies and render unique, personalized images on the fly based on dynamic data or URL parameters.
 
-## Features
+## Zero-Browser Rendering
+
+SvelteKit OG achieves its speed and efficiency by relying on two core technologies, entirely avoiding the performance cost of launching a headless browser like Puppeteer:
+
+1.  **Satori (Vercel):** This engine takes your standard HTML and CSS (Flexbox, Tailwind) and converts it into an **SVG** representation.
+2.  **Resvg:** This powerful Rust-based library then takes the generated SVG and converts it into the final **PNG** or JPEG image file that is served to the client.
+
+This combination ensures the library runs efficiently in **serverless** and **edge environments** (like Vercel Edge, Cloudflare Workers, or Netlify functions).
+
+## Key Features & Benefits
 
 - 🚀 Fast & Lightweight: Unlike Puppeteer or Playwright, sveltekit-og does not launch a browser instance. It runs efficiently in serverless and edge environments (like Vercel Edge or Cloudflare Workers).
 

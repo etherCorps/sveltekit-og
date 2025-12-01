@@ -51,7 +51,7 @@ Visit the URL corresponding to route in browser (e.g. `http://localhost:5173/ima
 </a>
 
 
-## ➡️ Next Steps
+## Next Steps
 
 - **Dynamic Data**: To inject dynamic data (e.g., a post title) into your HTML string, you will need to use `JavaScript` string replacement or a dedicated **templating engine** before passing the string to `ImageResponse`.
 - **Types Reference**: For a full overview of all options and parameters for `ImageResponse`, see [Types](/docs/utilities/types) reference guide.
