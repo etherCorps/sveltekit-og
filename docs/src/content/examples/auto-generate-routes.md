@@ -244,7 +244,7 @@ export default defineConfig({
 });
 ```
 
-### Usage and Result
+## Usage and Result
 
 The core idea is that the `sveltekit.og.ts` **file acts as the configuration layer** for the OG image's props, and the generated `+server.ts` file automatically imports and uses that configuration.
 
