@@ -1,5 +1,3 @@
-// vite-plugin-og-route-generator.ts
-
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import type { Plugin, ViteDevServer } from 'vite';
@@ -18,41 +16,36 @@ interface Manifest {
 }
 interface ConfigFile {
 	fullPath: string; // Absolute path to sveltekit.og.(ts|js)
-	ext: string;      // .ts or .js
+	ext: string; // .ts or .js
+}
+
+interface Entry {
+	"name": string,
+	"parentPath": string,
+	"path": string
 }
 
 // --- Generation Helpers ---
 
-function generateServerRouteContent(importPath: string): string {
-	const finalImportPath = importPath.replace(/\\/g, '/');
-
-	return `import { json } from '@sveltejs/kit';
-import { ogMetadata } from '${finalImportPath}.js';
-import { ImageResponse } from '@ethercorps/sveltekit-og';
+function generateServerRouteContent(): string {
+	return `import { ogMetadata } from "../sveltekit.og.js";
+import { createOgImageHandler } from "$lib/og-image.js";
 export const prerender = true;
-console.log('OG Metadata building');
-/** @type {import('./$types').RequestHandler} */
-export async function GET({ url }) { 
-  return json(ogMetadata);
-}
-`;
+export const GET = createOgImageHandler(ogMetadata);`;
 }
 
-
-// --- Cleanup Logic (Pass 2 - Simplified to rely only on Manifest) ---
+// --- Cleanup Logic ---
 
 async function initialCleanup(root: string): Promise<void> {
 	const manifestPath = path.resolve(root, MANIFEST_FILE_PATH_STRING);
 	let filesToClean: Manifest = { files: [], directories: [] };
 	let manifestWasUsed = false;
 
-	// 1. Try to load list from manifest (fastest for cleaning up previous failed/interrupted runs)
 	try {
 		const manifestContent = await fs.readFile(manifestPath, 'utf-8');
 		filesToClean = JSON.parse(manifestContent) as Manifest;
 		manifestWasUsed = true;
 	} catch (e) {
-		// Ignore ENOENT (No manifest means clean start or final cleanup)
 		if ((e as NodeJS.ErrnoException).code !== 'ENOENT') {
 			console.error(`[${PLUGIN_NAME}] Error loading manifest:`, e);
 			return;
@@ -63,20 +56,19 @@ async function initialCleanup(root: string): Promise<void> {
 
 	console.log(`[${PLUGIN_NAME}] Cleaning up ${filesToClean.files.length} files from manifest...`);
 
-	// Delete Files
-	await Promise.all(filesToClean.files.map(p => fs.rm(p, { force: true })));
+	await Promise.all(filesToClean.files.map((p) => fs.rm(p, { force: true })));
 
-	// Delete Directories
 	filesToClean.directories.sort((a, b) => b.localeCompare(a));
-	await Promise.all(filesToClean.directories.map(d => fs.rm(d, { force: true, recursive: true })));
+	await Promise.all(
+		filesToClean.directories.map((d) => fs.rm(d, { force: true, recursive: true }))
+	);
 
-	// Only delete the manifest file if it existed and was used for cleanup
 	if (manifestWasUsed) {
 		await fs.rm(manifestPath, { force: true });
 	}
 }
 
-// --- Discovery Helpers (used by Generation Logic) ---
+// --- Discovery & Generation Logic ---
 
 async function discoverConfigFiles(root: string): Promise<ConfigFile[]> {
 	const sveltekitRoutesDir = path.resolve(root, DEFAULT_ROUTES_DIR);
@@ -84,60 +76,53 @@ async function discoverConfigFiles(root: string): Promise<ConfigFile[]> {
 
 	try {
 		const entries = await fs.readdir(sveltekitRoutesDir, { withFileTypes: true, recursive: true });
-
-		for (const entry of entries) {
-			const fullPath = path.join(entry.path, entry.name);
-			if (entry.isFile() && CONFIG_FILE_PATTERN.test(entry.name)) {
-				const ext = path.extname(entry.name);
-				configFiles.push({ fullPath, ext });
+		if (entries.length > 0) {
+			for (const entry of entries) {
+				if ('path' in entry) {
+					const fullPath = path.join(entry.path as string, entry.name);
+					if (entry.isFile() && CONFIG_FILE_PATTERN.test(entry.name)) {
+						const ext = path.extname(entry.name);
+						configFiles.push({ fullPath, ext });
+					}
+				}
 			}
 		}
 	} catch (e) {
-		// Ignore ENOENT
+		throw new Error('src/routes directory not found.');
+		// Ignore ENOENT if src/routes doesn't exist
 	}
 	return configFiles;
 }
 
-
-// --- Generation Logic (Pass 3 - Conflict Resolution) ---
+async function resolveExtensionConflict(serverDirPath: string, requiredExt: string): Promise<void> {
+	const conflictExt = requiredExt === '.ts' ? '.js' : '.ts';
+	const conflictPath = path.join(serverDirPath, `+server${conflictExt}`);
+	try {
+		// This is a silent cleanup to prevent Vite from finding both +server.ts and +server.js.
+		// The "Generated route" log that follows is sufficient feedback for the user.
+		await fs.rm(conflictPath, { force: true });
+	} catch (e) {
+		throw new Error('Unexpected error during extension conflict resolution: ' + (e as Error).message);
+	}
+}
 
 async function generateRoutes(root: string): Promise<void> {
-	const sveltekitRoutesDir = path.resolve(root, DEFAULT_ROUTES_DIR);
 	const newManifest: Manifest = { files: [], directories: [] };
 	const manifestPath = path.resolve(root, MANIFEST_FILE_PATH_STRING);
 
 	const configFiles = await discoverConfigFiles(root);
 
-	// 2. Generate files and collect paths
 	for (const configFile of configFiles) {
 		const routeDir = path.dirname(configFile.fullPath);
-		const SERVER_ROUTE_FILE_NAME = `+server${configFile.ext}`;
+		const serverRouteFileName = `+server${configFile.ext}`;
 
 		const newServerDirPath = path.join(routeDir, SERVER_ROUTE_DIR);
-		const newServerFilePath = path.join(newServerDirPath, SERVER_ROUTE_FILE_NAME);
+		const newServerFilePath = path.join(newServerDirPath, serverRouteFileName);
 
-		// --- 🚨 CONFLICT RESOLUTION (CRITICAL FIX) ---
-		// Delete the file with the *opposite* extension if it exists, because the
-		// current config file dictates the extension we MUST use.
-		const conflictingTsFile = path.join(newServerDirPath, '+server.ts');
-		const conflictingJsFile = path.join(newServerDirPath, '+server.js');
-
-		// If the config is .ts, the conflict is .js. If config is .js, the conflict is .ts.
-		const conflictPath = configFile.ext === '.ts' ? conflictingJsFile : conflictingTsFile;
-
-		try {
-			console.log(`[${PLUGIN_NAME}] Resolving conflict: Deleting ${path.basename(conflictPath)} in ${path.basename(newServerDirPath)}.`);
-			await fs.rm(conflictPath, { force: true });
-		} catch (e) {
-			// Ignore, the file might not exist (e.g., first run)
-		}
-		// --- END CONFLICT RESOLUTION ---
+		await resolveExtensionConflict(newServerDirPath, configFile.ext);
 
 		await fs.mkdir(newServerDirPath, { recursive: true });
-
-		const relativePathToConfigFile = path.relative(newServerDirPath, configFile.fullPath);
-		const importPath = relativePathToConfigFile.replace(path.extname(relativePathToConfigFile), '');
-		const content = generateServerRouteContent(importPath);
+		const content = generateServerRouteContent();
 
 		await fs.writeFile(newServerFilePath, content, 'utf-8');
 
@@ -147,7 +132,6 @@ async function generateRoutes(root: string): Promise<void> {
 		console.log(`[${PLUGIN_NAME}] Generated route: ${path.relative(root, newServerFilePath)}`);
 	}
 
-	// 3. Write the new manifest file
 	const manifestDir = path.dirname(manifestPath);
 	await fs.mkdir(manifestDir, { recursive: true });
 	await fs.writeFile(manifestPath, JSON.stringify(newManifest, null, 2), 'utf-8');
@@ -162,25 +146,21 @@ export function ogRouteGenerator(): Plugin {
 
 	return {
 		name: PLUGIN_NAME,
-		apply: 'build',
 
 		configResolved(resolvedConfig) {
 			root = resolvedConfig.root;
 		},
 
-		// 1. Build Start: Manifest Cleanup -> Generation (with conflict resolution)
 		async buildStart() {
 			await initialCleanup(root);
 			await generateRoutes(root);
 		},
 
-		// 2. Build End: Final Cleanup (removes generated files and manifest)
 		async closeBundle() {
 			console.log(`[${PLUGIN_NAME}] Build finished. Starting final file cleanup.`);
 			await initialCleanup(root);
 		},
 
-		// 3. Dev Server Hook
 		configureServer(server: ViteDevServer) {
 			const routesDir = path.resolve(root, DEFAULT_ROUTES_DIR);
 
