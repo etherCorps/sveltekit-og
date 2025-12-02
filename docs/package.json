@@ -18,7 +18,7 @@
 		"lint": "prettier --check ."
 	},
 	"devDependencies": {
-		"@svecodocs/kit": "npm:@ethercorps/svecodocs@0.5.3",
+		"@svecodocs/kit": "npm:@ethercorps/svecodocs@0.5.4",
 		"@sveltejs/adapter-cloudflare": "^7.2.4",
 		"@sveltejs/kit": "^2.48.5",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
