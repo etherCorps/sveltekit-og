@@ -19,7 +19,7 @@
 				</h1>
 			</div>
 			<p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
-				{new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'long' }).format(
+				{new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(
 					new Date(packageInfo.time.modified)
 				)}
 			</p>
@@ -70,7 +70,7 @@
 										<td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400"
 											>{new Intl.DateTimeFormat('en-US', {
 												dateStyle: 'long',
-												timeStyle: 'long'
+												timeStyle: 'short'
 											}).format(new Date(time))}</td
 										>
 									</tr>
