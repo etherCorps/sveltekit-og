@@ -2,6 +2,7 @@
 title: GitHub Repository OG Image
 description: Recreate the iconic GitHub repository social card using dynamic data and Svelte components.
 section: Examples
+priority: 1
 ---
 
 <script>
@@ -16,7 +17,10 @@ section: Examples
       "#data-fetching-helper": "api.ts",
       "#fonts-config": "fonts-utils.ts"
     };
-    const currentTab = $derived(page.url.hash ? tabHashMapping[page.url.hash] : '#the-visual-component');
+
+    
+
+    const currentTab = $derived(tabHashMapping[page.url.hash] || 'github-repo.svelte');
 </script>
 
 ## Overview

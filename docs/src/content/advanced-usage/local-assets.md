@@ -2,7 +2,7 @@
 title: Assets Loading
 description: Guide to handling local images, SVGs, and remote assets in a SvelteKit server environment.
 section: Advanced Usage
-priority: 2
+priority: 1
 ---
 
 <script>
