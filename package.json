@@ -77,5 +77,8 @@
 	"peerDependencies": {
 		"@sveltejs/kit": ">=2.0.0"
 	},
+	"engines": {
+		"node": ">=18.13.0"
+	},
 	"packageManager": "pnpm@10.12.1"
 }
