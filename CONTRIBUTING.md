@@ -56,4 +56,4 @@ npm run format
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by the [SvelteKit OG Code of Conduct](httpsTBD). By participating, you are expected to uphold this code. Please report unacceptable behavior to [theethergit@gmail.com](mailto:theethergit@gmail.com).
+This project and everyone participating in it is governed by the [SvelteKit OG Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [theethergit@gmail.com](mailto:theethergit@gmail.com).
