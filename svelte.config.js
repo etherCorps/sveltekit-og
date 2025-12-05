@@ -15,7 +15,7 @@ const config = {
 		adapter: adapter(),
 		prerender: {
 			handleUnseenRoutes: (details) => {
-				console.log('handleUnseenRoutes', JSON.stringify(details, null, 2));
+				console.warn('handleUnseenRoutes', JSON.stringify(details, null, 2));
 				return;
 			},
 			handleHttpError: ({ path, message }) => {

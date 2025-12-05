@@ -18,8 +18,8 @@ export function sveltekitOG(options?: UnwasmPluginOptions): VitePlugin {
 			return {
 				build: {
 					rollupOptions: {
-						plugins: [rollupWasm(options)]
-					}
+						plugins: [rollupWasm(options)],
+					},
 				}
 			};
 		}
