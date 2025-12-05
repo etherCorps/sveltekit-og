@@ -172,51 +172,13 @@ ImageResponse(
   )
 ```
 
+## Contributing
+
+Contributions are welcome! Please read our [contributing guidelines](CONTRIBUTING.md) to get started.
+
 ## Changelog
 
-### v4.0.0 (Breaking Changes)
-
-> Just install @ethercorps/sveltekit-og
-
-> Support for NodeJS, Deno, Cloudflare Pages, Cloudflare Workers, Vercel and Netlify.
-
-> No support for Bun tried and failed.
-
-
-### v3.0.0 (Breaking Changes)
-
-> Just install @ethercorps/sveltekit-og
-> No wasm as of now, only support for nodejs based runtime.
-
-### v1.2.3 Update (Breaking Changes)
-
-> Now you have to install dependency by yourself which will make it easier to build for all plateforms.
-
-```
-npm i @resvg/resvg-js
-```
-
-```
-npm i satori
-```
-
-> From now on their will be no issues related to build, and soon this library going to have its own documentation.
-
-### v1.2.2 Update (Breaking Change)
-
-- We don't provide access to satori from `@ethercorps/sveltekit-og`.
-
-### v1.0.0 Update (Breaking Changes)
-
-Finally, We have added html to react like element like object converter out of the box and with svelte compiler.
-Now you can use `{ toReactElement }` with `"@ethercorps/sveltekit-og"` like:
-
-- We have changed to function based instead of class based ImageResponse and componentToImageResponse.
-- Removed `@resvg/resvg-wasm` with `@resvg/resvg-js` because of internal errors.
-- Removed `satori-html` because now we have `toReactElement` out of the box with svelte compiler.
-  > If you find a problem related to undefined a please check [_vite.config.js_](/vite.config.ts) and add ` define: { _a: 'undefined' } in config.`
-
-> If you find any issue and have suggestion for this project please open a ticket and if you want to contribute please create a new discussion.
+All notable changes to this project are documented in the [changelog](CHANGELOG.md).
 
 ## Acknowledgements
 
