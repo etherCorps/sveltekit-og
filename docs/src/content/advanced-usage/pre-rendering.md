@@ -159,3 +159,53 @@ export const GET: RequestHandler = async ({ params }) => {
 };
 ```
 By setting `prerender = true` and implementing `entries`, every single documentation image is ready before the site is deployed, leading to maximum performance.
+
+## Safety Considerations
+
+When pre-rendering OG images, ensure that:
+- All necessary data is available at build time.
+- You handle missing data gracefully to avoid build failures.
+
+To achieve above mentioned safety considerations, you can add `handleUnseenRoutes`, `handleHttpError`, and `handleMissingId` to `prerender` section in `svelte.config.js`. which will help you to manage unseen routes, HTTP errors, and missing IDs during the pre-rendering process.
+
+```javascript showLineNumbers title="svelte.config.js"
+import adapter from '@sveltejs/adapter-vercel';
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
+	// for more information about preprocessors
+	preprocess: adapter({
+		split: true,
+	}),
+
+	kit: {
+		// adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
+		// If your environment is not supported or you settled on a specific environment, switch out the adapter.
+		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
+		adapter: adapter(),
+		prerender: {
+			handleUnseenRoutes: (details) => {
+				console.warn('handleUnseenRoutes', JSON.stringify(details, null, 2));
+				return;
+			},
+			handleHttpError: ({ path, message }) => {
+				console.log('handleHttpError', path, message);
+				// ignore deliberate link to shiny 404 page
+				if (path.split('/').length === 2) return;
+
+				if (path.startsWith('/og.png')) return;
+
+				// otherwise fail the build
+				throw new Error(message);
+			},
+			handleMissingId: (details) => {
+				console.log('handleMissingId', JSON.stringify(details, null, 2));
+				return;
+			}
+		}
+	}
+};
+
+export default config;
+```
