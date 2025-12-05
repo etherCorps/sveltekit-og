@@ -6,8 +6,29 @@
 
 Dynamically generate Open Graph images from an HTML+CSS template or Svelte component using fast and efficient conversion from HTML > SVG > PNG. Based on [Satori](https://github.com/vercel/satori#documentation). No headless browser required.
 
+## Table of Contents
+
+- [SvelteKit Open Graph Image Generation](#sveltekit-open-graph-image-generation)
+  - [Table of Contents](#table-of-contents)
+  - [Docs](#docs)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [API Reference](#api-reference)
+  - [Features](#features)
+    - [Styling](#styling)
+    - [Fonts](#fonts)
+    - [Headers](#headers)
+  - [Examples](#examples)
+  - [Contributing](#contributing)
+  - [Changelog](#changelog)
+  - [License](#license)
+  - [Acknowledgements](#acknowledgements)
+  - [Authors](#authors)
+  - [Contributors](#contributors)
+
 ## Docs
-- With `sveltekit-og@4`, we have [official documentation](https://sveltekit-og.dev). 
+
+For more detailed information and advanced usage, please refer to the [official documentation](https://sveltekit-og.dev).
 
 ## Installation
 
@@ -17,160 +38,117 @@ pnpm install @ethercorps/sveltekit-og
 
 ## Usage
 
-### Vite (Recommended)
+1.  **Add the Vite plugin**
 
-- Add vite plugin
+    ```typescript title="vite.config.js"
+    import { sveltekit } from '@sveltejs/kit/vite';
+    import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
 
-```typescript title="vite.cofig.js"
-import { sveltekit } from '@sveltejs/kit/vite';
-import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
-const config = {
-	plugins: [sveltekit(), sveltekitOG()]
-};
- 
-export default config;
-```
+    const config = {
+    	plugins: [sveltekit(), sveltekitOG()]
+    };
+    
+    export default config;
+    ```
 
-### Rollup (will be deprecated in v5)
-- Add `rollupWasm` to `build.rollupOptions.plugins` in `vite.cofig.js` file.
-- For more information, check [docs](https://sveltekit-og.dev/docs/getting-started)
+2.  **Create an OG image endpoint**
 
-```ts title="vite.cofig.js"
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vitest/config';
-import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
+    Create a file at `/src/routes/og/+server.ts`:
 
-export default defineConfig({
-	plugins: [sveltekit()],
-	build: {
-		rollupOptions: {
-			plugins: [rollupWasm()],
-		}
-	}
-});
-```
+    ```typescript title="/src/routes/og/+server.ts"
+    import { ImageResponse } from '@ethercorps/sveltekit-og';
+    import type { RequestHandler } from './$types';
 
-- For node adapter update config with `rollupWasm`
-- Check node runtime [docs](https://sveltekit-og.dev/docs/runtime/node)
-
-```ts title="vite.cofig.js"
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vitest/config';
-import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
-
-export default defineConfig({
-	plugins: [sveltekit()],
-	build: {
-		rollupOptions: {
-			plugins: [
-				rollupWasm({ esmImport: false })
-            ],
-		}
-	}
-});
-```
-
-- Create a file at `/src/routes/og/+server.ts`. Alternatively, you can use JavaScript by removing the types from this example.
-
-```typescript
-// src/routes/og/+server.ts
-import { ImageResponse } from '@ethercorps/sveltekit-og';
-import { RequestHandler } from './$types';
-
-const template = `
- <div tw="bg-gray-50 flex w-full h-full items-center justify-center">
-    <div tw="flex flex-col md:flex-row w-full py-12 px-4 md:items-center justify-between p-8">
-      <h2 tw="flex flex-col text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 text-left">
-        <span>Ready to dive in?</span>
-        <span tw="text-indigo-600">Start your free trial today.</span>
-      </h2>
-      <div tw="mt-8 flex md:mt-0">
-        <div tw="flex rounded-md shadow">
-          <a href="#" tw="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white">Get started</a>
-        </div>
-        <div tw="ml-3 flex rounded-md shadow">
-          <a href="#" tw="flex items-center justify-center rounded-md border border-transparent bg-white px-5 py-3 text-base font-medium text-indigo-600">Learn more</a>
+    const template = `
+     <div tw="bg-gray-50 flex w-full h-full items-center justify-center">
+        <div tw="flex flex-col md:flex-row w-full py-12 px-4 md:items-center justify-between p-8">
+          <h2 tw="flex flex-col text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 text-left">
+            <span>Ready to dive in?</span>
+            <span tw="text-indigo-600">Start your free trial today.</span>
+          </h2>
+          <div tw="mt-8 flex md:mt-0">
+            <div tw="flex rounded-md shadow">
+              <a href="#" tw="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white">Get started</a>
+            </div>
+            <div tw="ml-3 flex rounded-md shadow">
+              <a href="#" tw="flex items-center justify-center rounded-md border border-transparent bg-white px-5 py-3 text-base font-medium text-indigo-600">Learn more</a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-`;
+    `;
 
-const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
-const fontData: ArrayBuffer = await fontFile.arrayBuffer();
+    const fontFile = await fetch('https://og-playground.vercel.app/inter-latin-ext-400-normal.woff');
+    const fontData: ArrayBuffer = await fontFile.arrayBuffer();
 
-export const GET: RequestHandler = async () => {
-  return await new ImageResponse(template, {
-    height: 630,
-    width: 1200,
-    fonts: [
-      {
-        name: 'Inter Latin',
-        data: fontData,
-        weight: 400
-      }
-    ]
-  });
-};
-```
+    export const GET: RequestHandler = async () => {
+      return new ImageResponse(template, {
+        height: 630,
+        width: 1200,
+        fonts: [
+          {
+            name: 'Inter Latin',
+            data: fontData,
+            weight: 400
+          }
+        ]
+      });
+    };
+    ```
 
-Then run `npm dev` and visit `localhost:5173/og` to view your generated PNG. Remember that hot module reloading does not work with server routes, so if you change your HTML or CSS, hard refresh the route to see changes.
+3.  **View your OG image**
 
-## Example Output
-
-![Rendered OG image](https://github.com/etherCorps/sveltekit-og/blob/main/static/og.png)
-
-## Headers
-
-When run in development, image headers contain `cache-control: no-cache, no-store`. In production, image headers contain `'cache-control': 'public, immutable, no-transform, max-age=31536000'`, which caches the image for 1 year. In both cases, the `'content-type': 'image/png'` is used.
-
-## Styling
-
-Notice that our example uses TailwindCSS classes (e.g. `tw="bg-gray-50"`). Alternatively, your HTML can contain style attributes using any of [the subset of CSS supported by Satori](https://github.com/vercel/satori#css).
-
-Satori supports only a subset of HTML and CSS. For full details, see [Satori’s documentation](https://github.com/vercel/satori#documentation). Notably, Satori only supports flex-based layouts.
-
-## Fonts
-
-Satori supports `ttf`, `otf`, and `woff` font formats; `woff2` is not supported. To maximize the font parsing speed, `ttf` or `otf` are recommended over `woff`.
-
-By default, `@ethercorps/sveltekit-og` includes only 'Noto Sans' font. If you need to use other fonts, you can specify them as shown in the example. Notably, you can also import a font file that is stored locally within your project and are not required to use fetch.
-
-## Examples
-
-- `ImageResponse` · [_source_](/src/routes/+server.ts) · [_demo_](https://vercel.sveltekit-og.dev)
-- `Component Rendering` · [_source_](/src/routes/sc/+server.ts) · [_demo_](https://vercel.sveltekit-og.dev/sc)
+    Run `pnpm dev` and visit `http://localhost:5173/og` to see your generated image.
 
 ## API Reference
 
-The package exposes an `ImageResponse` constructors, with the following options available:
+The package exposes an `ImageResponse` constructor with the following options:
 
 ```typescript
-import {ImageResponse} from '@ethercorps/sveltekit-og'
-import {SvelteComponent} from "svelte";
+import { ImageResponse } from '@ethercorps/sveltekit-og'
+import type { SvelteComponent } from "svelte";
 
-ImageResponse(
-    element : string | Component,
-    options : {
-      width ? : number = 1200
-      height ? : number = 630,
-      backgroundColor ? : string = "#fff"
-      fonts ? : {
-          name: string,
-          data: ArrayBuffer,
-          weight: number,
-          style: 'normal' | 'italic'
-      }[]
-      debug ? : boolean = false
-      // Options that will be passed to the HTTP response
-      status ? : number = 200
-      statusText ? : string
-      headers ? : Record<string, string>
-    },
-    // Component props if components. 
-    ComponentProps<Component>
-  )
+new ImageResponse(
+  element: string | SvelteComponent,
+  options: {
+    width?: number = 1200,
+    height?: number = 630,
+    backgroundColor?: string = "#fff",
+    fonts?: {
+      name: string,
+      data: ArrayBuffer,
+      weight: number,
+      style: 'normal' | 'italic'
+    }[],
+    debug?: boolean = false,
+    // Options that will be passed to the HTTP response
+    status?: number = 200,
+    statusText?: string,
+    headers?: Record<string, string>
+  },
+  // Component props if using a Svelte component
+  ComponentProps<SvelteComponent>
+)
 ```
+
+## Features
+
+### Styling
+
+You can style your OG image using TailwindCSS classes (e.g., `tw="bg-gray-50"`) or inline style attributes. Satori supports a subset of CSS, primarily flex-based layouts. For more details, see [Satori’s documentation](https://github.com/vercel/satori#documentation).
+
+### Fonts
+
+Satori supports `ttf`, `otf`, and `woff` font formats. `woff2` is not supported. For the best performance, `ttf` or `otf` are recommended. By default, `@ethercorps/sveltekit-og` includes the 'Noto Sans' font. You can provide your own fonts using the `fonts` option.
+
+### Headers
+
+In development, the image response includes `cache-control: no-cache, no-store` headers. In production, the headers are set to `cache-control: public, immutable, no-transform, max-age=31536000`, which caches the image for one year. The `content-type` is always `image/png`.
+
+## Examples
+
+- **ImageResponse**: [_source_](/src/routes/+server.ts) · [_demo_](https://vercel.sveltekit-og.dev)
+- **Component Rendering**: [_source_](/src/routes/sc/+server.ts) · [_demo_](https://vercel.sveltekit-og.dev/sc)
 
 ## Contributing
 
@@ -180,9 +158,13 @@ Contributions are welcome! Please read our [contributing guidelines](CONTRIBUTIN
 
 All notable changes to this project are documented in the [changelog](CHANGELOG.md).
 
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
 ## Acknowledgements
 
-This project will not be possible without the following projects:
+This project would not be possible without the following projects:
 
 - [Satori & @vercel/og](https://github.com/vercel/satori)
 - [Noto by Google Fonts](https://fonts.google.com/noto)
