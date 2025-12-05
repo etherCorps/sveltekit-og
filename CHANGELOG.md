@@ -12,24 +12,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Internal changes and improvements.
 
+## [4.2.0]
+
+### Added
+- Added utilities for fonts.
+
 ## [4.0.0]
 
 ### Added
-- Support for NodeJS, Deno, Cloudflare Pages, Cloudflare Workers, Vercel and Netlify.
-
-### Removed
-- Support for Bun.
+- Support for Node.js, Deno, Cloudflare Pages, Cloudflare Workers, Vercel and Netlify.
+- No support for `bun`.
+- Use of satori for HTML to React like element conversion.
 
 ## [3.0.0]
 
 ### Changed
-- Only support for nodejs based runtime.
-- No wasm as of now.
+- Only support for Node.js based runtime.
+
+### Removed
+- Removed support for Deno, Cloudflare Workers, Vercel and Netlify.
 
 ## [1.2.3]
 
 ### Changed
-- You have to install dependency by yourself which will make it easier to build for all plateforms.
+- You have to install dependency by yourself which will make it easier to build for all platforms.
 
 ## [1.2.2]
 

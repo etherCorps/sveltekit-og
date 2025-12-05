@@ -25,7 +25,7 @@ If you have an idea for a new feature or an improvement to an existing one, plea
 
 If you would like to contribute code to the project, please follow these steps:
 
-1. Fork the repository and create a new branch from `main`.
+1. Fork the repository and create a `new branch` from `main`. 
 2. Make your changes and commit them with a clear and descriptive commit message.
 3. Push your changes to your fork.
 4. Open a pull request to the `main` branch of the SvelteKit OG repository.
@@ -40,10 +40,12 @@ Please make sure your pull request includes:
 
 ### Git Commit Messages
 
+- Use feat, fix, docs, style, refactor, perf, test, chore as type prefixes.
+- Separate type and subject with a colon and a space.
 - Use the present tense ("Add feature" not "Added feature").
 - Use the imperative mood ("Move cursor to..." not "Moves cursor to...").
-- Limit the first line to 72 characters or less.
-- Reference issues and pull requests liberally after the first line.
+- Limit the first line to 72 characters or fewer.
+
 
 ### Code Style
 
@@ -56,4 +58,4 @@ npm run format
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by the [SvelteKit OG Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [theethergit@gmail.com](mailto:theethergit@gmail.com).
+This project and everyone participating in it is governed by the [SvelteKit OG Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [ethercorps@gmail.com](mailto:ethercorps@gmail.com).
