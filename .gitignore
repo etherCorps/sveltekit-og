@@ -13,3 +13,5 @@ vite.config.ts.timestamp-*
 .vercel
 .netlify
 **/**/.wrangler
+## Ignore pnpm workspace config due to project requirements
+pnpm-workspace.yaml

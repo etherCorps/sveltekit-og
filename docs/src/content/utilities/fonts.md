@@ -25,7 +25,6 @@ The `ImageResponse` options expects an array of resolved font data. You must alw
 
 </Callout>
 
-
 ## 🌐 Using Google Fonts
 
 The `GoogleFont` class is the easiest way to get started. It abstracts away the network logic, fetches the correct CSS, parses the font URL, and applies an internal cache to prevent redundant requests.
@@ -37,7 +36,7 @@ import { GoogleFont, resolveFonts } from '@ethercorps/sveltekit-og/fonts';
 // 1. Define the GoogleFont instances
 const interRegular = new GoogleFont('Inter', {
 	weight: 400,
-	name: 'Inter',
+	name: 'Inter'
 });
 
 const interBold = new GoogleFont('Inter', {
@@ -48,12 +47,9 @@ export const GET = async () => {
 	// 2. Await the resolution (which triggers the fetch/cache lookup)
 	const resolvedFontOptions = await resolveFonts([interRegular, interBold]);
 
-	return new ImageResponse(
-		`<div tw="flex" style="font-family: 'Inter'">Hello World</div>`,
-		{
-			fonts: resolvedFontOptions
-		}
-	);
+	return new ImageResponse(`<div tw="flex" style="font-family: 'Inter'">Hello World</div>`, {
+		fonts: resolvedFontOptions
+	});
 };
 ```
 
@@ -62,6 +58,7 @@ export const GET = async () => {
 This method involves placing TrueType (`.ttf`) or OpenType (`.otf`) files in the project and reading them directly from the file system.
 
 ### Steps
+
 1.  **Import**: Use the Vite `?url` suffix to get the build-time path of your local font file.
 2.  **Load**: Use SvelteKit's `$app/server` `read` function to retrieve the file.
 3.  **Wrap**: Pass a **function** that returns the `ArrayBuffer` to `CustomFont`.
@@ -87,11 +84,9 @@ const myCustomRegular = new CustomFont(
 	{ weight: 400 }
 );
 
-const myCustomBold = new CustomFont(
-	'My Custom Font',
-	() => read(BoldFontPath).arrayBuffer(),
-	{ weight: 700 }
-);
+const myCustomBold = new CustomFont('My Custom Font', () => read(BoldFontPath).arrayBuffer(), {
+	weight: 700
+});
 
 export const GET = async () => {
 	// 2. Resolve the promises to get the final ArrayBuffer array
@@ -129,12 +124,9 @@ const fontAwesome = new CustomFont(
 export const GET = async () => {
 	const resolvedFontOptions = await resolveFonts([fontAwesome]);
 
-	return new ImageResponse(
-		`<div tw="flex" style="font-family: 'Font Awesome'">Icon</div>`,
-		{
-			fonts: resolvedFontOptions
-		}
-	);
+	return new ImageResponse(`<div tw="flex" style="font-family: 'Font Awesome'">Icon</div>`, {
+		fonts: resolvedFontOptions
+	});
 };
 ```
 

@@ -19,12 +19,6 @@ interface ConfigFile {
 	ext: string; // .ts or .js
 }
 
-interface Entry {
-	"name": string,
-	"parentPath": string,
-	"path": string
-}
-
 // --- Generation Helpers ---
 
 function generateServerRouteContent(): string {
@@ -88,7 +82,9 @@ async function discoverConfigFiles(root: string): Promise<ConfigFile[]> {
 			}
 		}
 	} catch (e) {
-		throw new Error('src/routes directory not found.');
+		throw new Error('src/routes directory not found.', {
+			cause: e
+		});
 		// Ignore ENOENT if src/routes doesn't exist
 	}
 	return configFiles;
@@ -102,7 +98,9 @@ async function resolveExtensionConflict(serverDirPath: string, requiredExt: stri
 		// The "Generated route" log that follows is sufficient feedback for the user.
 		await fs.rm(conflictPath, { force: true });
 	} catch (e) {
-		throw new Error('Unexpected error during extension conflict resolution: ' + (e as Error).message);
+		throw new Error(
+			'Unexpected error during extension conflict resolution: ' + (e as Error).message
+		);
 	}
 }
 

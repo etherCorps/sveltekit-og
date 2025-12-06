@@ -3,7 +3,7 @@
 </script>
 
 <div class="bg-gray-50 flex w-full h-full items-center justify-center">
-	<div class="flex flex-col w-full py-12 px-4  p-8">
+	<div class="flex flex-col w-full py-12 px-4 p-8">
 		<h2 class="flex flex-col text-3xl sm:text-4xl tracking-tight text-gray-900 text-left">
 			<span class="font-bold">{text}</span>
 			<span class="text-indigo-600 font-normal mt-4">{spanText}</span>

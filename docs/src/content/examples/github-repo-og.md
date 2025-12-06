@@ -26,6 +26,7 @@ priority: 1
 ## Overview
 
 In this example, we will recreate the iconic GitHub repository Open Graph image. This involves:
+
 1.  **Fetching live data** from the GitHub API.
 2.  **Loading custom fonts** (Inter) to match the brand.
 3.  **Rendering a Svelte component** that visually mimics the design.
@@ -91,11 +92,9 @@ To get the authentic look, we load the `Inter` font family (`Regular` and `Bold`
 </TabItem>
 </Tabs>
 
-
 ## Live Preview
 
 Start your development server and visit the URL below. Change the `owner` and `repo` query parameters to generate cards for different repositories instantly in [playground](#playground).
-
 
 <a target="_blank" rel="external" no-referrer="no-referrer" href="https://sveltekit-og.dev/images/github?owner=etherCorps&repo=sveltekit-og">
     <img src="/images/github?owner=etherCorps&repo=sveltekit-og" class="mt-4 rounded-lg" alt="Github Repos OG Image">

@@ -1,5 +1,5 @@
-import { FONT_CACHE_MAP } from '$lib/helpers/cache.js';
-import type { FinalFontOptions, FontStyle, FontWeight, MayBePromise } from '$lib/types.js';
+import { FONT_CACHE_MAP } from "$lib/helpers/cache.js";
+import type { FinalFontOptions, FontStyle, FontWeight, MayBePromise } from "$lib/types.js";
 
 // Code stolen from https://github.com/fineshopdesign/cf-wasm
 interface BaseFontOptions {
@@ -11,13 +11,17 @@ interface BaseFontOptions {
  * All font types inherit from this class.
  */
 export class BaseFont {
-	protected input: any;
+	protected input: MayBePromise<Buffer | ArrayBuffer> | (() => MayBePromise<Buffer | ArrayBuffer>);
 
 	name: string;
 	style: FontStyle;
 	weight: FontWeight;
 
-	constructor(name: string, input: any, { weight = 400, style = 'normal' }: BaseFontOptions = {}) {
+	constructor(
+		name: string,
+		input: MayBePromise<Buffer | ArrayBuffer> | (() => MayBePromise<Buffer | ArrayBuffer>),
+		{ weight = 400, style = "normal" }: BaseFontOptions = {}
+	) {
 		this.input = input;
 		this.name = name;
 		this.style = style;
@@ -53,7 +57,7 @@ export class CustomFont extends BaseFont {
 		}
 
 		const fallback = async () => {
-			const buffer = typeof this.input === 'function' ? this.input() : this.input;
+			const buffer = typeof this.input === "function" ? this.input() : this.input;
 			const resolvedBuffer = await buffer;
 
 			FONT_CACHE_MAP.set(cacheKey, resolvedBuffer);
@@ -68,20 +72,32 @@ export class CustomFont extends BaseFont {
 /** Constructs Google font css url */
 const constructGoogleFontCssUrl = (
 	family: string,
-	{ text, weight = 400, style = 'normal', display }: { text?: string; weight?: string | number; style?: FontStyle; display?: FontDisplay } = {},
+	{
+		text,
+		weight = 400,
+		style = "normal",
+		display,
+	}: { text?: string; weight?: string | number; style?: FontStyle; display?: FontDisplay } = {}
 ) => {
 	// Logic to build the URL (e.g., https://fonts.googleapis.com/css2?family=...wght@...)
 	const params: Record<string, string> = {
-		family: `${family.replaceAll(' ', '+')}:${style === 'italic' ? 'ital,' : ''}wght@${style === 'italic' ? '1,' : ''}${weight}`,
+		family: `${family.replaceAll(" ", "+")}:${style === "italic" ? "ital," : ""}wght@${style === "italic" ? "1," : ""}${weight}`,
 	};
 	if (text) params.text = encodeURIComponent(text);
-	return `https://fonts.googleapis.com/css2?${Object.keys(params).map((key) => `${key}=${params[key]}`).join('&')}`;
+	return `https://fonts.googleapis.com/css2?${Object.keys(params)
+		.map((key) => `${key}=${params[key]}`)
+		.join("&")}`;
 };
 
 /** Loads Google font ArrayBuffer with caching. */
 export const loadGoogleFont = async (
 	family: string,
-	{ text, weight = 400, style = 'normal', display }: { text?: string; weight?: string | number; style?: FontStyle; display?: FontDisplay } = {}
+	{
+		text,
+		weight = 400,
+		style = "normal",
+		display,
+	}: { text?: string; weight?: string | number; style?: FontStyle; display?: FontDisplay } = {}
 ) => {
 	const cssUrl = constructGoogleFontCssUrl(family, { text, weight, display, style });
 
@@ -92,7 +108,9 @@ export const loadGoogleFont = async (
 
 	const cssResponse = await fetch(cssUrl);
 	if (!cssResponse.ok) {
-		throw new Error(`Failed to fetch Google Font CSS for ${family}. Status: ${cssResponse.status}`);
+		throw new Error(
+			`Failed to fetch Google Font CSS for ${family}. Status: ${cssResponse.status}`
+		);
 	}
 	const css = await cssResponse.text();
 
@@ -100,7 +118,9 @@ export const loadGoogleFont = async (
 	const fontUrl = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/)?.[1];
 
 	if (!fontUrl) {
-		throw new Error(`Could not find a compatible truetype font source in the CSS for ${family}.`);
+		throw new Error(
+			`Could not find a compatible truetype font source in the CSS for ${family}.`
+		);
 	}
 
 	// 4. Fetch the font buffer
@@ -120,7 +140,10 @@ export class GoogleFont extends BaseFont {
 	text: string | undefined;
 	private promise?: Promise<ArrayBuffer>;
 
-	constructor(family: string, options: { name?: string; text?: string; weight?: FontWeight; style?: FontStyle } = {}) {
+	constructor(
+		family: string,
+		options: { name?: string; text?: string; weight?: FontWeight; style?: FontStyle } = {}
+	) {
 		super(options.name || family, undefined, options);
 		this.family = family;
 		this.text = options.text;
@@ -152,5 +175,5 @@ export async function resolveFonts(
 			};
 		})
 	);
-	return resolvedFonts.filter(font => font !== null) as FinalFontOptions;
+	return resolvedFonts.filter((font) => font !== null) as FinalFontOptions;
 }

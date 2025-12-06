@@ -4,7 +4,6 @@
 	import { navigation } from '$lib/navigation';
 
 	let { children } = $props();
-
 </script>
 
 <DocsLayout {navigation}>

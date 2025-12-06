@@ -78,9 +78,9 @@ export default config;
 
 </Steps>
 
-
 ## Next Steps
 
 Once the package is installed and the plugin is configured, you are ready to create your first dynamic image by defining a SvelteKit server route and returning an ImageResponse.
+
 - **For Svelte Components**: If you prefer building your images using `.svelte` files, see the [Basic Image Generation](/docs/usage/svelte) guide.
 - **For Raw HTML**: If you prefer using pure HTML strings with Tailwind CSS, see the [Raw HTML](/docs/usage/html) guide.

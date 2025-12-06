@@ -1,18 +1,22 @@
 import { defineConfig, defineSchema, s } from 'velite';
-import { stat } from 'node:fs/promises'
+import { stat } from 'node:fs/promises';
 
 const timestamp = defineSchema(() =>
-		s
-			.custom(i => i === undefined || typeof i === 'string')
-			.transform(async (value, { meta, addIssue }) => {
+	s
+		.custom((i) => i === undefined || typeof i === 'string')
+		.transform(async (value, { meta, addIssue }) => {
 			if (value != null) {
-				addIssue({ fatal: false, code: 'custom', message: '`s.timestamp()` schema will resolve the file modified timestamp' })
+				addIssue({
+					fatal: false,
+					code: 'custom',
+					message: '`s.timestamp()` schema will resolve the file modified timestamp'
+				});
 			}
 
-			const stats = await stat(meta.path)
-			return stats.mtime.toISOString()
+			const stats = await stat(meta.path);
+			return stats.mtime.toISOString();
 		})
-)
+);
 
 const baseSchema = s.object({
 	title: s.string(),

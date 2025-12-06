@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-vercel';
+import adapter from "@sveltejs/adapter-vercel";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -15,25 +15,25 @@ const config = {
 		adapter: adapter(),
 		prerender: {
 			handleUnseenRoutes: (details) => {
-				console.warn('handleUnseenRoutes', JSON.stringify(details, null, 2));
+				console.warn("handleUnseenRoutes", JSON.stringify(details, null, 2));
 				return;
 			},
 			handleHttpError: ({ path, message }) => {
-				console.log('handleHttpError', path, message);
+				console.log("handleHttpError", path, message);
 				// ignore deliberate link to shiny 404 page
-				if (path.split('/').length === 2) return;
+				if (path.split("/").length === 2) return;
 
-				if (path.startsWith('/og.png')) return;
+				if (path.startsWith("/og.png")) return;
 
 				// otherwise fail the build
 				throw new Error(message);
 			},
 			handleMissingId: (details) => {
-				console.log('handleMissingId', JSON.stringify(details, null, 2));
+				console.log("handleMissingId", JSON.stringify(details, null, 2));
 				return;
-			}
-		}
-	}
+			},
+		},
+	},
 };
 
 export default config;

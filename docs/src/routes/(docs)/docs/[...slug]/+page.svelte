@@ -10,9 +10,9 @@
 			height: '630',
 			width: '1200'
 		}
-	})
+	});
 
-	const neighbors = $derived.by(() => getNavigationNeighbors(page.url.pathname))
+	const neighbors = $derived.by(() => getNavigationNeighbors(page.url.pathname));
 </script>
 
-<DocPage component={data.component} {...data.metadata} {metadata} {neighbors}/>
+<DocPage component={data.component} {...data.metadata} {metadata} {neighbors} />

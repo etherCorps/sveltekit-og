@@ -1,5 +1,5 @@
-import { type RequestHandler } from '@sveltejs/kit';
-import {ImageResponse} from "$lib/index.js";
+import { type RequestHandler } from "@sveltejs/kit";
+import { ImageResponse } from "$lib/index.js";
 
 export const GET: RequestHandler = async () => {
 	const html = `
@@ -7,12 +7,14 @@ export const GET: RequestHandler = async () => {
   <img tw="w-40 h-40" src="https://www.ethercorps.io/logo_transparent.png"/>
   <div style="margin-top: 20px; color: gray">Hello, OGs</div>
   </div>
-`.replaceAll('\n', '').trim()
+`
+		.replaceAll("\n", "")
+		.trim();
 
 	return new ImageResponse(html, {
-		format: 'png',
+		format: "png",
 		debug: false,
 		height: 300,
 		width: 600,
-	})
+	});
 };

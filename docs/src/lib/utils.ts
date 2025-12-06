@@ -66,9 +66,11 @@ const sortDocs = (a: Doc, b: Doc) => {
 	return titleLocaleCompare(a.title, b.title);
 };
 
-export function getSectionItems (sectionName: Doc['section'], doSort = true): Record<'title' | 'href', string>[] {
-	let items = getAllDocs()
-		.filter((doc) => doc.section === sectionName);
+export function getSectionItems(
+	sectionName: Doc['section'],
+	doSort = true
+): Record<'title' | 'href', string>[] {
+	let items = getAllDocs().filter((doc) => doc.section === sectionName);
 
 	if (doSort) {
 		items = items.sort(sortDocs);

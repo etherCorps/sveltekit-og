@@ -25,6 +25,7 @@ new ImageResponse<T extends string | Component<any>>(
 ## ImageResponse Parameters
 
 To create your dynamic Open Graph image, the **ImageResponse** constructor needs just three pieces of information, passed in this specific order. Think of this as defining the **design**, the **settings**, and the **data** for your image.
+
 1. **Svelte Component or Raw HTML:** The **design** of your image—what people will actually see.
 2. **Options:** The **settings** that define the image's size, fonts, and response headers.
 3. **Props:** The **dynamic data** (like a blog post title) to feed into your Svelte component.
@@ -34,25 +35,29 @@ import { ImageResponse } from '@ethercorps/sveltekit-og';
 import { CustomFont, resolveFonts } from '@ethercorps/sveltekit-og/fonts';
 import MySvelteComponent from '$lib/og/MySvelteComponent.svelte';
 export const GET = async () => {
-    const props = {
-        title: 'Dynamic Title',
-        subtitle: 'Generated with Sveltekit OG'
-    };
+	const props = {
+		title: 'Dynamic Title',
+		subtitle: 'Generated with Sveltekit OG'
+	};
 	const fonts = [
-		new CustomFont('Inter', () => fetch('https://example.com/fonts/Inter-Regular.ttf').then(res => res.arrayBuffer()), {weight: '400'})
-    ]	
-    return new ImageResponse(
-		// 1. Svelte Component or Raw HTML	
-        MySvelteComponent,
-        // 2. Options
-        {
-            width: 1200,
-            height: 630,
-            fonts: await resolveFonts(fonts)
-        },
-        // 3. Svelte Component props
-        props
-    );
+		new CustomFont(
+			'Inter',
+			() => fetch('https://example.com/fonts/Inter-Regular.ttf').then((res) => res.arrayBuffer()),
+			{ weight: '400' }
+		)
+	];
+	return new ImageResponse(
+		// 1. Svelte Component or Raw HTML
+		MySvelteComponent,
+		// 2. Options
+		{
+			width: 1200,
+			height: 630,
+			fonts: await resolveFonts(fonts)
+		},
+		// 3. Svelte Component props
+		props
+	);
 };
 ```
 
@@ -62,19 +67,18 @@ Font files must be loaded as raw binary data (ArrayBuffer). The `GoogleFont`, `C
 
 </Callout>
 
-
 ### Svelte Component or HTML
 
 This parameter defines the visual content of your Open Graph image. You can provide either a Svelte component or a raw HTML string.
 
 <PropField name="element" type="Component | string" required />
 
-
 <Callout type="tip" title="Suggestion">
     While you can use raw HTML, using a Svelte component is recommended for better maintainability and reusability.
 </Callout>
 
 ### ImageResponse Options
+
 The `options` object allows you to customize various technical aspects of the generated image and its HTTP response.
 
 <PropField name="options" type="ImageResponse" required>
@@ -150,32 +154,32 @@ import MySvelteComponent from '$lib/og/MySvelteComponent.svelte';
 import { FONT_DATA } from '$lib/fonts'; // Assume pre-loaded font data
 
 export const GET = async ({ url }) => {
-    // 1. Prepare dynamic data
-    const isError = url.searchParams.has('error');
-    
-    // 2. Define custom options
-    const options = {
-        width: 1200,
-        height: 630,
-        debug: url.searchParams.has('debug'), // Toggle debug mode via query param
-        emoji: 'blobmoji', // Use a different emoji set
-        fonts: await resolveFonts(FONT_DATA),
-        
-        // 3. Conditional HTTP Response options
-        status: isError ? 404 : 200,
-        statusText: isError ? 'Not Found' : 'OK',
-        headers: {
-            // Override or add custom headers
-            'X-OG-Generator': '@ethercorps/sveltekit-og',
-        }
-    };
-    
-    // 4. Define component props
-    const props = {
-        title: isError ? 'Page Not Found' : 'Standard Post Title',
-    };
+	// 1. Prepare dynamic data
+	const isError = url.searchParams.has('error');
 
-    return new ImageResponse(MySvelteComponent, options, props);
+	// 2. Define custom options
+	const options = {
+		width: 1200,
+		height: 630,
+		debug: url.searchParams.has('debug'), // Toggle debug mode via query param
+		emoji: 'blobmoji', // Use a different emoji set
+		fonts: await resolveFonts(FONT_DATA),
+
+		// 3. Conditional HTTP Response options
+		status: isError ? 404 : 200,
+		statusText: isError ? 'Not Found' : 'OK',
+		headers: {
+			// Override or add custom headers
+			'X-OG-Generator': '@ethercorps/sveltekit-og'
+		}
+	};
+
+	// 4. Define component props
+	const props = {
+		title: isError ? 'Page Not Found' : 'Standard Post Title'
+	};
+
+	return new ImageResponse(MySvelteComponent, options, props);
 };
 ```
 

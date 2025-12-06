@@ -17,7 +17,7 @@ export const GET: RequestHandler = async () => {
 		htmlString, // ⬅️ Pass the HTML string here
 		{
 			width: 1200,
-			height: 630,
+			height: 630
 		}
 	);
 };

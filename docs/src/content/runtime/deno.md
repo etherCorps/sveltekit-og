@@ -113,7 +113,7 @@ Deno throws error when we use [vite url imports](/docs/advanced-usage/local-asse
 ```typescript
 import imagePath from '$lib/assets/JetBrainsMono-Regular.ttf?url';
 
-or
+or;
 
 import imagePath from '$lib/assets/JetBrainsMono-Regular.ttf';
 ```

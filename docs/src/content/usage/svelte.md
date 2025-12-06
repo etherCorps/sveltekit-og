@@ -29,10 +29,11 @@ If using `style` blocks, you must enable CSS injection in svelte options.
 ```svelte
 <svelte:options css="injected" />
 ```
+
 </Callout>
 
 ```svelte title="lib/components/og/simple.svelte" showLineNumbers file=../../lib/components/og/simple.svelte
- // Auto added from source file
+// Auto added from source file
 ```
 
 ### Create API route
@@ -40,7 +41,7 @@ If using `style` blocks, you must enable CSS injection in svelte options.
 Create a SvelteKit server route (a `+server.ts` file) and use the `ImageResponse` constructor to render your component. For this basic setup, we include only the mandatory configuration: the component, dimensions, and necessary fonts.
 
 ```typescript title="routes/images/simple.png/+server.ts" showLineNumbers file=../../routes/(examples)/images/simple.png/+server.ts
- // Auto added from source file
+// Auto added from source file
 ```
 
 ### Preview
@@ -62,6 +63,7 @@ If using `style` blocks, you must enable CSS injection in svelte options.
 ```svelte
 <svelte:options css="injected" />
 ```
+
 </Callout>
 
 ```svelte title="vanills-css.svelte" showLineNumbers

@@ -4,8 +4,7 @@
 	import { page } from '$app/state';
 	let { data } = $props();
 
-	const neighbors = $derived.by(() => getNavigationNeighbors(page.url.pathname))
-
+	const neighbors = $derived.by(() => getNavigationNeighbors(page.url.pathname));
 </script>
 
-<DocPage component={data.component} {...data.metadata} {neighbors}/>
+<DocPage component={data.component} {...data.metadata} {neighbors} />

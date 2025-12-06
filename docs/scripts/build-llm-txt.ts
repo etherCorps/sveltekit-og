@@ -1,17 +1,17 @@
 // Stolen from https://github.com/huntabyte/bits-ui/blob/main/docs/other/build-llms-txt.ts
-import { unified } from "unified";
-import rehypeParse from "rehype-parse";
-import rehypeRemoveComments from "rehype-remove-comments";
-import rehypeRemark from "rehype-remark";
-import remarkStringify from "remark-stringify";
-import remarkGfm from "remark-gfm";
-import { visitParents } from "unist-util-visit-parents";
-import type { Node } from "unist";
-import { basename, dirname, join, relative } from "node:path";
-import { fileURLToPath } from "node:url";
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
-import { JSDOM } from "jsdom";
-import consola from "consola";
+import { unified } from 'unified';
+import rehypeParse from 'rehype-parse';
+import rehypeRemoveComments from 'rehype-remove-comments';
+import rehypeRemark from 'rehype-remark';
+import remarkStringify from 'remark-stringify';
+import remarkGfm from 'remark-gfm';
+import { visitParents } from 'unist-util-visit-parents';
+import type { Node } from 'unist';
+import { basename, dirname, join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { JSDOM } from 'jsdom';
+import consola from 'consola';
 
 consola.wrapConsole();
 
@@ -32,8 +32,8 @@ async function collectFiles(currentDir: string, baseDir: string): Promise<FileMa
 				const subFiles = await collectFiles(fullPath, baseDir);
 				Object.assign(files, subFiles);
 			} else if (entry.isFile()) {
-				if (fullPath.includes("figma")) continue;
-				const content = await readFile(fullPath, "utf-8");
+				if (fullPath.includes('figma')) continue;
+				const content = await readFile(fullPath, 'utf-8');
 
 				files[relPath] = content;
 			}
@@ -58,7 +58,8 @@ function remarkCleanCodeBlocks() {
 				node.value = node.value
 					.split('\n')
 					.filter((line: string) => line.trim().length > 0)
-					.join('\n').trim();
+					.join('\n')
+					.trim();
 			}
 
 			if ('children' in node && Array.isArray(node.children)) {
@@ -84,14 +85,14 @@ function remarkDecodeTableEntities() {
 
 			if (isInTableCell && 'value' in node && typeof node.value === 'string') {
 				node.value = node.value
-					.replace(/\\&#123;/g, "{")
-					.replace(/\\&#125;/g, "}")
-					.replace(/\\&amp;/g, "&")
-					.replace(/&#123;/g, "{")
-					.replace(/&#125;/g, "}")
-					.replace(/&lt;/g, "<")
-					.replace(/&gt;/g, ">")
-					.replace(/&amp;/g, "&");
+					.replace(/\\&#123;/g, '{')
+					.replace(/\\&#125;/g, '}')
+					.replace(/\\&amp;/g, '&')
+					.replace(/&#123;/g, '{')
+					.replace(/&#125;/g, '}')
+					.replace(/&lt;/g, '<')
+					.replace(/&gt;/g, '>')
+					.replace(/&amp;/g, '&');
 			}
 		});
 	};
@@ -100,26 +101,24 @@ function remarkDecodeTableEntities() {
 async function transformAndSaveMarkdown(rawHtml: string) {
 	const dom = new JSDOM(rawHtml);
 	const document = dom.window.document;
-	const codeTags = document?.querySelectorAll("code");
+	const codeTags = document?.querySelectorAll('code');
 	if (codeTags) {
 		for (const code of codeTags) {
-			const language = code.getAttribute("data-language");
+			const language = code.getAttribute('data-language');
 			if (language) {
-				code.className = `${code.className || ""} language-${language}`.trim();
+				code.className = `${code.className || ''} language-${language}`.trim();
 			}
 		}
 	}
-	const targetElement = document.getElementById("main-content");
+	const targetElement = document.getElementById('main-content');
 
-	const elementsToRemove = Array.from(
-		document.querySelectorAll<HTMLElement>("[data-llm-ignore]")
-	);
+	const elementsToRemove = Array.from(document.querySelectorAll<HTMLElement>('[data-llm-ignore]'));
 
 	for (const element of elementsToRemove) {
 		element.remove();
 	}
 
-	const html = targetElement ? targetElement.innerHTML : "";
+	const html = targetElement ? targetElement.innerHTML : '';
 
 	const file = await unified()
 		.use(rehypeParse)
@@ -129,10 +128,10 @@ async function transformAndSaveMarkdown(rawHtml: string) {
 		.use(remarkCleanCodeBlocks)
 		.use(remarkDecodeTableEntities)
 		.use(remarkStringify, {
-			bullet: "-",
-			listItemIndent: "one",
+			bullet: '-',
+			listItemIndent: 'one',
 			tightDefinitions: true,
-			fences: true,
+			fences: true
 		})
 		.process(html);
 
@@ -140,39 +139,39 @@ async function transformAndSaveMarkdown(rawHtml: string) {
 }
 
 async function generateRootLLMsTxt(fileNames: string[]) {
-	let content = "# Bits UI Documentation for LLMs\n\n";
+	let content = '# Bits UI Documentation for LLMs\n\n';
 
-	content += "> Bits UI is a headless component library for Svelte.\n\n";
+	content += '> Bits UI is a headless component library for Svelte.\n\n';
 
 	content +=
-		"This site provides documentation in a format optimized for Large Language Models, with each page available as a clean markdown file.\n\n";
+		'This site provides documentation in a format optimized for Large Language Models, with each page available as a clean markdown file.\n\n';
 
-	content += "## Complete Documentation\n\n";
+	content += '## Complete Documentation\n\n';
 	content +=
-		"- [Complete documentation](https://bits-ui.com/docs/llms.txt): The complete Bits UI documentation including all general content, components, type helpers, and utilities\n\n";
+		'- [Complete documentation](https://bits-ui.com/docs/llms.txt): The complete Bits UI documentation including all general content, components, type helpers, and utilities\n\n';
 
 	const sections: Record<string, string[]> = {
 		General: [],
 		Components: [],
 		Utilities: [],
-		"Type Helpers": [],
+		'Type Helpers': []
 	};
 
 	for (const fileName of fileNames) {
-		if (!fileName.endsWith(".html")) continue;
+		if (!fileName.endsWith('.html')) continue;
 
-		const baseName = basename(fileName, ".html");
+		const baseName = basename(fileName, '.html');
 		const dirPath = dirname(fileName);
-		const relativePath = join(dirPath, baseName, "llms.txt");
+		const relativePath = join(dirPath, baseName, 'llms.txt');
 
-		if (dirPath === ".") {
-			sections["General"].push(`${baseName}|${relativePath}`);
-		} else if (dirPath.startsWith("components")) {
-			sections["Components"].push(`${baseName}|${relativePath}`);
-		} else if (dirPath.startsWith("utilities")) {
-			sections["Utilities"].push(`${baseName}|${relativePath}`);
-		} else if (dirPath.startsWith("type-helpers")) {
-			sections["Type Helpers"].push(`${baseName}|${relativePath}`);
+		if (dirPath === '.') {
+			sections['General'].push(`${baseName}|${relativePath}`);
+		} else if (dirPath.startsWith('components')) {
+			sections['Components'].push(`${baseName}|${relativePath}`);
+		} else if (dirPath.startsWith('utilities')) {
+			sections['Utilities'].push(`${baseName}|${relativePath}`);
+		} else if (dirPath.startsWith('type-helpers')) {
+			sections['Type Helpers'].push(`${baseName}|${relativePath}`);
 		}
 	}
 
@@ -182,12 +181,12 @@ async function generateRootLLMsTxt(fileNames: string[]) {
 		content += `## ${sectionName}\n\n`;
 
 		for (const file of files) {
-			const [baseName, path] = file.split("|");
-			const linkTitle = baseName.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+			const [baseName, path] = file.split('|');
+			const linkTitle = baseName.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
 			content += `- [${linkTitle} Documentation](https://sveltekit-og.dev/docs/${path}): Detailed documentation for ${linkTitle}\n`;
 		}
 
-		content += "\n";
+		content += '\n';
 	}
 
 	return content;
@@ -195,81 +194,75 @@ async function generateRootLLMsTxt(fileNames: string[]) {
 
 async function main() {
 	try {
-		consola.info("Starting to build LLMS files...");
-		const rootPath = join(__dirname, "../.svelte-kit/cloudflare/docs");
-		console.info("Collecting files from", rootPath);
+		consola.info('Starting to build LLMS files...');
+		const rootPath = join(__dirname, '../.svelte-kit/cloudflare/docs');
+		console.info('Collecting files from', rootPath);
 		const files = await collectFiles(rootPath, rootPath);
 		const fileNames = Object.keys(files);
 
 		// store content by category
 		const contentByCategory: Record<string, string[]> = {
 			Introduction: [],
-			"Other Main content": [],
+			'Other Main content': [],
 			Components: [],
 			Utilities: [],
-			"Type Helpers": [],
+			'Type Helpers': []
 		};
 
 		// build individual llms.txt files and collect content
 		for (const fileName of fileNames) {
-			console.info("Processing", fileName);
-			if (!fileName.endsWith(".html")) continue;
+			console.info('Processing', fileName);
+			if (!fileName.endsWith('.html')) continue;
 
 			const fileContent = files[fileName];
 			const cleanedContent = await transformAndSaveMarkdown(fileContent);
 
-			const baseName = basename(fileName, ".html");
+			const baseName = basename(fileName, '.html');
 			const dirPath = dirname(fileName);
 
-			const outputPath = join(__dirname, "../static/docs", dirPath, baseName, "llms.txt");
+			const outputPath = join(__dirname, '../static/docs', dirPath, baseName, 'llms.txt');
 			const outputDir = dirname(outputPath);
 			await mkdir(outputDir, { recursive: true });
 			await writeFile(outputPath, cleanedContent);
 
 			// Categorize content
 			const contentWithSeparator =
-				cleanedContent + "\n\n----------------------------------------------------\n\n";
-			if (dirPath === "." && baseName === "introduction") {
-				contentByCategory["Introduction"].push(contentWithSeparator);
-			} else if (dirPath === ".") {
-				if (baseName === "migration-guide") continue;
-				contentByCategory["Other Main content"].push(contentWithSeparator);
-			} else if (dirPath.startsWith("components")) {
-				contentByCategory["Components"].push(contentWithSeparator);
-			} else if (dirPath.startsWith("utilities")) {
-				contentByCategory["Utilities"].push(contentWithSeparator);
-			} else if (dirPath.startsWith("type-helpers")) {
-				contentByCategory["Type Helpers"].push(contentWithSeparator);
+				cleanedContent + '\n\n----------------------------------------------------\n\n';
+			if (dirPath === '.' && baseName === 'introduction') {
+				contentByCategory['Introduction'].push(contentWithSeparator);
+			} else if (dirPath === '.') {
+				if (baseName === 'migration-guide') continue;
+				contentByCategory['Other Main content'].push(contentWithSeparator);
+			} else if (dirPath.startsWith('components')) {
+				contentByCategory['Components'].push(contentWithSeparator);
+			} else if (dirPath.startsWith('utilities')) {
+				contentByCategory['Utilities'].push(contentWithSeparator);
+			} else if (dirPath.startsWith('type-helpers')) {
+				contentByCategory['Type Helpers'].push(contentWithSeparator);
 			}
 		}
 
 		// combine content in the specified order
-		const order = [
-			"Introduction",
-			"Other Main content",
-			"Components",
-			"Utilities",
-			"Type Helpers",
-		];
-		let allContent = "";
+		const order = ['Introduction', 'Other Main content', 'Components', 'Utilities', 'Type Helpers'];
+		let allContent = '';
 		for (const category of order) {
 			if (contentByCategory[category].length > 0) {
-				allContent += contentByCategory[category].join("");
+				allContent += contentByCategory[category].join('');
 			}
 		}
 
 		// generate and save root llms.txt
-		console.info("Generating root llms.txt");
+		console.info('Generating root llms.txt');
 		const rootLLMsContent = await generateRootLLMsTxt(fileNames);
-		const rootOutputPath = join(__dirname, "../static", "llms.txt");
+		const rootOutputPath = join(__dirname, '../static', 'llms.txt');
 		await writeFile(rootOutputPath, rootLLMsContent);
 
 		// save combined documentation
-		console.info("Saving `/docs/llms.txt` with all content");
-		const allOutputPath = join(__dirname, "../static/docs", "llms.txt");
+		console.info('Saving `/docs/llms.txt` with all content');
+		const allOutputPath = join(__dirname, '../static/docs', 'llms.txt');
 		await writeFile(allOutputPath, allContent.trim());
 	} catch (error) {
-		console.error("Error building llms.txt files:", error);
+		console.error('Error building llms.txt files:', error);
 	}
 }
 

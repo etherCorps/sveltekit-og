@@ -31,16 +31,16 @@ The `?inline` query suffix is a Vite feature that processes the asset at **build
 
 ```svelte showLineNumbers title="inline-import.svelte"
 <script lang="ts">
-    // 1. Import the asset using the ?inline suffix (exports a base64 data URL string)
-    import myLogoData from '$lib/assets/logo.png?inline';
+	// 1. Import the asset using the ?inline suffix (exports a base64 data URL string)
+	import myLogoData from '$lib/assets/logo.png?inline';
 </script>
 
 <div tw="flex items-center">
-    <img src={myLogoData} width="128" height="128" alt="Base64 Logo" />
-    <h1>My Base64 Title</h1>
+	<img src={myLogoData} width="128" height="128" alt="Base64 Logo" />
+	<h1>My Base64 Title</h1>
 </div>
 ```
-    
+
 </TabItem>
 
 <TabItem value="Raw HTML">
@@ -72,8 +72,9 @@ This method is ideal for large assets (e.g., high-resolution background images) 
 ### How it Works
 
 - The `?url` suffix tells Vite to export the asset's path as a string (e.g., `$lib/assets/logo.png`).
-- The SvelteKit utility  `$app/server/read` uses this path to access the asset within the server's build directory and returns the content as a `Response`.
-- 
+- The SvelteKit utility `$app/server/read` uses this path to access the asset within the server's build directory and returns the content as a `Response`.
+-
+
 ### Example
 
 #### Reading into an ArrayBuffer
@@ -133,13 +134,10 @@ export const GET: RequestHandler = async ({ url }) => {
 };
 ```
 
-[//]: # ()
-[//]: # (<Callout type="warning" title="Warning for Edge Runtimes"> )
-
-[//]: # (    )
-[//]: # (In `Edge Runtimes` &#40;`Cloudflare`, `Vercel Edge`, `Deno`&#41;, using `fetch&#40;&#41;` to retrieve an `asset` from your own server &#40;`url.origin`&#41; can sometimes `slow cold starts`. <br /> )
-
-[//]: # (- Method 1 &#40;`?inline`&#41; or Method 2 &#40;`$app/server/read`&#41; is strongly preferred in these environments.)
-
-[//]: # ()
-[//]: # (</Callout>)
+[//]: #
+[//]: # '<Callout type="warning" title="Warning for Edge Runtimes"> '
+[//]: # '    '
+[//]: # 'In `Edge Runtimes` (`Cloudflare`, `Vercel Edge`, `Deno`), using `fetch()` to retrieve an `asset` from your own server (`url.origin`) can sometimes `slow cold starts`. <br /> '
+[//]: # '- Method 1 (`?inline`) or Method 2 (`$app/server/read`) is strongly preferred in these environments.'
+[//]: #
+[//]: # '</Callout>'

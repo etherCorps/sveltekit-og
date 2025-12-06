@@ -8,9 +8,9 @@ declare global {
 		// interface PageState {}
 		interface Platform {
 			context: {
-				waitUntil(promise: Promise<any>): void;
+				waitUntil(promise: Promise<unknown>): void;
 			};
-			caches: CacheStorage & { default: Cache }
+			caches: CacheStorage & { default: Cache };
 		}
 	}
 }

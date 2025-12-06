@@ -11,7 +11,7 @@ export default defineConfig({
 	plugins: [
 		sveltekit(),
 		tailwindcss(),
-		sveltekitOG(),
+		sveltekitOG()
 		// ogRouteGenerator()
 	],
 	server: {

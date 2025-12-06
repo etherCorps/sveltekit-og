@@ -25,7 +25,7 @@ If you have an idea for a new feature or an improvement to an existing one, plea
 
 If you would like to contribute code to the project, please follow these steps:
 
-1. Fork the repository and create a `new branch` from `main`. 
+1. Fork the repository and create a `new branch` from `main`.
 2. Make your changes and commit them with a clear and descriptive commit message.
 3. Push your changes to your fork.
 4. Open a pull request to the `main` branch of the SvelteKit OG repository.
@@ -45,7 +45,6 @@ Please make sure your pull request includes:
 - Use the present tense ("Add feature" not "Added feature").
 - Use the imperative mood ("Move cursor to..." not "Moves cursor to...").
 - Limit the first line to 72 characters or fewer.
-
 
 ### Code Style
 

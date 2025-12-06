@@ -1,6 +1,6 @@
 import { ImageResponse } from '@ethercorps/sveltekit-og';
 import type { RequestHandler } from '@sveltejs/kit';
-import JetbrainsRegular from "$lib/fonts/JetBrainsMono-Regular.ttf?url"
+import JetbrainsRegular from '$lib/fonts/JetBrainsMono-Regular.ttf?url';
 import { GoogleFont, CustomFont, resolveFonts } from '@ethercorps/sveltekit-og/fonts';
 import { read } from '$app/server';
 
@@ -23,12 +23,17 @@ const template = `
   </div>
 `;
 
-const jetbrainsMonoBoldURL = 'https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Bold.ttf'
+const jetbrainsMonoBoldURL =
+	'https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Bold.ttf';
 
 const fonts = [
-	new CustomFont('JetBrains Mono', () => read(JetbrainsRegular).arrayBuffer(), {weight: 400}),
+	new CustomFont('JetBrains Mono', () => read(JetbrainsRegular).arrayBuffer(), { weight: 400 }),
 	new GoogleFont('JetBrains Mono', { weight: 500 }),
-	new CustomFont('JetBrains Mono', () => fetch(jetbrainsMonoBoldURL).then((res) => res.arrayBuffer()), { weight: 700 }),
+	new CustomFont(
+		'JetBrains Mono',
+		() => fetch(jetbrainsMonoBoldURL).then((res) => res.arrayBuffer()),
+		{ weight: 700 }
+	)
 ];
 
 export const GET: RequestHandler = async () => {

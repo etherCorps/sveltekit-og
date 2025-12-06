@@ -9,17 +9,17 @@ Dynamically generate Open Graph images from an HTML+CSS template or Svelte compo
 ## Table of Contents
 
 - [SvelteKit Open Graph Image Generation](#sveltekit-open-graph-image-generation)
-  - [Table of Contents](#table-of-contents)
-  - [Docs](#docs)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Examples](#examples)
-  - [Contributing](#contributing)
-  - [Changelog](#changelog)
-  - [License](#license)
-  - [Acknowledgements](#acknowledgements)
-  - [Authors](#authors)
-  - [Contributors](#contributors)
+    - [Table of Contents](#table-of-contents)
+    - [Docs](#docs)
+    - [Installation](#installation)
+    - [Usage](#usage)
+    - [Examples](#examples)
+    - [Contributing](#contributing)
+    - [Changelog](#changelog)
+    - [License](#license)
+    - [Acknowledgements](#acknowledgements)
+    - [Authors](#authors)
+    - [Contributors](#contributors)
 
 ## Docs
 

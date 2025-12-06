@@ -50,7 +50,6 @@ Visit the URL corresponding to route in browser (e.g. `http://localhost:5173/ima
     <img src="/images/raw-html.png" class="mt-4 rounded-lg" alt="Raw HTML OG Image">
 </a>
 
-
 ## Next Steps
 
 - **Dynamic Data**: To inject dynamic data (e.g., a post title) into your HTML string, you will need to use `JavaScript` string replacement or a dedicated **templating engine** before passing the string to `ImageResponse`.

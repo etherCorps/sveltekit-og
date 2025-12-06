@@ -7,7 +7,7 @@
 
 <div class="flex flex-col bg-gradient w-full h-full p-5">
 	<div class="flex flex-row justify-normal items-center">
-		<Logo class="w-5 h-5" startColor="#4f46e5" endColor="#a5b4fc"/>
+		<Logo class="w-5 h-5" startColor="#4f46e5" endColor="#a5b4fc" />
 		<span class="ml-2 font-semibold text-xl text-orange-100">@ethercorps/sveltekit-og</span>
 	</div>
 	<div class="flex flex-row items-center justify-between w-full h-[90%] px-10">
@@ -29,9 +29,9 @@
 	.bg-gradient {
 		background: linear-gradient(
 			to right,
-      #3730a3,
-      #4f46e5,
-      #4f46e5
+			#3730a3,
+			#4f46e5,
+			#4f46e5
 		); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 	}
 </style>

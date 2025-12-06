@@ -1,20 +1,18 @@
-import { type RequestHandler } from '@sveltejs/kit';
-import {ImageResponse} from "$lib/index.js";
-import { CustomFont, GoogleFont, resolveFonts } from '$lib/fonts.js';
+import { type RequestHandler } from "@sveltejs/kit";
+import { ImageResponse } from "$lib/index.js";
+import { CustomFont, GoogleFont, resolveFonts } from "$lib/fonts.js";
 import RegularFont from "../(components)/SpaceMono-Regular.ttf?url";
-import { read } from '$app/server';
+import { read } from "$app/server";
 
 export const prerender = true;
 
-const spaceMonoBold = new GoogleFont('Space Mono', {
-	weight: 700
+const spaceMonoBold = new GoogleFont("Space Mono", {
+	weight: 700,
 });
 
-const customRegular = new CustomFont(
-	'Space Mono',
-	() => read(RegularFont).arrayBuffer(),
-	{ weight: 400 }
-);
+const customRegular = new CustomFont("Space Mono", () => read(RegularFont).arrayBuffer(), {
+	weight: 400,
+});
 
 export const GET: RequestHandler = async () => {
 	const html = `
@@ -23,13 +21,13 @@ export const GET: RequestHandler = async () => {
   	<div class="font-bold" style="margin-top: 20px; color: #203649;">Hello, OGs 😳</div>
   	<div class="font-normal" style="margin-top: 20px; color: #203649;">Welcome to unknown</div>
   	</div>
-`
+`;
 
 	return new ImageResponse(html, {
-		format: 'png',
+		format: "png",
 		debug: false,
 		height: 600,
 		width: 1200,
-		fonts: await resolveFonts([spaceMonoBold, customRegular])
-	})
+		fonts: await resolveFonts([spaceMonoBold, customRegular]),
+	});
 };
