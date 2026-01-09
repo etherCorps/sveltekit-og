@@ -1,6 +1,6 @@
 ---
 title: Cloudflare
-description: How to use Sveltekit OG with cloudflare adapter (@sveltejs/cloudflare-adapter)
+description: How to use Sveltekit OG with cloudflare adapter (@sveltejs/adapter-cloudflare)
 section: Runtime
 priority: 1
 ---
