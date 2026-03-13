@@ -36,7 +36,7 @@
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
 		"build:examples": "pnpm -F \"./examples/**\" --parallel --color build",
-		"check:examples": "pnpm -F \"./examples/**\" --parallel --color i",
+		"check:examples": "pnpm install -r",
 		"preview": "vite preview",
 		"package": "svelte-kit sync && svelte-package && publint",
 		"prepublishOnly": "pnpm run package",
@@ -112,7 +112,7 @@
 		"@sveltejs/kit": ">=2.0.0"
 	},
 	"engines": {
-		"node": ">=22.16.0",
-        "pnpm": ">=10.12.1"
-	}
+		"node": "22.16.0"
+	},
+	"packageManager": "pnpm@10.12.1"
 }
