@@ -2,6 +2,7 @@ import type { Component, ComponentProps } from "svelte";
 import type { ImageResponseOptions } from "./types.js";
 import { DEFAULT_OPTIONS, DEFAULT_STATUS_CODE, DEFAULT_STATUS_TEXT } from "./helpers/defaults.js";
 import { createPng, createSvg } from "./helpers/create.js";
+import { isDebugEnabled, logger, setDebug } from "./helpers/logger.js";
 
 export class ImageResponse<T extends string | Component<any>> extends Response {
 	constructor(
@@ -10,6 +11,8 @@ export class ImageResponse<T extends string | Component<any>> extends Response {
 		props?: T extends Component<any> ? ComponentProps<T> : never
 	) {
 		const extended_options = Object.assign({ ...DEFAULT_OPTIONS }, options);
+		setDebug(extended_options.debug ?? false);
+		logger.debug("Debug mode", isDebugEnabled())
 		const create_image_function = extended_options.format === "png" ? createPng : createSvg;
 		const body = new ReadableStream({
 			async start(controller) {

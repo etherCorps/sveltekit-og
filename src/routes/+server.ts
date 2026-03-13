@@ -25,7 +25,7 @@ export const GET: RequestHandler = async () => {
 
 	return new ImageResponse(html, {
 		format: "png",
-		debug: false,
+		debug: true,
 		height: 600,
 		width: 1200,
 		fonts: await resolveFonts([spaceMonoBold, customRegular]),

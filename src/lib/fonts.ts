@@ -1,5 +1,6 @@
 import { FONT_CACHE_MAP } from "$lib/helpers/cache.js";
 import type { FinalFontOptions, FontStyle, FontWeight, MayBePromise } from "$lib/types.js";
+import { logger } from "$lib/helpers/logger.js";
 
 // Code stolen from https://github.com/fineshopdesign/cf-wasm
 interface BaseFontOptions {
@@ -11,18 +12,14 @@ interface BaseFontOptions {
  * All font types inherit from this class.
  */
 export class BaseFont {
-	protected input: MayBePromise<Buffer | ArrayBuffer> | (() => MayBePromise<Buffer | ArrayBuffer>);
-
 	name: string;
 	style: FontStyle;
 	weight: FontWeight;
 
 	constructor(
 		name: string,
-		input: MayBePromise<Buffer | ArrayBuffer> | (() => MayBePromise<Buffer | ArrayBuffer>),
 		{ weight = 400, style = "normal" }: BaseFontOptions = {}
 	) {
-		this.input = input;
 		this.name = name;
 		this.style = style;
 		this.weight = weight;
@@ -32,11 +29,12 @@ export class BaseFont {
 	 * Overridden by CustomFont and GoogleFont for lazy loading.
 	 */
 	get data(): MayBePromise<Buffer | ArrayBuffer> {
-		return this.input;
+		throw new Error("The 'data' getter must be implemented by subclasses of BaseFont.");
 	}
 }
 
 export class CustomFont extends BaseFont {
+	protected input: MayBePromise<Buffer | ArrayBuffer> | (() => MayBePromise<Buffer | ArrayBuffer>);
 	private promise?: Promise<Buffer | ArrayBuffer>;
 
 	constructor(
@@ -44,7 +42,8 @@ export class CustomFont extends BaseFont {
 		input: MayBePromise<Buffer | ArrayBuffer> | (() => MayBePromise<Buffer | ArrayBuffer>),
 		options?: BaseFontOptions
 	) {
-		super(name, input, options);
+		super(name, options);
+		this.input = input;
 	}
 
 	/** A promise which resolves to font data as `ArrayBuffer` (Lazy load and CACHED) */
@@ -60,7 +59,7 @@ export class CustomFont extends BaseFont {
 			const buffer = typeof this.input === "function" ? this.input() : this.input;
 			const resolvedBuffer = await buffer;
 
-			FONT_CACHE_MAP.set(cacheKey, resolvedBuffer);
+			FONT_CACHE_MAP.set(cacheKey, <ArrayBuffer>resolvedBuffer);
 			return resolvedBuffer;
 		};
 
@@ -108,6 +107,9 @@ export const loadGoogleFont = async (
 
 	const cssResponse = await fetch(cssUrl);
 	if (!cssResponse.ok) {
+		logger.error(
+			`Failed to fetch Google Font CSS for ${family}. Status: ${cssResponse.status}`
+		);
 		throw new Error(
 			`Failed to fetch Google Font CSS for ${family}. Status: ${cssResponse.status}`
 		);
@@ -118,6 +120,7 @@ export const loadGoogleFont = async (
 	const fontUrl = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/)?.[1];
 
 	if (!fontUrl) {
+		logger.error(`Could not find a compatible truetype font source in the CSS for ${family}.`);
 		throw new Error(
 			`Could not find a compatible truetype font source in the CSS for ${family}.`
 		);
@@ -126,12 +129,14 @@ export const loadGoogleFont = async (
 	// 4. Fetch the font buffer
 	const fontResponse = await fetch(fontUrl);
 	if (!fontResponse.ok) {
+		logger.error(`Failed to fetch font file from URL. Status: ${fontResponse.status}`);
 		throw new Error(`Failed to fetch font file from URL. Status: ${fontResponse.status}`);
 	}
 	const buffer = await fontResponse.arrayBuffer();
 
 	// 5. CACHE AND RETURN: Store the resolved ArrayBuffer in the Map, keyed by the CSS URL.
 	FONT_CACHE_MAP.set(cssUrl, buffer);
+	logger.debug(`Loaded Google Font: ${family}`);
 	return buffer;
 };
 
@@ -144,7 +149,7 @@ export class GoogleFont extends BaseFont {
 		family: string,
 		options: { name?: string; text?: string; weight?: FontWeight; style?: FontStyle } = {}
 	) {
-		super(options.name || family, undefined, options);
+        super(options.name || family, options);
 		this.family = family;
 		this.text = options.text;
 	}

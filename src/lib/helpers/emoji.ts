@@ -58,10 +58,11 @@ function loadEmoji(code: string, type: EmojiType) {
 export const loadDynamicAsset = ({ emoji }: { emoji: EmojiType }) => {
 	const fn = async (code: string, text: string) => {
 		if (code === "emoji") {
-			return (
-				`data:image/svg+xml;base64,` +
-				btoa(await (await loadEmoji(getIconCode(text), emoji)).text())
-			);
+			const iconCode = getIconCode(text);
+			const emojiResponse = await loadEmoji(iconCode, emoji);
+			const svgText = await emojiResponse.text();
+			const base64Data = btoa(svgText);
+			return `data:image/svg+xml;base64,` + base64Data;
 		}
 	};
 
