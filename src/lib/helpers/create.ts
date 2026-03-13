@@ -29,7 +29,7 @@ export async function createSvg(
 	}) as SatoriOptions["loadAdditionalAsset"];
 
 	logger.debug("Generating SVG with Satori");
-	logger.info("VNode provided to satori:", JSON.stringify(vnodes), "\n");
+	logger.info("VNode provided to satori:", JSON.stringify(vnodes, null, 2), "\n");
 	logger.info("Options provided to satori:", imageOptions);
 
 	return satori(vnodes, satoriOptions as SatoriOptions);
