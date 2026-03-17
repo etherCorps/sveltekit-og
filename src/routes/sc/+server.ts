@@ -1,11 +1,16 @@
 import type { RequestHandler } from "@sveltejs/kit";
-import { ImageResponse } from "$lib/index.js";
+import { ImageResponse, type ImageResponseOptions } from "$lib/index.js";
 import OG from "../(components)/OG.svelte";
 
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async ({ url }) => {
+	const format = url.searchParams.get("format") as ImageResponseOptions['format'] || "png";
 	return new ImageResponse(
 		OG,
-		{ debug: false, width: 800, height: 400,
+		{
+			format,
+			debug: false,
+			width: 800,
+			height: 400,
 			headers: {
 				"Cache-Control": "no-cache, no-store"
 			}

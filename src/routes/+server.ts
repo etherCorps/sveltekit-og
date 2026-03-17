@@ -1,5 +1,5 @@
 import { type RequestHandler } from "@sveltejs/kit";
-import { ImageResponse } from "$lib/index.js";
+import { ImageResponse, type ImageResponseOptions } from "$lib/index.js";
 import { CustomFont, GoogleFont, resolveFonts } from "$lib/fonts.js";
 import RegularFont from "./(components)/SpaceMono-Regular.ttf?url";
 import { read } from "$app/server";
@@ -12,7 +12,8 @@ const customRegular = new CustomFont("Space Mono", () => read(RegularFont).array
 	weight: 400,
 });
 
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async ({ url }) => {
+	const format = url.searchParams.get("format") as ImageResponseOptions['format'] || "png";
 	const html = `
 		<div class="h-full w-full flex flex-col items-center justify-center bg-white text-6xl">
   	<img class="h-96 w-96" src="https://www.ethercorps.io/logo_transparent.png"/>
@@ -24,7 +25,7 @@ export const GET: RequestHandler = async () => {
 		.trim();
 
 	return new ImageResponse(html, {
-		format: "png",
+		format: format,
 		debug: true,
 		height: 600,
 		width: 1200,
