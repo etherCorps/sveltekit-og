@@ -112,3 +112,5 @@ Live: https://workers.sveltekit-og.dev/cog
 
 Source: https://github.com/etherCorps/sveltekit-og/tree/main/examples/cf-pages-build <br/>
 Live: https://pages.sveltekit-og.dev/cog
+
+<Callout type="warning" title="Add Async Localstorage flag"> Cloudflare Pages requires you to manually add ALS support via config or dashboard. Add `node_als` compatability flag.</Callout>
