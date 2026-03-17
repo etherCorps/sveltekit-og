@@ -1,4 +1,5 @@
 import { DEFAULT_EMOJI_PROVIDER } from "../helpers/defaults.js";
+import { handleAsync, ErrorCodes } from "./error-handler.js";
 // Code stolen from @vercel/og and https://github.com/fineshopdesign/cf-wasm
 const U200D = String.fromCharCode(8205);
 const UFE0Fg = /\uFE0F/g;
@@ -44,25 +45,37 @@ const emoji_apis = {
 		"_flat.svg",
 } as const;
 
-function loadEmoji(code: string, type: EmojiType) {
-	if (!type || !emoji_apis[type]) {
-		type = DEFAULT_EMOJI_PROVIDER;
-	}
-	const api = emoji_apis[type];
-	if (typeof api === "function") {
-		return fetch(api(code));
-	}
-	return fetch(`${api}${code.toUpperCase()}.svg`);
+async function loadEmoji(code: string, type: EmojiType): Promise<Response> {
+	return handleAsync(
+		async () => {
+			if (!type || !emoji_apis[type]) {
+				type = DEFAULT_EMOJI_PROVIDER;
+			}
+			const api = emoji_apis[type];
+			if (typeof api === "function") {
+				return fetch(api(code));
+			}
+			return fetch(`${api}${code.toUpperCase()}.svg`);
+		},
+		ErrorCodes.EMOJI_LOAD_FAILED,
+		`Failed to load emoji for code: ${code}`
+	);
 }
 
 export const loadDynamicAsset = ({ emoji }: { emoji: EmojiType }) => {
 	const fn = async (code: string, text: string) => {
 		if (code === "emoji") {
-			const iconCode = getIconCode(text);
-			const emojiResponse = await loadEmoji(iconCode, emoji);
-			const svgText = await emojiResponse.text();
-			const base64Data = btoa(svgText);
-			return `data:image/svg+xml;base64,` + base64Data;
+			return handleAsync(
+				async () => {
+					const iconCode = getIconCode(text);
+					const emojiResponse = await loadEmoji(iconCode, emoji);
+					const svgText = await emojiResponse.text();
+					const base64Data = btoa(svgText);
+					return `data:image/svg+xml;base64,` + base64Data;
+				},
+				ErrorCodes.EMOJI_LOAD_FAILED,
+				`Failed to process emoji: ${text}`
+			);
 		}
 	};
 
