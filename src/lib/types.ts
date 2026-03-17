@@ -1,4 +1,4 @@
-import type { SatoriOptions } from "satori/wasm";
+import type { SatoriOptions } from "satori";
 import type { EmojiType } from "./helpers/emoji.js";
 
 export type Font = SatoriOptions["fonts"][number];
