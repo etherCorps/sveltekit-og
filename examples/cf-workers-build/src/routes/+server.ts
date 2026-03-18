@@ -60,7 +60,7 @@ export const GET: RequestHandler = async () => {
 	return new ImageResponse(template, {
 		height: 600,
 		width: 1200,
-		debug: false,
+		debug: true,
 		fonts: await resolveFonts(fonts)
 	});
 };
