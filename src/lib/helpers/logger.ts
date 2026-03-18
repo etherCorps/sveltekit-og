@@ -6,18 +6,14 @@ const PREFIX = '[SvelteKit-OG]';
 const debugStorage = new AsyncLocalStorage<boolean>();
 
 /**
- * Set the debug flag for the current request context
- * Call this once at the beginning of your request handler
- */
-export function setDebug(enabled: boolean) {
-	debugStorage.enterWith(enabled);
-}
-
-/**
  * Get the current debug flag from the request context
  */
 export function isDebugEnabled(): boolean {
 	return debugStorage.getStore() ?? false;
+}
+
+export function withDebug<T>(enabled: boolean, fn: () => T): T {
+	return debugStorage.run(enabled, fn);
 }
 
 export const logger = {
