@@ -1,37 +1,38 @@
 {
 	"name": "@ethercorps/sveltekit-og",
-	"version": "4.3.0-next.3",
+	"version": "4.3.0-next.4",
 	"license": "MIT",
 	"homepage": "https://sveltekit-og.dev",
 	"repository": "github:ethercorps/sveltekit-og",
 	"funding": "https://github.com/sponsors/ethercorps",
 	"author": "Shivam Meena <https://github.com/theetherGit>",
 	"description": "Dynamically generate Open Graph images from an HTML, CSS template or Svelte component using fast and efficient conversion from HTML > SVG > PNG",
-    "contributors": [
-      {
-        "name": "Shivam Meena",
-        "github": "https://github.com/theetherGit"
-      },
-        {
-            "name": "Jason",
-            "github": "https://github.com/jasongitmail"},
-        {
-            "name": "Mihkel Martin Kasterpalu",
-            "github": "https://github.com/MihkelMK"
-        },
-        {
-          "name": "Luke Parke",
-          "github": "https://github.com/LukasParke"
-        },
-        {
-          "name": "Willow (GHOST)",
-            "github": "https://github.com/ghostdevv"
-        },
-        {
-            "name": "Minseo Lee",
-            "github": "https://github.com/quiple"
-        }
-    ],
+	"contributors": [
+		{
+			"name": "Shivam Meena",
+			"github": "https://github.com/theetherGit"
+		},
+		{
+			"name": "Jason",
+			"github": "https://github.com/jasongitmail"
+		},
+		{
+			"name": "Mihkel Martin Kasterpalu",
+			"github": "https://github.com/MihkelMK"
+		},
+		{
+			"name": "Luke Parke",
+			"github": "https://github.com/LukasParke"
+		},
+		{
+			"name": "Willow (GHOST)",
+			"github": "https://github.com/ghostdevv"
+		},
+		{
+			"name": "Minseo Lee",
+			"github": "https://github.com/quiple"
+		}
+	],
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
