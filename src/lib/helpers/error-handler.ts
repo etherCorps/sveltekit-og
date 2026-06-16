@@ -1,5 +1,3 @@
-import { logger } from "./logger.js";
-
 export class ImageResponseError extends Error {
 	constructor(
 		message: string,
@@ -34,7 +32,6 @@ export async function handleAsync<T = unknown>(
 		return await operation();
 	} catch (error) {
 		const err = error instanceof Error ? error : new Error(String(error));
-		logger.error(`${errorMessage}:`, err.message);
 		throw new ImageResponseError(errorMessage, errorCode, err);
 	}
 }
@@ -47,7 +44,6 @@ export function handleSync<T>(operation: () => T, errorCode: string, errorMessag
 		return operation();
 	} catch (error) {
 		const err = error instanceof Error ? error : new Error(String(error));
-		logger.error(`${errorMessage}:`, err.message);
 		throw new ImageResponseError(errorMessage, errorCode, err);
 	}
 }
@@ -64,7 +60,6 @@ export async function handleAsyncAll<T extends readonly unknown[]>(
 		return (await Promise.all(operations.map((op) => op()))) as unknown as T;
 	} catch (error) {
 		const err = error instanceof Error ? error : new Error(String(error));
-		logger.error(`${errorMessage}:`, err.message);
 		throw new ImageResponseError(errorMessage, errorCode, err);
 	}
 }
@@ -78,7 +73,6 @@ export async function validateResponse(
 	errorMessage: string
 ): Promise<ArrayBuffer> {
 	if (!response.ok) {
-		logger.error(`${errorMessage}: HTTP ${response.status} ${response.statusText}`);
 		throw new ImageResponseError(`${errorMessage} (HTTP ${response.status})`, errorCode);
 	}
 	const buffer = await response.arrayBuffer();

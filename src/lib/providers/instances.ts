@@ -1,7 +1,7 @@
 import type { Resvg } from "@resvg/resvg-wasm";
 import type _satori from "satori";
 import { isEdgeLight, isWorkerd } from "std-env";
-import { logger } from "../helpers/logger.js";
+import { createLogger } from "../helpers/logger.js";
 import { handleAsync, ErrorCodes } from "../helpers/error-handler.js";
 
 // we keep instances alive to avoid re-importing them on every request, maybe not needed but
@@ -14,13 +14,14 @@ const satoriInstance: { instance?: { initWasmPromise: Promise<void>; satori: typ
 	instance: undefined,
 };
 
-export async function useResvg() {
+export async function useResvg(debug = false) {
+	const log = createLogger(debug);
 	if (resvgInstance.instance) {
 		return resvgInstance.instance.Resvg;
 	}
-	logger.debug("Initializing Resvg WASM");
+	log.debug("Initializing Resvg WASM");
 	const isWorkerLikeRuntime = isEdgeLight || isWorkerd;
-	logger.info(`Detected runtime: ${isWorkerLikeRuntime ? "Edge Light or Workerd" : "Node.js"}`);
+	log.info(`Detected runtime: ${isWorkerLikeRuntime ? "Edge Light or Workerd" : "Node.js"}`);
 
 	const moduleImport = await handleAsync(
 		async () => {
@@ -51,11 +52,12 @@ export async function useResvg() {
 	return resvgInstance.instance!.Resvg;
 }
 
-export async function useSatori() {
+export async function useSatori(debug = false) {
+	const log = createLogger(debug);
 	if (satoriInstance.instance) {
 		return satoriInstance.instance.satori;
 	}
-	logger.debug("Initializing Satori WASM");
+	log.debug("Initializing Satori WASM");
 
 	satoriInstance.instance = await handleAsync(
 		async () => {

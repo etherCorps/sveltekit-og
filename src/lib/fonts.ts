@@ -1,6 +1,5 @@
 import { FONT_CACHE_MAP } from "$lib/helpers/cache.js";
 import type { FinalFontOptions, FontStyle, FontWeight, MayBePromise } from "$lib/types.js";
-import { logger } from "$lib/helpers/logger.js";
 
 // Code stolen from https://github.com/fineshopdesign/cf-wasm
 interface BaseFontOptions {
@@ -107,9 +106,6 @@ export const loadGoogleFont = async (
 
 	const cssResponse = await fetch(cssUrl);
 	if (!cssResponse.ok) {
-		logger.error(
-			`Failed to fetch Google Font CSS for ${family}. Status: ${cssResponse.status}`
-		);
 		throw new Error(
 			`Failed to fetch Google Font CSS for ${family}. Status: ${cssResponse.status}`
 		);
@@ -120,7 +116,6 @@ export const loadGoogleFont = async (
 	const fontUrl = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/)?.[1];
 
 	if (!fontUrl) {
-		logger.error(`Could not find a compatible truetype font source in the CSS for ${family}.`);
 		throw new Error(
 			`Could not find a compatible truetype font source in the CSS for ${family}.`
 		);
@@ -129,14 +124,12 @@ export const loadGoogleFont = async (
 	// 4. Fetch the font buffer
 	const fontResponse = await fetch(fontUrl);
 	if (!fontResponse.ok) {
-		logger.error(`Failed to fetch font file from URL. Status: ${fontResponse.status}`);
 		throw new Error(`Failed to fetch font file from URL. Status: ${fontResponse.status}`);
 	}
 	const buffer = await fontResponse.arrayBuffer();
 
 	// 5. CACHE AND RETURN: Store the resolved ArrayBuffer in the Map, keyed by the CSS URL.
 	FONT_CACHE_MAP.set(cssUrl, buffer);
-	logger.debug(`Loaded Google Font: ${family}`);
 	return buffer;
 };
 
