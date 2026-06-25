@@ -5,7 +5,11 @@ export default {
 	// @ts-ignore
 	initWasmPromise: initWasm(
 		// @ts-ignore
-		import("@resvg/resvg-wasm/index_bg.wasm?module").then((r) => r.default || r)
+		// Vendored wasm: a relative import resolves inside this package so the
+		// consumer's bundler emits a real CompiledWasm module. A bare
+		// "@resvg/resvg-wasm/...?module" specifier falls back to runtime byte
+		// compilation, which Cloudflare Workers block.
+		import("./resvg.wasm?module").then((r) => r.default || r)
 	),
 	Resvg: _Resvg,
 };

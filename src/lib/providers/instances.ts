@@ -23,28 +23,19 @@ export async function useResvg(debug = false) {
 	const isWorkerLikeRuntime = isEdgeLight || isWorkerd;
 	log.info(`Detected runtime: ${isWorkerLikeRuntime ? "Edge Light or Workerd" : "Node.js"}`);
 
-	const moduleImport = await handleAsync(
-		async () => {
-			if (isWorkerLikeRuntime) {
-				return import("./resvg/edge.js");
-			}
-			return import("./resvg/node.js");
-		},
+	// Keep both dynamic imports as direct expressions so the bundler (unwasm/Rollup)
+	// can statically analyse them and emit the `?module` wasm chunk correctly.
+	// Burying these inside nested async callbacks breaks wasm bundling on Cloudflare.
+	const moduleImport = isWorkerLikeRuntime ? import("./resvg/edge.js") : import("./resvg/node.js");
+
+	resvgInstance.instance = await handleAsync(
+		() => moduleImport.then((m) => m.default),
 		ErrorCodes.RESVG_INIT_FAILED,
 		"Failed to import ReSVG module"
 	);
 
-	resvgInstance.instance = await handleAsync(
-		async () => {
-			const mod = await moduleImport;
-			return mod.default;
-		},
-		ErrorCodes.RESVG_INIT_FAILED,
-		"Failed to load ReSVG default export"
-	);
-
 	await handleAsync(
-		async () => resvgInstance.instance!.initWasmPromise,
+		() => resvgInstance.instance!.initWasmPromise,
 		ErrorCodes.RESVG_INIT_FAILED,
 		"Failed to initialize ReSVG WASM"
 	);
@@ -60,16 +51,13 @@ export async function useSatori(debug = false) {
 	log.debug("Initializing Satori WASM");
 
 	satoriInstance.instance = await handleAsync(
-		async () => {
-			const mod = await import("./satori/node.js");
-			return mod.default;
-		},
+		() => import("./satori/node.js").then((m) => m.default),
 		ErrorCodes.SATORI_INIT_FAILED,
 		"Failed to load Satori module"
 	);
 
 	await handleAsync(
-		async () => satoriInstance.instance!.initWasmPromise,
+		() => satoriInstance.instance!.initWasmPromise,
 		ErrorCodes.SATORI_INIT_FAILED,
 		"Failed to initialize Satori WASM"
 	);
