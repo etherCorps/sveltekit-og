@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ethercorps/sveltekit-og':
-        specifier: 4.3.0-next.4
-        version: 4.3.0-next.4(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))
+        specifier: 4.3.0-next.5
+        version: 4.3.0-next.5(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))
     devDependencies:
       '@deno/svelte-adapter':
         specifier: ^0.1.0
@@ -247,8 +247,8 @@ packages:
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@ethercorps/sveltekit-og@4.3.0-next.4':
-    resolution: {integrity: sha512-76gnht9TWxp10OAaL6y+sf02XdfXtfIoqp/HY+SLsMPp6GDVrYc/jGYavVcFTgwvijZRxcZJnI6O+bx1yoOUIw==}
+  '@ethercorps/sveltekit-og@4.3.0-next.5':
+    resolution: {integrity: sha512-UtXCoukNjVT5/ohtkR7Ki4X7RTXJb+pB4RKdbAON6PocjMbn0gRYyRVMOkTT6I4/P/qe6fjh7Re+Cz88GIZCTA==}
     peerDependencies:
       '@sveltejs/kit': '>=2.0.0'
 
@@ -1198,7 +1198,7 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@ethercorps/sveltekit-og@4.3.0-next.4(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))':
+  '@ethercorps/sveltekit-og@4.3.0-next.5(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))':
     dependencies:
       '@resvg/resvg-wasm': 2.6.2
       '@sveltejs/kit': 2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1)
