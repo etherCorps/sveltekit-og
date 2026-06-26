@@ -1,6 +1,6 @@
 {
 	"name": "@ethercorps/sveltekit-og",
-	"version": "4.3.0-next.5",
+	"version": "4.3.0-next.6",
 	"license": "MIT",
 	"homepage": "https://sveltekit-og.dev",
 	"repository": "github:ethercorps/sveltekit-og",
@@ -106,7 +106,7 @@
 		"@resvg/resvg-wasm": "^2.6.2",
 		"satori": "^0.25.0",
 		"satori-html": "0.3.2",
-		"std-env": "^3.10.0",
+		"std-env": "^4.1.0",
 		"unwasm": "^0.5.3"
 	},
 	"peerDependencies": {

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ethercorps/sveltekit-og':
-        specifier: 4.3.0-next.5
-        version: 4.3.0-next.5(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))
+        specifier: 4.3.0-next.6
+        version: 4.3.0-next.6(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))
     devDependencies:
       '@playwright/test':
         specifier: ^1.55.0
@@ -219,8 +219,8 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@ethercorps/sveltekit-og@4.3.0-next.5':
-    resolution: {integrity: sha512-UtXCoukNjVT5/ohtkR7Ki4X7RTXJb+pB4RKdbAON6PocjMbn0gRYyRVMOkTT6I4/P/qe6fjh7Re+Cz88GIZCTA==}
+  '@ethercorps/sveltekit-og@4.3.0-next.6':
+    resolution: {integrity: sha512-iMdTJE0SiwhREjMbfkae+Hsm1zaH9/m+zFUANPaWbC1SCdERKPz+5uYhfq/SCgUTaXwh/u8tmjg1OKGpPRvzJw==}
     peerDependencies:
       '@sveltejs/kit': '>=2.0.0'
 
@@ -1047,8 +1047,8 @@ packages:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
 
-  std-env@3.10.0:
-    resolution: {integrity: sha512-5GS12FdOZNliM5mAOxFRg7Ir0pWz8MdpYm6AY6VPkGpbA7ZzmbzNcBJQ0GPvvyWgcY7QAhCgf9Uy89I03faLkg==}
+  std-env@4.1.0:
+    resolution: {integrity: sha512-Rq7ybcX2RuC55r9oaPVEW7/xu3tj8u4GeBYHBWCychFtzMIr86A7e3PPEBPT37sHStKX3+TiX/Fr/ACmJLVlLQ==}
 
   string.prototype.codepointat@0.2.1:
     resolution: {integrity: sha512-2cBVCj6I4IOvEnjgO/hWqXjqBGsY+zwPmHl12Srk9IXSZ56Jwwmy+66XO5Iut/oQVR7t5ihYdLB0GMa4alEUcg==}
@@ -1283,13 +1283,13 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@ethercorps/sveltekit-og@4.3.0-next.5(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))':
+  '@ethercorps/sveltekit-og@4.3.0-next.6(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))':
     dependencies:
       '@resvg/resvg-wasm': 2.6.2
       '@sveltejs/kit': 2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1)
       satori: 0.25.0
       satori-html: 0.3.2
-      std-env: 3.10.0
+      std-env: 4.1.0
       unwasm: 0.5.3
 
   '@humanwhocodes/config-array@0.13.0':
@@ -2074,7 +2074,7 @@ snapshots:
 
   source-map-js@1.2.1: {}
 
-  std-env@3.10.0: {}
+  std-env@4.1.0: {}
 
   string.prototype.codepointat@0.2.1: {}
 
