@@ -44,6 +44,10 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vitest",
+		"bench": "vitest bench --run",
+		"bench:save": "vitest bench --run --outputJson benchmarks/baseline.json",
+		"bench:compare": "vitest bench --run --compare benchmarks/baseline.json",
+		"bench:snapshot": "node scripts/bench-snapshot.mjs",
 		"lint": "oxlint . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"publishBeta": "npm publish --tag beta"
