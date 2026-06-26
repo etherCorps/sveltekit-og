@@ -13,14 +13,39 @@ export class ImageResponse<T extends string | Component<any>> extends Response {
 		props?: T extends Component<any> ? ComponentProps<T> : never
 	) {
 		const extended_options = Object.assign({ ...DEFAULT_OPTIONS }, options);
+		const isDebug = extended_options.debug ?? false;
+		const log = createLogger(isDebug);
+		log.debug("ImageResponse created");
 		const create_image_function = extended_options.format === "png" ? createPng : createSvg;
 		const body = new ReadableStream({
 			async start(controller) {
-				const buffer = await create_image_function(element as string, extended_options, {
-					props,
-				});
-				controller.enqueue(buffer);
-				controller.close();
+				try {
+					const buffer = (await handleAsync(
+						() =>
+							create_image_function(element as string, extended_options, {
+								props,
+							}) as Promise<unknown>,
+						ErrorCodes.UNKNOWN_ERROR,
+						`Failed to generate ${extended_options.format?.toUpperCase()}`
+					)) as Uint8Array | string;
+					log.debug(buffer.length.toLocaleString());
+					log.info(
+						`Generated ${extended_options!.format!.toUpperCase()}: ${formatBytes(buffer.length)}`
+					);
+					controller.enqueue(buffer);
+					controller.close();
+				} catch (error) {
+					const err =
+						error instanceof ImageResponseError
+							? error
+							: new ImageResponseError(
+								error instanceof Error ? error.message : String(error),
+								ErrorCodes.UNKNOWN_ERROR,
+								error instanceof Error ? error : new Error(String(error))
+							);
+					log.error("Failed to create image response:", err.message);
+					controller.error(err);
+				}
 			},
 		});
 
