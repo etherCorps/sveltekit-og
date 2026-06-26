@@ -19,14 +19,17 @@ export async function useResvg(debug = false) {
 	if (resvgInstance.instance) {
 		return resvgInstance.instance.Resvg;
 	}
-	log.debug("Initializing Resvg WASM");
+
+	log.debug("Initializing ReSVG WASM");
 	const isWorkerLikeRuntime = isEdgeLight || isWorkerd;
 	log.info(`Detected runtime: ${isWorkerLikeRuntime ? "Edge Light or Workerd" : "Node.js"}`);
 
 	// Keep both dynamic imports as direct expressions so the bundler (unwasm/Rollup)
 	// can statically analyse them and emit the `?module` wasm chunk correctly.
 	// Burying these inside nested async callbacks breaks wasm bundling on Cloudflare.
-	const moduleImport = isWorkerLikeRuntime ? import("./resvg/edge.js") : import("./resvg/node.js");
+	const moduleImport = isWorkerLikeRuntime
+		? import("./resvg/edge.js")
+		: import("./resvg/node.js");
 
 	resvgInstance.instance = await handleAsync(
 		() => moduleImport.then((m) => m.default),
@@ -48,12 +51,19 @@ export async function useSatori(debug = false) {
 	if (satoriInstance.instance) {
 		return satoriInstance.instance.satori;
 	}
-	log.debug("Initializing Satori WASM");
+
+	log.debug("Initializing Satori");
+	const isWorkerLikeRuntime = isEdgeLight || isWorkerd;
+	log.info(`Detected runtime: ${isWorkerLikeRuntime ? "Edge Light or Workerd" : "Node.js"}`);
+
+	const moduleImport = isWorkerLikeRuntime
+		? import("./satori/edge.js")
+		: import("./satori/node.js");
 
 	satoriInstance.instance = await handleAsync(
-		() => import("./satori/node.js").then((m) => m.default),
+		() => moduleImport.then((m) => m.default),
 		ErrorCodes.SATORI_INIT_FAILED,
-		"Failed to load Satori module"
+		"Failed to import Satori module"
 	);
 
 	await handleAsync(
