@@ -9,6 +9,13 @@ export class ImageResponseError extends Error {
 	}
 }
 
+/** Coerce anything thrown into an ImageResponseError, keeping existing ones as-is. */
+export function toImageResponseError(error: unknown): ImageResponseError {
+	if (error instanceof ImageResponseError) return error;
+	const err = error instanceof Error ? error : new Error(String(error));
+	return new ImageResponseError(err.message, ErrorCodes.UNKNOWN_ERROR, err);
+}
+
 export const ErrorCodes = {
 	FONT_LOAD_FAILED: "FONT_LOAD_FAILED",
 	VNODE_CREATION_FAILED: "VNODE_CREATION_FAILED",
@@ -17,6 +24,8 @@ export const ErrorCodes = {
 	RESVG_RENDER_FAILED: "RESVG_RENDER_FAILED",
 	SATORI_INIT_FAILED: "SATORI_INIT_FAILED",
 	EMOJI_LOAD_FAILED: "EMOJI_LOAD_FAILED",
+	TAKUMI_INIT_FAILED: "TAKUMI_INIT_FAILED",
+	TAKUMI_RENDER_FAILED: "TAKUMI_RENDER_FAILED",
 	UNKNOWN_ERROR: "UNKNOWN_ERROR",
 } as const;
 
