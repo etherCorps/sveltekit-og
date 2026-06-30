@@ -3,12 +3,9 @@ import { render } from "svelte/server";
 import { handleSync, ErrorCodes } from "./error-handler.js";
 
 /**
- * Renders a Svelte component to its server-side HTML parts.
- *
- * Shared by both rendering engines: the satori path feeds `body + head` into
- * `satori-html`, while the takumi path passes an HTML string to its renderer.
- * Components that need their styles inlined should use
- * `<svelte:options css="injected" />` so the CSS lands in `head`.
+ * Render a Svelte component to its SSR html parts. Shared by both engines — satori
+ * feeds body+head to satori-html, takumi passes the html string straight in. Use
+ * `<svelte:options css="injected" />` to get component styles into `head`.
  */
 export function renderComponentToHtml(
 	component: Component<any>,

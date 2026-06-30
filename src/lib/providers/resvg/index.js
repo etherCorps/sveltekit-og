@@ -1,10 +1,8 @@
 import { Resvg as _Resvg, initWasm } from "@resvg/resvg-wasm";
 
 export default {
-	// Load resvg's wasm straight from the dependency (it exports `./index_bg.wasm`)
-	// via `?module` so the consumer bundler emits a real CompiledWasm module. This
-	// avoids shipping a vendored copy in our package, and works on both Node and
-	// worker-like runtimes (no runtime byte compilation).
+	// load resvg's wasm from the dep (it exports ./index_bg.wasm) via ?module, so we
+	// don't vendor a copy. precompiled module works on node + workers alike.
 	initWasmPromise: initWasm(
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore

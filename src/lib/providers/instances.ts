@@ -22,10 +22,8 @@ export async function useResvg(debug = false) {
 
 	log.debug("Initializing ReSVG WASM");
 
-	// One provider for every runtime: resvg's wasm is loaded from the dependency
-	// via `?module` (a pre-compiled module), which works on both Node and
-	// worker-like runtimes. Keep this a direct import expression so the bundler
-	// (unwasm/Rollup) can statically emit the `?module` wasm chunk.
+	// one provider for every runtime now (wasm comes from the dep via ?module).
+	// keep this a direct import() so the bundler can emit the wasm chunk.
 	resvgInstance.instance = await handleAsync(
 		() => import("./resvg/index.js").then((m) => m.default),
 		ErrorCodes.RESVG_INIT_FAILED,

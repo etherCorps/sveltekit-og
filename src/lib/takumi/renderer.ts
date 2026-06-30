@@ -2,23 +2,20 @@ import type { Renderer as NodeRenderer, FontDetails } from "takumi-js/node";
 import autoModule, { init as initTakumiWasm, Renderer } from "takumi-js/wasm";
 import { handleAsync, ErrorCodes } from "../helpers/error-handler.js";
 
-/** The WASM renderer; exposes `render`/`renderSvg`/`registerFont`. */
 export type TakumiRenderer = NodeRenderer;
 
-// Keep one renderer alive across requests (mirrors satori/resvg instance reuse
-// and Takumi's own global renderer). Fonts registered on it accumulate, so we
-// track which have already been registered to avoid duplicate work.
+// keep one renderer alive across requests, same as the satori/resvg instances.
+// fonts registered on it stick around, so we dedupe by key.
 let rendererPromise: Promise<TakumiRenderer> | undefined;
 const registeredFontKeys = new Set<string>();
 
 async function initRenderer(): Promise<TakumiRenderer> {
 	await handleAsync(
 		async () => {
-			// Mirror takumi-js's own wasm backend init. `@takumi-rs/wasm/auto`
-			// (re-exported as the default of takumi-js/wasm) resolves the correct
-			// wasm binary for the current runtime — workerd, edge-light, node, or a
-			// bundler `?module`/`?url` — via package export conditions. So we reuse
-			// the wasm that ships with takumi-js instead of vendoring a 4MB copy.
+			// reuse the wasm that ships with takumi-js instead of vendoring our own.
+			// @takumi-rs/wasm/auto picks the right binary per runtime (workerd, edge,
+			// node, ?module) via export conditions. this is the same dance takumi-js
+			// does internally.
 			const resolved = typeof autoModule === "function" ? await autoModule() : await autoModule;
 			const input =
 				resolved && typeof resolved === "object" && "default" in resolved
@@ -39,10 +36,7 @@ export async function useTakumiRenderer(_debug = false): Promise<TakumiRenderer>
 	return rendererPromise;
 }
 
-/**
- * Registers each font on the renderer once. Keyed by name/weight/style so the
- * same face isn't re-registered across requests.
- */
+/** Register each font once, keyed by name/weight/style. */
 export async function registerTakumiFonts(
 	renderer: TakumiRenderer,
 	fonts: FontDetails[]

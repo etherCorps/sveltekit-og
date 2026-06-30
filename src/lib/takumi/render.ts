@@ -9,16 +9,12 @@ import { handleAsync, handleSync, ErrorCodes } from "../helpers/error-handler.js
 
 function elementToHtml(element: string | Component, props?: Record<string, unknown>): string {
 	if (typeof element === "string") return element.replaceAll("\n", "").trim();
-	// Takumi reads inline `style`/`<style>`; `head` carries CSS injected via
-	// `<svelte:options css="injected" />`, so it goes first.
+	// head carries css injected via <svelte:options css="injected" />, so it goes first
 	const { head, body } = renderComponentToHtml(element, props);
 	return head + body;
 }
 
-/**
- * Renders an HTML string or Svelte component to image bytes (or an SVG string)
- * using a cached, font-registered Takumi renderer for the current runtime.
- */
+/** Render an HTML string or Svelte component to image bytes (or an svg string). */
 export async function createTakumiImage(
 	element: string | Component,
 	options: TakumiImageOptions,
@@ -40,8 +36,6 @@ export async function createTakumiImage(
 	}
 
 	const { width, height, format = "png", quality, stylesheets, emoji } = options;
-	// `renderer` is typed as the native Renderer; on edge it's the wasm Renderer,
-	// which is structurally compatible for takumi-js's managed render.
 	const shared = { renderer: renderer as TakumiRenderer, width, height, stylesheets, emoji };
 
 	log.debug(`Rendering ${format.toUpperCase()} with Takumi`);

@@ -8,5 +8,5 @@ export type {
 export type { TakumiFontInput, TakumiFontDescriptor } from "./fonts.js";
 export { resolveTakumiFonts } from "./fonts.js";
 
-// Re-export the font helpers so the Takumi path is usable from a single import.
+// re-export the font helpers so the takumi path works from one import
 export { GoogleFont, CustomFont, loadGoogleFont } from "../fonts.js";
