@@ -1,9 +1,8 @@
 import type { Renderer as NodeRenderer, FontDetails } from "takumi-js/node";
-import { isEdgeLight, isWorkerd } from "std-env";
-import { createLogger } from "../helpers/logger.js";
+import autoModule, { init as initTakumiWasm, Renderer } from "takumi-js/wasm";
 import { handleAsync, ErrorCodes } from "../helpers/error-handler.js";
 
-/** Either backend's Renderer; both expose `render`/`renderSvg`/`registerFont`. */
+/** The WASM renderer; exposes `render`/`renderSvg`/`registerFont`. */
 export type TakumiRenderer = NodeRenderer;
 
 // Keep one renderer alive across requests (mirrors satori/resvg instance reuse
@@ -12,35 +11,31 @@ export type TakumiRenderer = NodeRenderer;
 let rendererPromise: Promise<TakumiRenderer> | undefined;
 const registeredFontKeys = new Set<string>();
 
-async function initRenderer(debug: boolean): Promise<TakumiRenderer> {
-	const log = createLogger(debug);
-	const isWorkerLikeRuntime = isEdgeLight || isWorkerd;
-	log.info(`Detected runtime: ${isWorkerLikeRuntime ? "Edge Light or Workerd" : "Node.js"}`);
-
-	// Keep the imports as direct ternary expressions so the bundler can statically
-	// emit the wasm chunk for the edge build (see providers/takumi/edge.js).
-	const moduleImport = isWorkerLikeRuntime
-		? import("../providers/takumi/edge.js")
-		: import("../providers/takumi/node.js");
-
-	const provider = (await handleAsync(
-		() => moduleImport.then((m) => m.default),
-		ErrorCodes.TAKUMI_INIT_FAILED,
-		"Failed to import Takumi renderer module"
-	)) as { initWasmPromise: Promise<unknown>; Renderer: new () => TakumiRenderer };
-
+async function initRenderer(): Promise<TakumiRenderer> {
 	await handleAsync(
-		() => provider.initWasmPromise,
+		async () => {
+			// Mirror takumi-js's own wasm backend init. `@takumi-rs/wasm/auto`
+			// (re-exported as the default of takumi-js/wasm) resolves the correct
+			// wasm binary for the current runtime — workerd, edge-light, node, or a
+			// bundler `?module`/`?url` — via package export conditions. So we reuse
+			// the wasm that ships with takumi-js instead of vendoring a 4MB copy.
+			const resolved = typeof autoModule === "function" ? await autoModule() : await autoModule;
+			const input =
+				resolved && typeof resolved === "object" && "default" in resolved
+					? (resolved as { default: unknown }).default
+					: resolved;
+			await initTakumiWasm(input ? { module_or_path: input } : undefined);
+		},
 		ErrorCodes.TAKUMI_INIT_FAILED,
 		"Failed to initialize Takumi WASM"
 	);
 
-	return new provider.Renderer();
+	return new Renderer() as unknown as TakumiRenderer;
 }
 
 /** Lazily creates and caches the Takumi renderer for the current runtime. */
-export async function useTakumiRenderer(debug = false): Promise<TakumiRenderer> {
-	rendererPromise ??= initRenderer(debug);
+export async function useTakumiRenderer(_debug = false): Promise<TakumiRenderer> {
+	rendererPromise ??= initRenderer();
 	return rendererPromise;
 }
 
