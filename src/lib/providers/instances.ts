@@ -21,18 +21,13 @@ export async function useResvg(debug = false) {
 	}
 
 	log.debug("Initializing ReSVG WASM");
-	const isWorkerLikeRuntime = isEdgeLight || isWorkerd;
-	log.info(`Detected runtime: ${isWorkerLikeRuntime ? "Edge Light or Workerd" : "Node.js"}`);
 
-	// Keep both dynamic imports as direct expressions so the bundler (unwasm/Rollup)
-	// can statically analyse them and emit the `?module` wasm chunk correctly.
-	// Burying these inside nested async callbacks breaks wasm bundling on Cloudflare.
-	const moduleImport = isWorkerLikeRuntime
-		? import("./resvg/edge.js")
-		: import("./resvg/node.js");
-
+	// One provider for every runtime: resvg's wasm is loaded from the dependency
+	// via `?module` (a pre-compiled module), which works on both Node and
+	// worker-like runtimes. Keep this a direct import expression so the bundler
+	// (unwasm/Rollup) can statically emit the `?module` wasm chunk.
 	resvgInstance.instance = await handleAsync(
-		() => moduleImport.then((m) => m.default),
+		() => import("./resvg/index.js").then((m) => m.default),
 		ErrorCodes.RESVG_INIT_FAILED,
 		"Failed to import ReSVG module"
 	);
