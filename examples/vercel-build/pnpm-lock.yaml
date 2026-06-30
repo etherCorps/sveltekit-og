@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ethercorps/sveltekit-og':
-        specifier: 4.3.0-next.6
-        version: 4.3.0-next.6(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))
+        specifier: 4.3.0-next.9
+        version: 4.3.0-next.9(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))(takumi-js@2.0.0-beta.14)
       takumi-js:
         specifier: 2.0.0-beta.14
         version: 2.0.0-beta.14
@@ -222,10 +222,14 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@ethercorps/sveltekit-og@4.3.0-next.6':
-    resolution: {integrity: sha512-iMdTJE0SiwhREjMbfkae+Hsm1zaH9/m+zFUANPaWbC1SCdERKPz+5uYhfq/SCgUTaXwh/u8tmjg1OKGpPRvzJw==}
+  '@ethercorps/sveltekit-og@4.3.0-next.9':
+    resolution: {integrity: sha512-/tBuJi9YGfWXeyaaluzlFikzJFQtl3X+l4h1awR2q2UuJjOuYy1juwinsZHmQfEupVek8iTP0uLslI3QMtUFRQ==}
     peerDependencies:
       '@sveltejs/kit': '>=2.0.0'
+      takumi-js: ^2.0.0-beta.14
+    peerDependenciesMeta:
+      takumi-js:
+        optional: true
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -1492,7 +1496,7 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@ethercorps/sveltekit-og@4.3.0-next.6(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))':
+  '@ethercorps/sveltekit-og@4.3.0-next.9(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1))(takumi-js@2.0.0-beta.14)':
     dependencies:
       '@resvg/resvg-wasm': 2.6.2
       '@sveltejs/kit': 2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.10)(vite@6.4.1))(svelte@5.53.10)(vite@6.4.1)
@@ -1500,6 +1504,8 @@ snapshots:
       satori-html: 0.3.2
       std-env: 4.1.0
       unwasm: 0.5.3
+    optionalDependencies:
+      takumi-js: 2.0.0-beta.14
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
