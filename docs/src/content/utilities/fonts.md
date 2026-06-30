@@ -25,6 +25,12 @@ The `ImageResponse` options expects an array of resolved font data. You must alw
 
 </Callout>
 
+<Callout type="note" title="Using the Takumi engine?">
+
+The same `GoogleFont` and `CustomFont` classes work with the [Takumi engine](/docs/usage/takumi) too — but there you pass the **instances directly** to `fonts` and skip `resolveFonts`.
+
+</Callout>
+
 ## 🌐 Using Google Fonts
 
 The `GoogleFont` class is the easiest way to get started. It abstracts away the network logic, fetches the correct CSS, parses the font URL, and applies an internal cache to prevent redundant requests.
