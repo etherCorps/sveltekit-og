@@ -1,14 +1,22 @@
 import { Resvg as _Resvg, initWasm } from "@resvg/resvg-wasm";
+import { readFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 
-// on node we hand initWasm the raw wasm bytes, not a `?module` import. the
-// `?module` path only works where the bundler can emit a real CompiledWasm
-// module (workers, or node with esmImport:false which inlines it) — on node
-// serverless (vercel/netlify, esmImport:true) it emits an esm wasm import that
-// node can't instantiate (unresolved `wbg` imports). fetching bytes works
-// everywhere. runs once when this module first loads.
-const resvgWasm = fetch("https://unpkg.com/@resvg/resvg-wasm/index_bg.wasm");
+// prefer reading resvg's wasm straight from the installed dependency (no
+// network). some serverless bundlers (vercel/netlify via nft) don't trace the
+// sibling .wasm onto disk, so fall back to fetching it there. either way we hand
+// initWasm raw bytes / a Response — never a `?module` import, which node
+// serverless can't instantiate. runs once when this module first loads.
+async function loadResvgWasm() {
+	try {
+		const require = createRequire(import.meta.url);
+		return await readFile(require.resolve("@resvg/resvg-wasm/index_bg.wasm"));
+	} catch {
+		return fetch("https://unpkg.com/@resvg/resvg-wasm/index_bg.wasm");
+	}
+}
 
 export default {
-	initWasmPromise: initWasm(resvgWasm),
+	initWasmPromise: initWasm(loadResvgWasm()),
 	Resvg: _Resvg,
 };
