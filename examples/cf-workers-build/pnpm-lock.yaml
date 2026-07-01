@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ethercorps/sveltekit-og':
-        specifier: 4.3.0-next.10
-        version: 4.3.0-next.10(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.43.12)(vite@6.4.1(@types/node@22.15.29)))(svelte@5.43.12)(vite@6.4.1(@types/node@22.15.29)))(takumi-js@2.0.0-beta.14)
+        specifier: 4.3.0-next.11
+        version: 4.3.0-next.11(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.43.12)(vite@6.4.1(@types/node@22.15.29)))(svelte@5.43.12)(vite@6.4.1(@types/node@22.15.29)))(takumi-js@2.0.0-beta.14)
       takumi-js:
         specifier: 2.0.0-beta.14
         version: 2.0.0-beta.14
@@ -431,8 +431,8 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@ethercorps/sveltekit-og@4.3.0-next.10':
-    resolution: {integrity: sha512-L77zRVHfNQilse097VIudoYm/sehFzg2yvb5nE70DofQMURQr4DfyAJ4hCrgzSqfSoxMAN4Vy7KmPsx3oQl6dg==}
+  '@ethercorps/sveltekit-og@4.3.0-next.11':
+    resolution: {integrity: sha512-PtG5w+72qjpklZixMS+nwytp/SwsKVdmrddi4hMuVhqnOgcek0WpsBtL+3oLnOZmEuH9B3MpU564XDTlegxs5A==}
     peerDependencies:
       '@sveltejs/kit': '>=2.0.0'
       takumi-js: ^2.0.0-beta.14
@@ -1947,7 +1947,7 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@ethercorps/sveltekit-og@4.3.0-next.10(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.43.12)(vite@6.4.1(@types/node@22.15.29)))(svelte@5.43.12)(vite@6.4.1(@types/node@22.15.29)))(takumi-js@2.0.0-beta.14)':
+  '@ethercorps/sveltekit-og@4.3.0-next.11(@sveltejs/kit@2.48.5(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.43.12)(vite@6.4.1(@types/node@22.15.29)))(svelte@5.43.12)(vite@6.4.1(@types/node@22.15.29)))(takumi-js@2.0.0-beta.14)':
     dependencies:
       '@resvg/resvg-wasm': 2.6.2
       '@sveltejs/kit': 2.48.5(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.43.12)(vite@6.4.1(@types/node@22.15.29)))(svelte@5.43.12)(vite@6.4.1(@types/node@22.15.29))
