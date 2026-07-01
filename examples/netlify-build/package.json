@@ -12,7 +12,7 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.55.0",
-		"@sveltejs/adapter-netlify": "^5.2.4",
+		"@sveltejs/adapter-netlify": "^6.0.4",
 		"@sveltejs/kit": "^2.48.5",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"eslint": "^9.39.1",
