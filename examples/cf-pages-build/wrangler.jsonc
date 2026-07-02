@@ -2,15 +2,5 @@
 	"name": "sveltekit-og",
 	"pages_build_output_dir": "./.svelte-kit/cloudflare",
 	"compatibility_date": "2026-04-28",
-	"compatibility_flags": ["nodejs_compat", "nodejs_als"],
-	"observability": {
-		"enabled": true,
-		"head_sampling_rate": 1,
-		"logs": {
-			"enabled": true,
-			"head_sampling_rate": 1,
-			"persist": true,
-			"invocation_logs": true
-		}
-	}
+	"compatibility_flags": ["nodejs_compat", "nodejs_als"]
 }
