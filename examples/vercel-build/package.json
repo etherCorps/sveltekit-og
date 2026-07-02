@@ -24,7 +24,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@ethercorps/sveltekit-og": "4.3.0-next.11",
+		"@ethercorps/sveltekit-og": "4.3.0-next.12",
 		"takumi-js": "2.0.0-beta.14"
 	}
 }
