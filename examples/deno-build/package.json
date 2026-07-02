@@ -11,7 +11,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@deno/svelte-adapter": "^0.1.0",
+		"@deno/svelte-adapter": "^0.2.1",
 		"@playwright/test": "^1.55.0",
 		"@sveltejs/kit": "^2.48.5",
 		"@sveltejs/vite-plugin-svelte": "^5.1.1",
