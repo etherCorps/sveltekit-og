@@ -1,8 +1,8 @@
 import { ImageResponse } from '@ethercorps/sveltekit-og';
 import { resolveFonts } from '@ethercorps/sveltekit-og/fonts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { satoriTemplate } from '$lib/templates';
-import { fonts } from '$lib/utils/helper';
+import { satoriTemplate } from '$lib/templates.js';
+import { fonts } from '$lib/utils/helper.js';
 
 // Default: HTML string → Satori → resvg PNG (rendered per request).
 export const GET: RequestHandler = async () => {

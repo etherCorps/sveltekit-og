@@ -1,6 +1,6 @@
 import { ImageResponse, type TakumiImageResponseOptions } from '@ethercorps/sveltekit-og/takumi';
 import type { RequestHandler } from '@sveltejs/kit';
-import { takumiTemplate } from '$lib/templates';
+import { takumiTemplate } from '$lib/templates.js';
 
 // Default: HTML string → Takumi. Switch output with `?format=`, e.g.
 // /takumi/default?format=webp — supports png (default), jpeg, webp, ico, svg, raw.

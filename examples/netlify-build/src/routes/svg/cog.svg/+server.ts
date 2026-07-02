@@ -2,7 +2,7 @@ import { ImageResponse } from '@ethercorps/sveltekit-og';
 import { resolveFonts } from '@ethercorps/sveltekit-og/fonts';
 import type { RequestHandler } from '@sveltejs/kit';
 import OG from '$lib/OG.svelte';
-import { fonts } from '$lib/utils/helper';
+import { fonts } from '$lib/utils/helper.js';
 
 // Component: Svelte component → Satori SVG (rendered per request).
 export const GET: RequestHandler = async () => {
