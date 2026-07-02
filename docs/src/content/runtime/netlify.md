@@ -23,7 +23,7 @@ First, ensure you have the Netlify adapter installed:
 In your `svelte.config.js`, configure the adapter:
 
 ```typescript title="svelte.config.js" showLineNumbers
-import adapter from 'svelte-adapter-deno';
+import adapter from '@sveltejs/adapter-netlify';
 
 const config = {
 	 ...,
@@ -66,6 +66,36 @@ const config = defineConfig({
 export default config;
 ```
 
+<Callout type="warning" title="Netlify adapter v6 (esbuild)">
+
+`@sveltejs/adapter-netlify@6` bundles your functions with **esbuild**, which has no loader for the standalone `.wasm` chunks the plugin normally emits — so the build fails with:
+
+```
+✘ [ERROR] No loader is configured for ".wasm" files
+```
+
+Fix it by inlining the Wasm as base64 instead of emitting separate `.wasm` files — pass `esmImport: false` to the plugin:
+
+```ts title="vite.config.ts" showLineNumbers
+import { sveltekit } from '@sveltejs/kit/vite';
+import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [sveltekit()],
+	build: {
+		rollupOptions: {
+			// base64-inline the Wasm so esbuild never sees a .wasm import
+			plugins: [rollupWasm({ esmImport: false })]
+		}
+	}
+});
+```
+
+`esmImport: false` also works on the Vite-plugin form: `sveltekitOG({ esmImport: false })`. The Wasm is embedded directly in the JavaScript bundle, so esbuild has nothing to resolve. This makes the bundle a little larger but builds cleanly on Netlify Functions v6.
+
+</Callout>
+
 ### Rollup Plugin (Legacy)
 
 <Callout type="danger" title="Deprecation"> The Rollup plugin will be <strong>deprecated</strong> in <strong>v5</strong>. Migrate to the Vite plugin when possible. </Callout>
@@ -100,10 +130,10 @@ Once configured, the usage remains the same as any other SvelteKit environment.
 
 ## Preview
 
-<img src="https://netlify.sveltekit-og.dev/cog" class="mt-4 rounded-lg">
+<img src="https://netlify.sveltekit-og.dev/png/cog.png" class="mt-4 rounded-lg">
 
 Source: https://github.com/etherCorps/sveltekit-og/tree/main/examples/netlify-build <br/>
-Live: https://netlify.sveltekit-og.dev/cog
+Live: https://netlify.sveltekit-og.dev/
 
 ## Known Issues
 
