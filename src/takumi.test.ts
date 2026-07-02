@@ -56,6 +56,21 @@ describe("createTakumiImage (node/native)", () => {
 		);
 		expect(Array.from((out as Uint8Array).subarray(0, 4))).toEqual(PNG_MAGIC);
 	});
+
+	// guards against the render input being dropped on the way to takumiRender
+	// (a bug where the same output rendered regardless of the template).
+	it("renders the given template, not a fixed placeholder", async () => {
+		const base = { width: 600, height: 300, format: "png" } as const;
+		const a = (await createTakumiImage(
+			`<div style="display:flex;font-size:40px">First</div>`,
+			base
+		)) as Uint8Array;
+		const b = (await createTakumiImage(
+			`<div style="display:flex;font-size:40px">Second completely different</div>`,
+			base
+		)) as Uint8Array;
+		expect(Buffer.from(a).equals(Buffer.from(b))).toBe(false);
+	});
 });
 
 describe("Takumi ImageResponse", () => {

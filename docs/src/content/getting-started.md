@@ -84,3 +84,4 @@ Once the package is installed and the plugin is configured, you are ready to cre
 
 - **For Svelte Components**: If you prefer building your images using `.svelte` files, see the [Basic Image Generation](/docs/usage/svelte) guide.
 - **For Raw HTML**: If you prefer using pure HTML strings with Tailwind CSS, see the [Raw HTML](/docs/usage/html) guide.
+- **Takumi Engine**: For more output formats (`webp`, `jpeg`, …) and a built-in font, render with the alternative [Takumi](/docs/usage/takumi) engine.

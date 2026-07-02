@@ -4,7 +4,12 @@
 
 # SvelteKit Open Graph Image Generation
 
-Dynamically generate Open Graph images from an HTML+CSS template or Svelte component using fast and efficient conversion from HTML > SVG > PNG. Based on [Satori](https://github.com/vercel/satori#documentation). No headless browser required.
+Dynamically generate Open Graph images from an HTML+CSS template or Svelte component. No headless browser required.
+
+Pick the rendering engine that fits your needs:
+
+- **Satori** (default) — HTML → SVG → PNG, based on [Satori](https://github.com/vercel/satori#documentation).
+- **[Takumi](https://takumi.kane.tw)** — a Rust/WASM engine with more output formats (`webp`, `jpeg`, `ico`, `svg`, …) and a built-in font, available from `@ethercorps/sveltekit-og/takumi` (v4.3.0+).
 
 ## Table of Contents
 
@@ -35,6 +40,8 @@ pnpm install @ethercorps/sveltekit-og
 
 For detailed usage instructions, please see the [Getting Started](https://sveltekit-og.dev/docs/getting-started) section of our documentation.
 
+Prefer the Takumi engine — more output formats and a built-in font? See the [Takumi Engine](https://sveltekit-og.dev/docs/usage/takumi) guide.
+
 ## Examples
 
 - **ImageResponse**: [_source_](/src/routes/+server.ts) · [_demo_](https://vercel.sveltekit-og.dev)
@@ -57,6 +64,7 @@ This project is licensed under the [MIT License](LICENSE).
 This project would not be possible without the following projects:
 
 - [Satori & @vercel/og](https://github.com/vercel/satori)
+- [Takumi](https://takumi.kane.tw)
 - [Noto by Google Fonts](https://fonts.google.com/noto)
 - [fineshopdesign](https://github.com/fineshopdesign/cf-wasm)
 

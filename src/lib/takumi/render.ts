@@ -53,7 +53,7 @@ export async function createTakumiImage(
 	}
 
 	return handleAsync(
-		() => takumiRender(html, { ...shared, format, quality }),
+		() => takumiRender(vNode, { ...shared, format, quality }),
 		ErrorCodes.TAKUMI_RENDER_FAILED,
 		"Failed to render image with Takumi"
 	);
