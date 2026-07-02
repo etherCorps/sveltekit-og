@@ -26,7 +26,7 @@ export async function createTakumiImage(
 ): Promise<Uint8Array | string> {
 	const log = createLogger(options.debug ?? false);
 
-	const html = handleSync(
+	const vNode = handleSync(
 		() => elementToHtml(element, props),
 		ErrorCodes.VNODE_CREATION_FAILED,
 		"Failed to create HTML for Takumi"
@@ -46,7 +46,7 @@ export async function createTakumiImage(
 
 	if (format === "svg") {
 		return handleAsync(
-			() => renderSvg(html, shared),
+			() => renderSvg(vNode, shared),
 			ErrorCodes.TAKUMI_RENDER_FAILED,
 			"Failed to render SVG with Takumi"
 		);
