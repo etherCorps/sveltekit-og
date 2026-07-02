@@ -136,4 +136,6 @@ pnpm run build
 pnpm run preview
 ```
 
+Then open [http://localhost:3000](http://localhost:3000) to browse the example gallery — the **PNG**, **SVG** and **Takumi** routes, each as an HTML string, a Svelte component, and a pre-rendered image.
+
 More on how to use [adapter-node in sveltekit](https://svelte.dev/docs/kit/adapter-node)

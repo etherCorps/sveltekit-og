@@ -143,7 +143,7 @@ Once configured, the usage remains the same as any other SvelteKit environment.
 
 ## Preview
 
-<img src="https://vercel.sveltekit-og.dev/sc" class="mt-4 rounded-lg">
+<img src="https://vercel.sveltekit-og.dev/png/cog.png" class="mt-4 rounded-lg">
 
 Source: https://github.com/etherCorps/sveltekit-og/tree/main/examples/vercel-build <br/>
-Live: https://vercel.sveltekit-og.dev/sc
+Live: https://vercel.sveltekit-og.dev/

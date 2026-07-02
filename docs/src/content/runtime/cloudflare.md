@@ -101,16 +101,16 @@ Once configured, the usage remains the same as any other SvelteKit environment.
 
 ### Cloudflare Workers
 
-<img src="https://workers.sveltekit-og.dev/cog" class="mt-4 rounded-lg">
+<img src="https://workers.sveltekit-og.dev/png/cog.png" class="mt-4 rounded-lg">
 
 Source: https://github.com/etherCorps/sveltekit-og/tree/main/examples/cf-workers-build <br/>
-Live: https://workers.sveltekit-og.dev/cog
+Live: https://workers.sveltekit-og.dev/
 
 ### Cloudflare Pages
 
-<img src="https://pages.sveltekit-og.dev/cog" class="mt-4 rounded-lg">
+<img src="https://pages.sveltekit-og.dev/png/cog.png" class="mt-4 rounded-lg">
 
 Source: https://github.com/etherCorps/sveltekit-og/tree/main/examples/cf-pages-build <br/>
-Live: https://pages.sveltekit-og.dev/cog
+Live: https://pages.sveltekit-og.dev/
 
 <Callout type="warning" title="Add Async Localstorage flag"> Cloudflare Pages requires you to manually add ALS support via config or dashboard. Add `node_als` compatability flag.</Callout>
