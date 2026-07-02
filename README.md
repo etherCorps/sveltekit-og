@@ -40,6 +40,8 @@ pnpm install @ethercorps/sveltekit-og
 
 For detailed usage instructions, please see the [Getting Started](https://sveltekit-og.dev/docs/getting-started) section of our documentation.
 
+Prefer the Takumi engine — more output formats and a built-in font? See the [Takumi Engine](https://sveltekit-og.dev/docs/usage/takumi) guide.
+
 ## Examples
 
 - **ImageResponse**: [_source_](/src/routes/+server.ts) · [_demo_](https://vercel.sveltekit-og.dev)

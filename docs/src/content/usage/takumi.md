@@ -60,9 +60,15 @@ export const GET: RequestHandler = async () => {
 };
 ```
 
-<Callout type="warning" title="Styling">
+<Callout type="note" title="Styling">
 
-Takumi reads **inline `style`**, the **`tw`** prop (Tailwind), and `<style>` blocks — it does not process a Tailwind `class` attribute. Use `tw="..."` for Tailwind utilities.
+Templates are normalized through [satori-html](https://github.com/natemoo-re/satori-html) before rendering, so styling works three ways:
+
+- **Inline `style`** — applied as-is.
+- **Tailwind** — via the `tw` prop **or** a `class` attribute. Tailwind-looking utility classes are detected and mapped to `tw` for you, so `class="flex items-center"` works the same as `tw="flex items-center"`.
+- **`<style>` blocks** — inlined onto the matching elements automatically.
+
+Plain, non-Tailwind class names only take effect when a `<style>` block defines them. For whole external stylesheets, use the [`stylesheets`](#options-reference) option.
 
 </Callout>
 
@@ -155,6 +161,24 @@ Emoji are rendered from a provider, controlled with the `emoji` option (defaults
 ```typescript showLineNumbers
 new ImageResponse(`<div style="display:flex">Ship it 🚀</div>`, { emoji: 'noto' });
 ```
+
+## Options Reference
+
+Everything the constructor accepts, passed as the second argument.
+
+| Option | Type | Default | Description |
+| ------ | ---- | ------- | ----------- |
+| `width` | `number` | `1200` | Image width in pixels. |
+| `height` | `number` | `630` | Image height in pixels. |
+| `format` | `TakumiFormat` | `'png'` | Output format — see [Output Formats](#output-formats). |
+| `quality` | `number` | — | `0`–`100`, applies to lossy `jpeg` / `webp`. |
+| `fonts` | `TakumiFontInput[]` | built-in font | Fonts to register — see [Fonts](#fonts). |
+| `stylesheets` | `string[]` | — | Extra CSS stylesheets applied before rendering. |
+| `emoji` | `EmojiType \| 'from-font'` | `'twemoji'` | Emoji provider — see [Emoji](#emoji). |
+| `debug` | `boolean` | `false` | Log render timing and diagnostics. |
+| `status` | `number` | `200` | HTTP status code of the `Response`. |
+| `statusText` | `string` | `'Success'` | HTTP status text of the `Response`. |
+| `headers` | `Record<string, string>` | — | Extra response headers (merged with the `Content-Type`). |
 
 ## Next Steps
 
