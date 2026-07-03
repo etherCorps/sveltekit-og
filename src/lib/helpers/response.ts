@@ -1,6 +1,21 @@
 import { createLogger } from "./logger.js";
 import { handleAsync, toImageResponseError, ErrorCodes } from "./error-handler.js";
+import { DEFAULT_STATUS_CODE, DEFAULT_STATUS_TEXT } from "./defaults.js";
 import { formatBytes } from "./utils.js";
+
+/** format → content type for every format either engine can emit; satori uses the
+ * png/svg subset, takumi the whole map. */
+export const CONTENT_TYPES = {
+	png: "image/png",
+	jpeg: "image/jpeg",
+	webp: "image/webp",
+	ico: "image/x-icon",
+	raw: "application/octet-stream",
+	svg: "image/svg+xml",
+} as const;
+
+// TextEncoder is stateless; one shared instance instead of one per svg response
+const textEncoder = new TextEncoder();
 
 // produces the final image; svg renders a string, raster formats give bytes
 type ImageProducer = () => Promise<Uint8Array | string>;
@@ -34,7 +49,7 @@ export function buildImageResponse(
 					ErrorCodes.UNKNOWN_ERROR,
 					`Failed to generate ${opts.label}`
 				);
-				const bytes = typeof out === "string" ? new TextEncoder().encode(out) : out;
+				const bytes = typeof out === "string" ? textEncoder.encode(out) : out;
 				log.info(`Generated ${opts.label}: ${formatBytes(bytes.byteLength)}`);
 				controller.enqueue(bytes);
 				controller.close();
@@ -54,8 +69,8 @@ export function buildImageResponse(
 				: "public, immutable, no-transform, max-age=31536000",
 			...opts.headers,
 		},
-		status: opts.status || 200,
-		statusText: opts.statusText || "Success",
+		status: opts.status || DEFAULT_STATUS_CODE,
+		statusText: opts.statusText || DEFAULT_STATUS_TEXT,
 	};
 
 	return { body, init };

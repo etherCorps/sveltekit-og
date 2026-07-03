@@ -6,17 +6,7 @@ import { resolveTakumiFonts } from "./fonts.js";
 import type { TakumiImageOptions } from "./types.js";
 import { createLogger } from "../helpers/logger.js";
 import { handleAsync, handleSync, ErrorCodes } from "../helpers/error-handler.js";
-import { html } from "satori-html";
-
-function elementToHtml(
-	element: string | Component,
-	props?: Record<string, unknown>
-): string | ReactElementLike {
-	if (typeof element === "string") return html(element.replaceAll("\n", "").trim());
-	// head carries css injected via <svelte:options css="injected" />, so it goes first
-	const { head, body } = renderComponentToHtml(element, props);
-	return html(head + body);
-}
+import { createVNode } from "$lib/helpers/toJSX.js";
 
 /** Render an HTML string or Svelte component to image bytes (or an svg string). */
 export async function createTakumiImage(
@@ -27,12 +17,12 @@ export async function createTakumiImage(
 	const log = createLogger(options.debug ?? false);
 
 	const vNode = handleSync(
-		() => elementToHtml(element, props),
+		() => createVNode(element, props),
 		ErrorCodes.VNODE_CREATION_FAILED,
 		"Failed to create HTML for Takumi"
 	);
 
-	const renderer = await useTakumiRenderer(options.debug);
+	const renderer = await useTakumiRenderer();
 
 	if (options.fonts?.length) {
 		const fonts = await resolveTakumiFonts(options.fonts);

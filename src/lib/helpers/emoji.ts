@@ -63,7 +63,7 @@ async function loadEmoji(code: string, type: EmojiType): Promise<Response> {
 }
 
 export const loadDynamicAsset = ({ emoji }: { emoji: EmojiType }) => {
-	const fn = async (code: string, text: string) => {
+	return async (code: string, text: string) => {
 		if (code === "emoji") {
 			return handleAsync(
 				async () => {
@@ -77,12 +77,6 @@ export const loadDynamicAsset = ({ emoji }: { emoji: EmojiType }) => {
 				`Failed to process emoji: ${text}`
 			);
 		}
-	};
-
-	return async (...args: any[]) => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		return await fn(...args);
 	};
 };
 

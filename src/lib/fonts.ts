@@ -82,8 +82,9 @@ const constructGoogleFontCssUrl = (
 		family: `${family.replaceAll(" ", "+")}:${style === "italic" ? "ital," : ""}wght@${style === "italic" ? "1," : ""}${weight}`,
 	};
 	if (text) params.text = encodeURIComponent(text);
-	return `https://fonts.googleapis.com/css2?${Object.keys(params)
-		.map((key) => `${key}=${params[key]}`)
+	if (display) params.display = display;
+	return `https://fonts.googleapis.com/css2?${Object.entries(params)
+		.map(([key, value]) => `${key}=${value}`)
 		.join("&")}`;
 };
 

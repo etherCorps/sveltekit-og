@@ -30,9 +30,13 @@ async function initRenderer(): Promise<TakumiRenderer> {
 	return new Renderer() as unknown as TakumiRenderer;
 }
 
-/** Lazily creates and caches the Takumi renderer for the current runtime. */
-export async function useTakumiRenderer(_debug = false): Promise<TakumiRenderer> {
-	rendererPromise ??= initRenderer();
+/** Lazily creates and caches the Takumi renderer for the current runtime.
+ * A rejected init clears the cache so the next request retries. */
+export async function useTakumiRenderer(): Promise<TakumiRenderer> {
+	rendererPromise ??= initRenderer().catch((error) => {
+		rendererPromise = undefined;
+		throw error;
+	});
 	return rendererPromise;
 }
 

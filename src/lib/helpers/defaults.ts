@@ -4,7 +4,18 @@ import type { ImageOptions } from "../types.js";
 import type { EmojiType } from "./emoji.js";
 import { handleAsyncAll, validateResponse, ErrorCodes } from "./error-handler.js";
 
-export async function default_fonts(): Promise<SatoriOptions["fonts"]> {
+// fetched once per process; a rejected fetch clears the cache so the next request retries
+let defaultFontsPromise: Promise<SatoriOptions["fonts"]> | undefined;
+
+export function default_fonts(): Promise<SatoriOptions["fonts"]> {
+	defaultFontsPromise ??= loadDefaultFonts().catch((error) => {
+		defaultFontsPromise = undefined;
+		throw error;
+	});
+	return defaultFontsPromise;
+}
+
+async function loadDefaultFonts(): Promise<SatoriOptions["fonts"]> {
 	const [noto_sans_regular_font_resp, noto_sans_bold_font_reps] = await handleAsyncAll(
 		[
 			() => fetch("https://cdn-sveltekit-og.ethercorps.io/NotoSans-Regular.ttf"),

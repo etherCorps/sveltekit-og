@@ -9,30 +9,39 @@ import { useResvg, useSatori } from "../providers/instances.js";
 import type { ComponentOptions, ImageOptions } from "../types.js";
 import { createVNode } from "./toJSX.js";
 import { createLogger } from "./logger.js";
-import { handleAsyncAll, handleAsync, ErrorCodes } from "./error-handler.js";
+import { handleAsync, ErrorCodes } from "./error-handler.js";
 
+/** Single entry for the Satori and ReSVG engine */
+export function createImage(
+	element: string | Component,
+	imageOptions: ImageOptions,
+	componentOptions?: ComponentOptions
+): Promise<Uint8Array | string> {
+	return imageOptions.format === "svg"
+		? createSvg(element, imageOptions, componentOptions)
+		: createPng(element, imageOptions, componentOptions);
+}
+
+/** Create an SVG string from a Svelte component or HTML string using Satori */
 export async function createSvg(
 	element: string | Component,
 	imageOptions: ImageOptions,
 	componentOptions?: ComponentOptions
 ): Promise<string> {
 	const log = createLogger(imageOptions.debug ?? false);
-	const [satori, vnodes] = await handleAsyncAll(
-		[() => useSatori(imageOptions.debug), () => Promise.resolve(createVNode(element, componentOptions))] as const,
-		ErrorCodes.SATORI_RENDER_FAILED,
-		"Failed to initialize Satori or create VNode"
-	);
+	const vnodes = createVNode(element, componentOptions);
+	const satori = await useSatori(imageOptions.debug);
 
-	const satoriOptions = structuredClone(imageOptions) as SatoriOptions;
-	if (!Object.hasOwn(satoriOptions, "fonts")) {
-		satoriOptions["fonts"] = await handleAsync(
+	const satoriOptions = { ...imageOptions } as SatoriOptions;
+	if (!satoriOptions.fonts) {
+		satoriOptions.fonts = await handleAsync(
 			() => default_fonts(),
 			ErrorCodes.FONT_LOAD_FAILED,
 			"Failed to load default fonts for Satori"
 		);
 	}
 
-	satoriOptions["loadAdditionalAsset"] = loadDynamicAsset({
+	satoriOptions.loadAdditionalAsset = loadDynamicAsset({
 		emoji: imageOptions.emoji as EmojiType,
 	}) as SatoriOptions["loadAdditionalAsset"];
 
@@ -41,12 +50,13 @@ export async function createSvg(
 	log.info("Options provided to satori:", imageOptions);
 
 	return handleAsync(
-		() => satori(vnodes, satoriOptions as SatoriOptions),
+		() => satori(vnodes, satoriOptions),
 		ErrorCodes.SATORI_RENDER_FAILED,
 		"Failed to render SVG with Satori"
 	);
 }
 
+/* Create a PNG image from a Svelte component or HTML string using Satori and ReSVG */
 export async function createPng(
 	element: string | Component,
 	imageOptions: ImageOptions,
