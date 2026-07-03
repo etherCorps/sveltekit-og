@@ -9,7 +9,7 @@ import { createVNode } from "$lib/helpers/toJSX.js";
 
 /** Render an HTML string or Svelte component to image bytes (or an svg string). */
 export async function createTakumiImage(
-	element: string | Component,
+	element: string | Component<any>,
 	options: TakumiImageOptions,
 	props?: Record<string, unknown>
 ): Promise<Uint8Array | string> {

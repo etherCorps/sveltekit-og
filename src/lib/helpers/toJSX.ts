@@ -5,7 +5,7 @@ import { handleSync, ErrorCodes } from "./error-handler.js";
 import { renderComponentToHtml } from "./to-html.js";
 
 export function createVNode(
-	element: string | Component,
+	element: string | Component<any>,
 	componentOptions?: ComponentOptions
 ): VNode {
 	return handleSync(

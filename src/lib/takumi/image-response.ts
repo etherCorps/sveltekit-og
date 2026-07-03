@@ -25,7 +25,7 @@ export class ImageResponse<T extends string | Component<any>> extends Response {
 		const opts = { ...DEFAULT_OPTIONS, ...options };
 
 		const { body, init } = buildImageResponse(
-			() => createTakumiImage(element as string, opts, props),
+			() => createTakumiImage(element, opts, props),
 			{
 				label: opts.format.toUpperCase(),
 				contentType: CONTENT_TYPES[opts.format],

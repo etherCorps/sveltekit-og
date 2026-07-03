@@ -13,7 +13,7 @@ import { handleAsync, ErrorCodes } from "./error-handler.js";
 
 /** Single entry for the Satori and ReSVG engine */
 export function createImage(
-	element: string | Component,
+	element: string | Component<any>,
 	imageOptions: ImageOptions,
 	componentOptions?: ComponentOptions
 ): Promise<Uint8Array | string> {
@@ -24,7 +24,7 @@ export function createImage(
 
 /** Create an SVG string from a Svelte component or HTML string using Satori */
 export async function createSvg(
-	element: string | Component,
+	element: string | Component<any>,
 	imageOptions: ImageOptions,
 	componentOptions?: ComponentOptions
 ): Promise<string> {
@@ -58,7 +58,7 @@ export async function createSvg(
 
 /* Create a PNG image from a Svelte component or HTML string using Satori and ReSVG */
 export async function createPng(
-	element: string | Component,
+	element: string | Component<any>,
 	imageOptions: ImageOptions,
 	componentOptions?: ComponentOptions
 ) {
