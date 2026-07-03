@@ -1,5 +1,5 @@
 <script lang="ts">
-	const version = '4.3.0-next.12';
+	const version = '4.3.0-next.14';
 
 	type Route = { kind: string; label: string; href: string };
 	type Section = {
