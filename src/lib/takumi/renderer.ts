@@ -16,7 +16,8 @@ async function initRenderer(): Promise<TakumiRenderer> {
 			// @takumi-rs/wasm/auto picks the right binary per runtime (workerd, edge,
 			// node, ?module) via export conditions. this is the same dance takumi-js
 			// does internally.
-			const resolved = typeof autoModule === "function" ? await autoModule() : await autoModule;
+			const resolved =
+				typeof autoModule === "function" ? await autoModule() : await autoModule;
 			const input =
 				resolved && typeof resolved === "object" && "default" in resolved
 					? (resolved as { default: unknown }).default
