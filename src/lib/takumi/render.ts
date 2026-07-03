@@ -1,11 +1,10 @@
 import type { Component } from "svelte";
-import { render as takumiRender, renderSvg, type ReactElementLike } from "takumi-js";
-import { renderComponentToHtml } from "../helpers/to-html.js";
+import { render as takumiRender, renderSvg } from "takumi-js";
 import { useTakumiRenderer, registerTakumiFonts, type TakumiRenderer } from "./renderer.js";
 import { resolveTakumiFonts } from "./fonts.js";
 import type { TakumiImageOptions } from "./types.js";
 import { createLogger } from "../helpers/logger.js";
-import { handleAsync, handleSync, ErrorCodes } from "../helpers/error-handler.js";
+import { handleAsync, ErrorCodes, handleSync } from "../helpers/error-handler.js";
 import { createVNode } from "$lib/helpers/toJSX.js";
 
 /** Render an HTML string or Svelte component to image bytes (or an svg string). */
@@ -17,7 +16,7 @@ export async function createTakumiImage(
 	const log = createLogger(options.debug ?? false);
 
 	const vNode = handleSync(
-		() => createVNode(element, props),
+		() => createVNode(element, { props }),
 		ErrorCodes.VNODE_CREATION_FAILED,
 		"Failed to create HTML for Takumi"
 	);
