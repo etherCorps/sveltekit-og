@@ -3,17 +3,22 @@
 // and a timestamp (build time for pre-rendered routes, request time otherwise).
 
 export type TemplateData = {
-	provider: string;
-	format: string;
-	mode: 'Prerendered' | 'Runtime';
-	timestamp: string;
+  provider: string;
+  format: string;
+  mode: "Prerendered" | "Runtime";
+  timestamp: string;
 };
 
 // Satori understands Tailwind through `class` (satori-html maps recognised
 // utilities for us), so the Satori-backed routes (PNG via resvg, and SVG)
 // share this one.
-export function satoriTemplate({ provider, format, mode, timestamp }: TemplateData): string {
-	return `
+export function satoriTemplate({
+  provider,
+  format,
+  mode,
+  timestamp,
+}: TemplateData): string {
+  return `
 	<div class="flex h-full w-full flex-col items-center justify-center bg-gray-900">
 		<div class="flex flex-col items-center rounded-2xl bg-gray-800 px-20 py-14">
 			<div class="text-3xl font-semibold text-indigo-400">@ethercorps/sveltekit-og</div>
@@ -30,8 +35,13 @@ export function satoriTemplate({ provider, format, mode, timestamp }: TemplateDa
 
 // Takumi reads inline `style` and ships a built-in font, so no font setup is
 // needed. Inline styles keep this bulletproof across every runtime.
-export function takumiTemplate({ provider, format, mode, timestamp }: TemplateData): string {
-	return `
+export function takumiTemplate({
+  provider,
+  format,
+  mode,
+  timestamp,
+}: TemplateData): string {
+  return `
 	<div style="display:flex;height:100%;width:100%;flex-direction:column;align-items:center;justify-content:center;background:#111827">
 		<div style="display:flex;flex-direction:column;align-items:center;border-radius:24px;background:#1f2937;padding:56px 80px">
 			<div style="font-size:30px;font-weight:600;color:#818cf8">@ethercorps/sveltekit-og</div>

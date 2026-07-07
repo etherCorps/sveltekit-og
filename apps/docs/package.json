@@ -48,12 +48,7 @@
 		"vite": "^7.2.4"
 	},
 	"dependencies": {
-		"@ethercorps/sveltekit-og": "^4.3.1-next.3",
+		"@ethercorps/sveltekit-og": "workspace:*",
 		"octokit": "^5.0.5"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"esbuild"
-		]
 	}
 }

@@ -1,0 +1,43 @@
+{
+	"name": "@examples/shared",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "svelte-package",
+		"prepare": "svelte-package"
+	},
+	"exports": {
+		"./satori": {
+			"types": "./dist/satori.d.ts",
+			"svelte": "./dist/satori.js",
+			"default": "./dist/satori.js"
+		},
+		"./takumi": {
+			"types": "./dist/takumi.d.ts",
+			"svelte": "./dist/takumi.js",
+			"default": "./dist/takumi.js"
+		}
+	},
+	"dependencies": {
+		"@ethercorps/sveltekit-og": "workspace:*"
+	},
+	"peerDependencies": {
+		"svelte": "^5",
+		"takumi-js": "^2.0.0-beta.14"
+	},
+	"peerDependenciesMeta": {
+		"takumi-js": {
+			"optional": true
+		}
+	},
+	"devDependencies": {
+		"@sveltejs/kit": "^2.53.4",
+		"@sveltejs/package": "^2.5.7",
+		"@sveltejs/vite-plugin-svelte": "^6.2.1",
+		"svelte": "^5.53.10",
+		"svelte-check": "^4.4.5",
+		"takumi-js": "2.0.0-beta.14",
+		"typescript": "^5.9.3"
+	}
+}
