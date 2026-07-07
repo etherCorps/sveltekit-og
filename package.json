@@ -1,27 +1,27 @@
 {
-	"name": "sveltekit-og-monorepo",
-	"version": "0.0.0",
-	"private": true,
-	"type": "module",
-	"license": "MIT",
-	"repository": "github:ethercorps/sveltekit-og",
-	"scripts": {
-		"dev": "pnpm -F @ethercorps/sveltekit-og dev",
-		"build": "pnpm -F @ethercorps/sveltekit-og build",
-		"test": "pnpm -F @ethercorps/sveltekit-og test",
-		"bench": "pnpm -F @ethercorps/sveltekit-og bench",
-		"build:examples": "pnpm -F \"./examples/**\" --parallel --color build",
-		"docs:dev": "pnpm -F @svecodocs/docs dev",
-		"docs:build": "pnpm -F @svecodocs/docs build",
-		"check": "pnpm -r check",
-		"lint": "pnpm -r lint",
-		"format": "pnpm -r format"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"esbuild",
-			"sharp",
-			"workerd"
-		]
-	}
+  "name": "sveltekit-og-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "repository": "github:ethercorps/sveltekit-og",
+  "scripts": {
+    "dev": "pnpm -F @ethercorps/sveltekit-og dev",
+    "build": "pnpm -F @ethercorps/sveltekit-og build",
+    "test": "pnpm -F @ethercorps/sveltekit-og test",
+    "bench": "pnpm -F @ethercorps/sveltekit-og bench",
+    "build:examples": "pnpm -F \"./examples/**\" --parallel --color build",
+    "docs:dev": "pnpm -F @svecodocs/docs dev",
+    "docs:build": "pnpm -F @svecodocs/docs build",
+    "check": "pnpm -r check",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "workerd"
+    ]
+  }
 }
