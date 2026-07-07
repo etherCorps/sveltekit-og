@@ -1,5 +1,5 @@
 <script lang="ts">
-	const version = '4.3.0-next.14';
+	import { version } from '@ethercorps/sveltekit-og/package.json';
 
 	type Route = { kind: string; label: string; href: string };
 	type Section = { title: string; tagline: string; accent: 'indigo' | 'emerald' | 'violet'; routes: Route[] };

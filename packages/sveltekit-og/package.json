@@ -69,7 +69,8 @@
 		"./plugin": {
 			"types": "./dist/plugin.d.ts",
 			"import": "./dist/plugin.js"
-		}
+		},
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist",
