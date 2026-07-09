@@ -33,6 +33,12 @@ The Takumi engine lives behind a separate entry point and `takumi-js` is an **op
 pnpm add @ethercorps/sveltekit-og takumi-js
 ```
 
+<Callout type="note" title="Takumi v2">
+
+`takumi-js` has graduated from beta — install the stable `v2` line (`^2.0.1`), which is what `pnpm add takumi-js` resolves to.
+
+</Callout>
+
 <Callout type="warning" title="Plugin still required">
 
 Takumi loads its WebAssembly through the same build plugin as Satori. Make sure the Vite/Rollup plugin is configured as shown in [Getting Started](/docs/getting-started).
