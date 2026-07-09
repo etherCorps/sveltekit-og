@@ -13,7 +13,7 @@ const customRegular = new CustomFont("Space Mono", () => read(RegularFont).array
 });
 
 export const GET: RequestHandler = async ({ url }) => {
-	const format = url.searchParams.get("format") as ImageResponseOptions['format'] || "png";
+	const format = (url.searchParams.get("format") as ImageResponseOptions["format"]) || "png";
 	const html = `
 		<div class="h-full w-full flex flex-col items-center justify-center bg-white text-6xl">
   	<img class="h-96 w-96" src="https://www.ethercorps.io/logo_transparent.png"/>

@@ -1,4 +1,4 @@
-const PREFIX = '[SvelteKit-OG]';
+const PREFIX = "[SvelteKit-OG]";
 
 export type Logger = ReturnType<typeof createLogger>;
 
@@ -15,6 +15,6 @@ export function createLogger(debug: boolean) {
 		},
 		error: (message: string, ...args: unknown[]) => {
 			if (debug) console.error(`${PREFIX} ❌ ${message}`, ...args);
-		}
+		},
 	};
 }

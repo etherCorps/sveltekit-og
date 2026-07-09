@@ -3,7 +3,8 @@ import { ImageResponse, type TakumiImageResponseOptions } from "$lib/takumi/inde
 import OG from "../(components)/OG.svelte";
 
 export const GET: RequestHandler = async ({ url }) => {
-	const format = (url.searchParams.get("format") as TakumiImageResponseOptions["format"]) || "png";
+	const format =
+		(url.searchParams.get("format") as TakumiImageResponseOptions["format"]) || "png";
 	return new ImageResponse(
 		OG,
 		{

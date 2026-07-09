@@ -3,7 +3,7 @@ import { ImageResponse, type ImageResponseOptions } from "$lib/index.js";
 import OG from "../(components)/OG.svelte";
 
 export const GET: RequestHandler = async ({ url }) => {
-	const format = url.searchParams.get("format") as ImageResponseOptions['format'] || "png";
+	const format = (url.searchParams.get("format") as ImageResponseOptions["format"]) || "png";
 	return new ImageResponse(
 		OG,
 		{
@@ -12,8 +12,8 @@ export const GET: RequestHandler = async ({ url }) => {
 			width: 800,
 			height: 400,
 			headers: {
-				"Cache-Control": "no-cache, no-store"
-			}
+				"Cache-Control": "no-cache, no-store",
+			},
 		},
 		{
 			text: "Ready to try sveltekit-og?",

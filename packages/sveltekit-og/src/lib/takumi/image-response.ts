@@ -24,17 +24,14 @@ export class ImageResponse<T extends string | Component<any>> extends Response {
 	) {
 		const opts = { ...DEFAULT_OPTIONS, ...options };
 
-		const { body, init } = buildImageResponse(
-			() => createTakumiImage(element, opts, props),
-			{
-				label: opts.format.toUpperCase(),
-				contentType: CONTENT_TYPES[opts.format],
-				debug: opts.debug,
-				headers: opts.headers,
-				status: opts.status,
-				statusText: opts.statusText,
-			}
-		);
+		const { body, init } = buildImageResponse(() => createTakumiImage(element, opts, props), {
+			label: opts.format.toUpperCase(),
+			contentType: CONTENT_TYPES[opts.format],
+			debug: opts.debug,
+			headers: opts.headers,
+			status: opts.status,
+			statusText: opts.statusText,
+		});
 
 		super(body, init);
 	}

@@ -107,14 +107,14 @@ new ImageResponse(template, { format: 'jpeg', quality: 90 });
 new ImageResponse(template, { format: 'svg' });
 ```
 
-| Format | Content-Type |
-| ------ | ------------ |
-| `png` (default) | `image/png` |
-| `jpeg` | `image/jpeg` |
-| `webp` | `image/webp` |
-| `ico` | `image/x-icon` |
-| `svg` | `image/svg+xml` |
-| `raw` | `application/octet-stream` |
+| Format          | Content-Type               |
+| --------------- | -------------------------- |
+| `png` (default) | `image/png`                |
+| `jpeg`          | `image/jpeg`               |
+| `webp`          | `image/webp`               |
+| `ico`           | `image/x-icon`             |
+| `svg`           | `image/svg+xml`            |
+| `raw`           | `application/octet-stream` |
 
 ## Fonts
 
@@ -132,17 +132,14 @@ import { read } from '$app/server';
 import RegularFont from '$lib/assets/MyFont-Regular.ttf?url';
 
 export const GET = async () => {
-	return new ImageResponse(
-		`<div style="display:flex; font-family: 'Inter'">Hello World</div>`,
-		{
-			width: 1200,
-			height: 630,
-			fonts: [
-				new GoogleFont('Inter', { weight: 400 }),
-				new CustomFont('My Font', () => read(RegularFont).arrayBuffer(), { weight: 700 })
-			]
-		}
-	);
+	return new ImageResponse(`<div style="display:flex; font-family: 'Inter'">Hello World</div>`, {
+		width: 1200,
+		height: 630,
+		fonts: [
+			new GoogleFont('Inter', { weight: 400 }),
+			new CustomFont('My Font', () => read(RegularFont).arrayBuffer(), { weight: 700 })
+		]
+	});
 };
 ```
 
@@ -172,19 +169,19 @@ new ImageResponse(`<div style="display:flex">Ship it 🚀</div>`, { emoji: 'noto
 
 Everything the constructor accepts, passed as the second argument.
 
-| Option | Type | Default | Description |
-| ------ | ---- | ------- | ----------- |
-| `width` | `number` | `1200` | Image width in pixels. |
-| `height` | `number` | `630` | Image height in pixels. |
-| `format` | `TakumiFormat` | `'png'` | Output format — see [Output Formats](#output-formats). |
-| `quality` | `number` | — | `0`–`100`, applies to lossy `jpeg` / `webp`. |
-| `fonts` | `TakumiFontInput[]` | built-in font | Fonts to register — see [Fonts](#fonts). |
-| `stylesheets` | `string[]` | — | Extra CSS stylesheets applied before rendering. |
-| `emoji` | `EmojiType \| 'from-font'` | `'twemoji'` | Emoji provider — see [Emoji](#emoji). |
-| `debug` | `boolean` | `false` | Log render timing and diagnostics. |
-| `status` | `number` | `200` | HTTP status code of the `Response`. |
-| `statusText` | `string` | `'Success'` | HTTP status text of the `Response`. |
-| `headers` | `Record<string, string>` | — | Extra response headers (merged with the `Content-Type`). |
+| Option        | Type                       | Default       | Description                                              |
+| ------------- | -------------------------- | ------------- | -------------------------------------------------------- |
+| `width`       | `number`                   | `1200`        | Image width in pixels.                                   |
+| `height`      | `number`                   | `630`         | Image height in pixels.                                  |
+| `format`      | `TakumiFormat`             | `'png'`       | Output format — see [Output Formats](#output-formats).   |
+| `quality`     | `number`                   | —             | `0`–`100`, applies to lossy `jpeg` / `webp`.             |
+| `fonts`       | `TakumiFontInput[]`        | built-in font | Fonts to register — see [Fonts](#fonts).                 |
+| `stylesheets` | `string[]`                 | —             | Extra CSS stylesheets applied before rendering.          |
+| `emoji`       | `EmojiType \| 'from-font'` | `'twemoji'`   | Emoji provider — see [Emoji](#emoji).                    |
+| `debug`       | `boolean`                  | `false`       | Log render timing and diagnostics.                       |
+| `status`      | `number`                   | `200`         | HTTP status code of the `Response`.                      |
+| `statusText`  | `string`                   | `'Success'`   | HTTP status text of the `Response`.                      |
+| `headers`     | `Record<string, string>`   | —             | Extra response headers (merged with the `Content-Type`). |
 
 ## Next Steps
 
