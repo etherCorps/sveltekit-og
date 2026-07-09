@@ -22,6 +22,9 @@
       "esbuild",
       "sharp",
       "workerd"
-    ]
+    ],
+    "patchedDependencies": {
+      "@deno/svelte-adapter@0.2.1": "patches/@deno__svelte-adapter@0.2.1.patch"
+    }
   }
 }

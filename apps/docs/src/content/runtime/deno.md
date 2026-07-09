@@ -142,7 +142,7 @@ A prerendered image endpoint — a `+server.ts` with `export const prerender = t
 
 Deno Deploy is different: it serves static assets from an explicit route manifest, not by scanning the filesystem. The current Deno adapter only registers prerendered **pages** in that manifest — prerendered **endpoints** (image/asset routes) are written to disk but never added — so the file is orphaned and requesting the route (e.g. `/png/prerendered.png`) returns a **404**.
 
-Until this is fixed upstream, **don't prerender image endpoints on Deno** — serve them dynamically by dropping `export const prerender = true`:
+Until this is fixed upstream, either patch the adapter to also register `builder.prerendered.assets` in `staticFiles` (see [the patch used by this repo](https://github.com/etherCorps/sveltekit-og/blob/main/patches/%40deno__svelte-adapter%400.2.1.patch) via [`pnpm patch`](https://pnpm.io/cli/patch)), or **don't prerender image endpoints on Deno** — serve them dynamically by dropping `export const prerender = true`:
 
 ```typescript title="routes/png/og.png/+server.ts"
 // export const prerender = true; // ← remove on Deno Deploy
