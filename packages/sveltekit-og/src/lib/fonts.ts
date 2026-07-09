@@ -15,10 +15,7 @@ export class BaseFont {
 	style: FontStyle;
 	weight: FontWeight;
 
-	constructor(
-		name: string,
-		{ weight = 400, style = "normal" }: BaseFontOptions = {}
-	) {
+	constructor(name: string, { weight = 400, style = "normal" }: BaseFontOptions = {}) {
 		this.name = name;
 		this.style = style;
 		this.weight = weight;
@@ -33,7 +30,9 @@ export class BaseFont {
 }
 
 export class CustomFont extends BaseFont {
-	protected input: MayBePromise<Buffer | ArrayBuffer> | (() => MayBePromise<Buffer | ArrayBuffer>);
+	protected input:
+		| MayBePromise<Buffer | ArrayBuffer>
+		| (() => MayBePromise<Buffer | ArrayBuffer>);
 	private promise?: Promise<Buffer | ArrayBuffer>;
 
 	constructor(
@@ -143,7 +142,7 @@ export class GoogleFont extends BaseFont {
 		family: string,
 		options: { name?: string; text?: string; weight?: FontWeight; style?: FontStyle } = {}
 	) {
-        super(options.name || family, options);
+		super(options.name || family, options);
 		this.family = family;
 		this.text = options.text;
 	}

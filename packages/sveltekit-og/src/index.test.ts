@@ -7,7 +7,9 @@ import { createSvg } from "$lib/helpers/create.js";
 const fontData = readFileSync(
 	new URL("./routes/(components)/SpaceMono-Regular.ttf", import.meta.url)
 );
-const fonts = [{ name: "Space Mono", data: fontData, weight: 400 as const, style: "normal" as const }];
+const fonts = [
+	{ name: "Space Mono", data: fontData, weight: 400 as const, style: "normal" as const },
+];
 const html = `<div style="display:flex;width:100%;height:100%">hi</div>`;
 
 describe("satori ImageResponse", () => {
