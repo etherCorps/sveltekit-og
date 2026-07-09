@@ -3,14 +3,4 @@
 	"pages_build_output_dir": ".svelte-kit/cloudflare",
 	"compatibility_date": "2025-11-22",
 	"compatibility_flags": ["nodejs_compat"],
-	"env": {
-		"dev": {
-			"routes": [
-				{
-					"pattern": "dev-workers.sveltekit-og.dev",
-					"custom_domain": true
-				}
-			]
-		}
-	}
 }
