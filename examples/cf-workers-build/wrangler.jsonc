@@ -9,7 +9,7 @@
 		}
 	],
 	"workers_dev": false,
-	"compatibility_date": "2025-11-20",
+	"compatibility_date": "2026-07-01",
 	"build": {
 		"command": "pnpm run build"
 	},
