@@ -2,5 +2,15 @@
 	"name": "sveltekit-og",
 	"pages_build_output_dir": "./.svelte-kit/cloudflare",
 	"compatibility_date": "2026-04-28",
-	"compatibility_flags": ["nodejs_compat", "nodejs_als"]
+	"compatibility_flags": ["nodejs_compat", "nodejs_als"],
+	"env": {
+		"dev": {
+		"routes": [
+		        {
+        "pattern": "dev-workers.sveltekit-og.dev",
+        "custom_domain": true
+      }
+		]
+		}
+	}
 }

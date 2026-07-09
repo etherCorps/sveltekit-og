@@ -44,5 +44,15 @@
 			"globs": ["**/*.ttf"],
 			"fallthrough": true
 		}
-	]
+	],
+	"env": {
+		"dev": {
+			"routes": [
+				{
+					"pattern": "dev-workers.sveltekit-og.dev",
+					"custom_domain": true
+				}
+			]
+		}
+	}
 }
