@@ -21,7 +21,7 @@ Reach for Takumi when you want:
 
 <Callout type="note" title="Available from v4.3.0">
 
-Takumi support is available from `sveltekit-og@v4.3.0`. While v4.3 is in prerelease, install it from the `next` tag: `@ethercorps/sveltekit-og@next`.
+Takumi support is available from `sveltekit-og@v4.3.0`. v4.3 is in beta and ready for test deployments — install it from the `beta` tag: `@ethercorps/sveltekit-og@beta`.
 
 </Callout>
 
