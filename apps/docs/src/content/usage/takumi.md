@@ -21,7 +21,7 @@ Reach for Takumi when you want:
 
 <Callout type="note" title="Available from v4.3.0">
 
-Takumi support is available from `sveltekit-og@v4.3.0`. While v4.3 is in prerelease, install it from the `next` tag: `@ethercorps/sveltekit-og@next`.
+Takumi support is available from `sveltekit-og@v4.3.0`. v4.3 is in beta and ready for test deployments — install it from the `beta` tag: `@ethercorps/sveltekit-og@beta`.
 
 </Callout>
 
@@ -32,6 +32,12 @@ The Takumi engine lives behind a separate entry point and `takumi-js` is an **op
 ```bash
 pnpm add @ethercorps/sveltekit-og takumi-js
 ```
+
+<Callout type="note" title="Takumi v2">
+
+`takumi-js` has graduated from beta — install the stable `v2` line (`^2.0.1`), which is what `pnpm add takumi-js` resolves to.
+
+</Callout>
 
 <Callout type="warning" title="Plugin still required">
 
