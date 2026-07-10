@@ -135,3 +135,21 @@ NotFound: No such file or directory (os error 2): open '_app/immutable/assets/Je
 ```
 
 </Collapsible>
+
+<Collapsible title="Prerendered image routes return 404">
+
+A prerendered image endpoint — a `+server.ts` with `export const prerender = true` that returns an image — is generated at build time and written into the deploy output as a static file (e.g. `static/png/prerendered.png`). On most hosts this just works, because they serve the static directory straight from the filesystem.
+
+Deno Deploy is different: it serves static assets from an explicit route manifest, not by scanning the filesystem. The current Deno adapter only registers prerendered **pages** in that manifest — prerendered **endpoints** (image/asset routes) are written to disk but never added — so the file is orphaned and requesting the route (e.g. `/png/prerendered.png`) returns a **404**.
+
+Until this is fixed upstream, either patch the adapter to also register `builder.prerendered.assets` in `staticFiles` (see [the patch used by this repo](https://github.com/etherCorps/sveltekit-og/blob/main/patches/%40deno__svelte-adapter%400.2.1.patch) via [`pnpm patch`](https://pnpm.io/cli/patch)), or **don't prerender image endpoints on Deno** — serve them dynamically by dropping `export const prerender = true`:
+
+```typescript title="routes/png/og.png/+server.ts"
+// export const prerender = true; // ← remove on Deno Deploy
+
+export const GET = async () => new ImageResponse(template, { width: 1200, height: 630 });
+```
+
+Satori and Takumi both generate images fast enough at request time. To avoid regenerating on every hit, cache with a `Cache-Control` header on the response or Deno Deploy's ISR.
+
+</Collapsible>

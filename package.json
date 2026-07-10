@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.30.3",
   "license": "MIT",
   "repository": "github:ethercorps/sveltekit-og",
   "scripts": {
@@ -15,13 +16,21 @@
     "docs:build": "pnpm -F @svecodocs/docs build",
     "check": "pnpm -r check",
     "lint": "pnpm -r lint",
-    "format": "pnpm -r format"
+    "format": "pnpm -r format",
+    "release": "bumpp --no-tag packages/sveltekit-og/package.json"
+  },
+  "devDependencies": {
+    "bumpp": "^10.4.0",
+    "changelogithub": "^13.16.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
       "sharp",
       "workerd"
-    ]
+    ],
+    "patchedDependencies": {
+      "@deno/svelte-adapter@0.2.1": "patches/@deno__svelte-adapter@0.2.1.patch"
+    }
   }
 }

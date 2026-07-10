@@ -1,0 +1,19 @@
+diff --git a/dist/index.js b/dist/index.js
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -52,6 +52,15 @@
+                     });
+                 }
+             }
++            // Prerendered endpoints (e.g. image routes) are written into the
++            // static dir by writePrerendered() above, but only prerendered
++            // *pages* were registered — so Deno Deploy 404s the assets.
++            for (const pathname of builder.prerendered.assets.keys()) {
++                staticFiles.push({
++                    source: pathname,
++                    destination: path.join(dirs.static, pathname),
++                });
++            }
+             const svelteData = {
+                 isr: [],
+             };

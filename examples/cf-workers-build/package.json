@@ -28,6 +28,6 @@
 	"dependencies": {
 		"@ethercorps/sveltekit-og": "workspace:*",
 		"@examples/shared": "workspace:*",
-		"takumi-js": "2.0.0-beta.14"
+		"takumi-js": "2.0.1"
 	}
 }
