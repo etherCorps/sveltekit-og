@@ -7,7 +7,7 @@ interface BaseFontOptions {
 	style?: FontStyle;
 }
 
-/** * Base font class defining the structure required by Satori.
+/** Base font class defining the structure required by Satori.
  * All font types inherit from this class.
  */
 export class BaseFont {
@@ -21,7 +21,7 @@ export class BaseFont {
 		this.weight = weight;
 	}
 
-	/** * Abstract getter that returns the promised ArrayBuffer.
+	/** Abstract getter that returns the promised ArrayBuffer.
 	 * Overridden by CustomFont and GoogleFont for lazy loading.
 	 */
 	get data(): MayBePromise<Buffer | ArrayBuffer> {
