@@ -16,7 +16,12 @@
     "docs:build": "pnpm -F @svecodocs/docs build",
     "check": "pnpm -r check",
     "lint": "pnpm -r lint",
-    "format": "pnpm -r format"
+    "format": "pnpm -r format",
+    "release": "bumpp --no-tag packages/sveltekit-og/package.json"
+  },
+  "devDependencies": {
+    "bumpp": "^10.4.0",
+    "changelogithub": "^13.16.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
