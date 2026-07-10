@@ -1,0 +1,98 @@
+name: Release
+
+# Release channel is driven by the branch you merge into:
+#   main -> production  (dist-tag: latest)
+#   dev  -> beta        (dist-tag: beta)   version must be a -beta.x prerelease
+#   any  -> next        (dist-tag: next)   whenever the version contains -next.x
+# A merge only publishes when the version in package.json is NOT already on npm,
+# so ordinary merges that don't bump the version are no-ops.
+on:
+  push:
+    branches: [main, dev]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+# No secrets. Publishing uses npm Trusted Publishing (OIDC) — there is no
+# NPM_TOKEN in this repo to steal. id-token mints a short-lived identity npm
+# verifies against the trusted publisher configured on npmjs.com for this exact
+# repo + workflow. contents:write is only for the tag + GitHub release notes.
+permissions: {}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      # Trusted Publishing needs npm >= 11.5.1; Node 22 ships an older npm.
+      - run: npm install -g npm@latest
+
+      - run: pnpm install --frozen-lockfile
+
+      # Decide the dist-tag from branch + version, or skip if this channel/version
+      # combination is not allowed. Enforces: production only from main, beta only
+      # from dev, next from anywhere.
+      - name: Resolve release channel
+        id: channel
+        working-directory: packages/sveltekit-og
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          BRANCH="${GITHUB_REF_NAME}"
+          echo "name=$NAME"; echo "version=$VERSION"; echo "branch=$BRANCH"
+
+          if [[ "$VERSION" == *-next.* ]]; then
+            TAG=next
+          elif [[ "$BRANCH" == "dev" && "$VERSION" == *-beta.* ]]; then
+            TAG=beta
+          elif [[ "$BRANCH" == "main" && "$VERSION" != *-* ]]; then
+            TAG=latest
+          else
+            echo "No release: version '$VERSION' is not valid for branch '$BRANCH'." >> "$GITHUB_STEP_SUMMARY"
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Skip if this exact version is already on npm (merge didn't bump it).
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "$NAME@$VERSION already published — skipping." >> "$GITHUB_STEP_SUMMARY"
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "publish=true" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      # Build runs via the package's prepublishOnly. --provenance signs a build attestation.
+      - name: Publish to npm
+        if: steps.channel.outputs.publish == 'true'
+        working-directory: packages/sveltekit-og
+        run: |
+          echo "Publishing ${{ steps.channel.outputs.version }} with dist-tag: ${{ steps.channel.outputs.tag }}"
+          npm publish --provenance --tag "${{ steps.channel.outputs.tag }}"
+
+      # Tag the release commit and generate GitHub release notes from conventional commits.
+      - name: Tag + GitHub release notes
+        if: steps.channel.outputs.publish == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v${{ steps.channel.outputs.version }}"
+          git tag "$TAG"
+          git push origin "$TAG"
+          npx changelogithub
