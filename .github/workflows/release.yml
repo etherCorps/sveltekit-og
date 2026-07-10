@@ -33,13 +33,13 @@ jobs:
 
       - uses: pnpm/action-setup@v4
 
+      # Node 24 bundles npm >= 11.5.1, which supports OIDC Trusted Publishing.
+      # Do NOT self-upgrade npm (`npm i -g npm@latest`) — it leaves a broken
+      # dependency tree (missing 'sigstore') and provenance publishing crashes.
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org
-
-      # Trusted Publishing needs npm >= 11.5.1; Node 22 ships an older npm.
-      - run: npm install -g npm@latest
 
       - run: pnpm install --frozen-lockfile
 
