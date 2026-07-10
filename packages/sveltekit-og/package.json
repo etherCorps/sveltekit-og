@@ -3,7 +3,7 @@
 	"version": "4.3.0",
 	"license": "MIT",
 	"homepage": "https://sveltekit-og.dev",
-	"repository": "github:ethercorps/sveltekit-og",
+	"repository": "github:etherCorps/sveltekit-og",
 	"funding": "https://github.com/sponsors/ethercorps",
 	"author": "Shivam Meena <https://github.com/theetherGit>",
 	"description": "Dynamically generate Open Graph images from an HTML, CSS template or Svelte component using fast and efficient conversion from HTML > SVG > PNG",
