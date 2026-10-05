@@ -1,8 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ImageResponse, createImage } from "$lib/client/index.js";
+import { ErrorCodes } from "$lib/helpers/error-handler.js";
+import Card from "./routes/client/Card.svelte";
 
-// The client entry picks its wasm providers by runtime, so under vitest (node) it
-// runs on the node providers — which lets us exercise the engine dispatch here.
+// Vitest runs in node: no `document` (same as a worker), and the satori wasm
+// can't be fetched from `?url` assets here. So these tests cover dispatch,
+// the worker guard and the font fallback; real satori rendering is checked by
+// hand in the browser (see the spec's manual checklist).
 const html = `<div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:white;font-size:48px;color:#203649">Hello</div>`;
 
 const PNG_MAGIC = [0x89, 0x50, 0x4e, 0x47];
@@ -60,5 +64,21 @@ describe("client ImageResponse", () => {
 		const res = createImage(html, { engine: "takumi", width: 600, height: 300 });
 		expect(res).toBeInstanceOf(Response);
 		expect(await png(res)).toEqual(PNG_MAGIC);
+	});
+});
+
+describe("client render: components in a worker", () => {
+	it("rejects a component with COMPONENT_IN_WORKER when there is no document", async () => {
+		const { createClientImage } = await import("$lib/client/render.js");
+		expect(typeof document).toBe("undefined");
+		await expect(
+			createClientImage(Card, { engine: "takumi", width: 600, height: 300 }, { title: "t", subtitle: "s", num1: 1, num2: 2 })
+		).rejects.toMatchObject({ name: "ImageResponseError", code: ErrorCodes.COMPONENT_IN_WORKER });
+	});
+
+	it("still renders HTML strings without a document", async () => {
+		const { createClientImage } = await import("$lib/client/render.js");
+		const out = (await createClientImage(html, { engine: "takumi", width: 600, height: 300 })) as Uint8Array;
+		expect(Array.from(out.subarray(0, 4))).toEqual([0x89, 0x50, 0x4e, 0x47]);
 	});
 });
