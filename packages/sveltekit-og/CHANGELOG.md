@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `@ethercorps/sveltekit-og/client`: render OG images in the browser or a web worker with Takumi (default) or Satori + ReSVG, no server request. Engines load lazily (only the one you pick is downloaded); Satori falls back to bundled Noto Sans served same-origin; components render on the main thread, HTML strings everywhere; passing a component in a worker rejects with `COMPONENT_IN_WORKER`. Errors reach `.blob()`/`.arrayBuffer()`/`.text()` as `ImageResponseError` with a `code`.
+
 ## [4.3.0] - 2026-07-10
 
 ### Added
