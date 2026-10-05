@@ -37,8 +37,15 @@ export async function createClientImage(
 
 	// lazy: one Vite chunk per engine, so the other engine's JS + wasm are never fetched
 	if (engine === "satori") {
+		const satoriOptions = imageOptions as ImageOptions;
+		// satori has no built-in font; use the bundled ones unless the caller passed some.
+		// Lives here (not in the engine) so it's unit-testable in node, where the engine can't run.
+		if (!satoriOptions.fonts?.length) {
+			const { defaultClientFonts } = await import("./fonts.js");
+			satoriOptions.fonts = await defaultClientFonts();
+		}
 		const { render } = await import("./engines/satori.js");
-		return render(html, imageOptions as ImageOptions);
+		return render(html, satoriOptions);
 	}
 
 	const { render } = await import("./engines/takumi.js");
