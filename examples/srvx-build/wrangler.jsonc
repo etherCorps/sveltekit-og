@@ -1,0 +1,26 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "test-servx",
+	"compatibility_date": "2026-04-28",
+	"main": "build/server/cloudflare.js",
+	"compatibility_flags": ["nodejs_compat"],
+	"build": {
+    "command": "pnpm run build"
+  },
+  "assets": {
+		"binding": "ASSETS",
+		"directory": "build/client"
+	},
+	"rules": [
+		{
+			"type": "CompiledWasm",
+			"globs": ["**/*.wasm", "**/*.wasm?module"],
+			"fallthrough": true
+		},
+		{
+			"type": "Data",
+			"globs": ["**/*.ttf"],
+			"fallthrough": true
+		}
+	],
+}
