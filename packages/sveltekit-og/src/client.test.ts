@@ -214,3 +214,37 @@ describe("client fonts: defaultClientFonts (real module)", () => {
 		}
 	});
 });
+
+describe("client ImageResponse: errors reach the caller in browsers", () => {
+	// Chromium's Response.arrayBuffer()/blob()/text() reject with a bare
+	// `TypeError: Failed to fetch` when the body stream errors, dropping our
+	// ImageResponseError (and its .code). Node keeps it, so simulate the browser.
+	beforeEach(() => {
+		const failedToFetch = () => Promise.reject(new TypeError("Failed to fetch"));
+		vi.spyOn(Response.prototype, "arrayBuffer").mockImplementation(failedToFetch);
+		vi.spyOn(Response.prototype, "blob").mockImplementation(failedToFetch);
+		vi.spyOn(Response.prototype, "text").mockImplementation(failedToFetch);
+	});
+
+	const worker = () => createImage(Card, { engine: "takumi", width: 600, height: 300 }, { title: "t", subtitle: "s", num1: 1, num2: 2 });
+
+	it("blob() rejects with the ImageResponseError, not 'Failed to fetch'", async () => {
+		await expect(worker().blob()).rejects.toMatchObject({ name: "ImageResponseError", code: ErrorCodes.COMPONENT_IN_WORKER });
+	});
+
+	it("arrayBuffer() and text() do the same", async () => {
+		await expect(worker().arrayBuffer()).rejects.toMatchObject({ code: ErrorCodes.COMPONENT_IN_WORKER });
+		await expect(worker().text()).rejects.toMatchObject({ code: ErrorCodes.COMPONENT_IN_WORKER });
+	});
+
+	it("successful renders still come through blob()/arrayBuffer()/text()", async () => {
+		const res = () => createImage(html, { engine: "takumi", width: 600, height: 300 });
+		const buf = await res().arrayBuffer();
+		expect(Array.from(new Uint8Array(buf).subarray(0, 4))).toEqual(PNG_MAGIC);
+		const blob = await res().blob();
+		expect(blob.type).toBe("image/png");
+		expect(blob.size).toBe(buf.byteLength);
+		const svg = await createImage(html, { engine: "takumi", width: 600, height: 300, format: "svg" }).text();
+		expect(svg.startsWith("<svg")).toBe(true);
+	});
+});
