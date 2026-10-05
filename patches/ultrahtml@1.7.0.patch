@@ -1,0 +1,26 @@
+diff --git a/dist/selector.js b/dist/selector.js
+index 969dcd8aec1a7abaa71847013eb69d9e1ec6775c..134e1723a556416d23734fe8f5747b91f3680f60 100644
+--- a/dist/selector.js
++++ b/dist/selector.js
+@@ -11,7 +11,7 @@ var r = (t2) => {
+   switch (t2) {
+     case "pseudo-element":
+     case "pseudo-class":
+-      return new RegExp(e[t2].source.replace("(?<argument>\xB6*)", "(?<argument>.*)"), "gu");
++      return new RegExp(e[t2].source.replace(/\(\?<argument>[^)]*\)/, "(?<argument>.*)"), "gu");
+     default:
+       return e[t2];
+   }
+diff --git a/dist/transformers/scope.js b/dist/transformers/scope.js
+index 0360df295a3dad12849bff07a2ee2a876cbe47d1..beeba5a94c11ac805e899b52d8b6ad4157b69dfb 100644
+--- a/dist/transformers/scope.js
++++ b/dist/transformers/scope.js
+@@ -8,7 +8,7 @@ var r = (t2) => {
+   switch (t2) {
+     case "pseudo-element":
+     case "pseudo-class":
+-      return new RegExp(e[t2].source.replace("(?<argument>\xB6*)", "(?<argument>.*)"), "gu");
++      return new RegExp(e[t2].source.replace(/\(\?<argument>[^)]*\)/, "(?<argument>.*)"), "gu");
+     default:
+       return e[t2];
+   }
