@@ -9,6 +9,27 @@ import Card from "./routes/client/Card.svelte";
 // hand in the browser (see the spec's manual checklist).
 const html = `<div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:white;font-size:48px;color:#203649">Hello</div>`;
 
+// The satori engine can't run in node (wasm via `?url`), so it's always mocked.
+// `vi.resetModules()` + `vi.doMock()` per test gives a fresh factory each time, which
+// is what lets a test observe whether render.js actually imported the module.
+function mockSatoriEngine() {
+	const state = {
+		evaluated: false,
+		render: vi.fn(async (_html: string, options: { format?: string }) =>
+			options.format === "svg" ? "<svg/>" : new Uint8Array([0x89, 0x50, 0x4e, 0x47])
+		),
+	};
+	vi.doMock("$lib/client/engines/satori.js", () => {
+		state.evaluated = true;
+		return { render: state.render };
+	});
+	return state;
+}
+
+beforeEach(() => {
+	vi.resetModules();
+});
+
 const PNG_MAGIC = [0x89, 0x50, 0x4e, 0x47];
 const png = (res: Response) =>
 	res.arrayBuffer().then((b) => Array.from(new Uint8Array(b).subarray(0, 4)));
@@ -80,5 +101,33 @@ describe("client render: components in a worker", () => {
 		const { createClientImage } = await import("$lib/client/render.js");
 		const out = (await createClientImage(html, { engine: "takumi", width: 600, height: 300 })) as Uint8Array;
 		expect(Array.from(out.subarray(0, 4))).toEqual([0x89, 0x50, 0x4e, 0x47]);
+	});
+});
+
+describe("client render: lazy engine dispatch", () => {
+	it("defaults to takumi and never loads the satori engine module", async () => {
+		const satori = mockSatoriEngine();
+		const { createClientImage } = await import("$lib/client/render.js");
+		const out = (await createClientImage(html, { width: 600, height: 300 })) as Uint8Array;
+		expect(Array.from(out.subarray(0, 4))).toEqual([0x89, 0x50, 0x4e, 0x47]);
+		expect(satori.evaluated).toBe(false);
+	});
+
+	it("loads the satori engine module only when engine is satori", async () => {
+		const satori = mockSatoriEngine();
+		const { createClientImage } = await import("$lib/client/render.js");
+		const out = await createClientImage(html, { engine: "satori", width: 600, height: 300, format: "png" });
+		expect(satori.evaluated).toBe(true);
+		expect(satori.render).toHaveBeenCalledTimes(1);
+		expect(out).toBeInstanceOf(Uint8Array);
+	});
+
+	it("does not load any engine when the worker guard fires", async () => {
+		const satori = mockSatoriEngine();
+		const { createClientImage } = await import("$lib/client/render.js");
+		await expect(
+			createClientImage(Card, { engine: "satori", width: 600, height: 300 }, { title: "t", subtitle: "s", num1: 1, num2: 2 })
+		).rejects.toMatchObject({ code: ErrorCodes.COMPONENT_IN_WORKER });
+		expect(satori.evaluated).toBe(false);
 	});
 });

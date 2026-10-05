@@ -1,6 +1,4 @@
 import type { Component } from "svelte";
-import { createSatoriImage } from "./satori.js";
-import { createTakumiImage } from "../takumi/render.js";
 import { ImageResponseError, ErrorCodes } from "../helpers/error-handler.js";
 import type { ImageOptions } from "../types.js";
 import type { TakumiImageOptions } from "../takumi/types.js";
@@ -37,9 +35,12 @@ export async function createClientImage(
 	// components are rendered to HTML here (browser mount), so engines only ever see a string
 	const html = await toHtml(element, props);
 
+	// lazy: one Vite chunk per engine, so the other engine's JS + wasm are never fetched
 	if (engine === "satori") {
-		return createSatoriImage(html, imageOptions as ImageOptions);
+		const { render } = await import("./engines/satori.js");
+		return render(html, imageOptions as ImageOptions);
 	}
 
-	return createTakumiImage(html, imageOptions as TakumiImageOptions);
+	const { render } = await import("./engines/takumi.js");
+	return render(html, imageOptions as TakumiImageOptions);
 }
