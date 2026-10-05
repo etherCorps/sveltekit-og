@@ -26,7 +26,9 @@ playground at `/client`). It rebases cleanly onto `dev`. Gaps:
 1. `render.ts` statically imports both engines, so every client bundle ships
    satori + yoga + resvg + takumi and all their wasm.
 2. Satori's default fonts come from `cdn-sveltekit-og.ethercorps.io`, which sends no
-   `Access-Control-Allow-Origin` — browsers block it. Takumi has no default fonts.
+   `Access-Control-Allow-Origin` — browsers block it. Takumi is unaffected: its wasm
+   embeds a sans-serif fallback (confirmed by `takumi.test.ts` and the font tables
+   in `takumi_wasm_bg.wasm`).
 3. `componentToHtml` uses `document`, so components crash inside workers.
 4. The satori client test is `it.skip` (node `fetch` can't read `file:` wasm).
 5. Unrelated changes ride along: playground adapter switched to `adapter-node`,
@@ -64,12 +66,13 @@ src/lib/client/
   types.ts           ClientImageResponseOptions (unchanged)
   image-response.ts  Response subclass (unchanged)
   create.ts          function form (unchanged)
-  render.ts          engine dispatch via dynamic import()
-  component.ts       NEW: componentToHtml + worker guard (moved out of render.ts)
-  fonts.ts           NEW: bundled Noto Sans fallback, loaded once via ?url
+  render.ts          engine dispatch via dynamic import(); satori font fallback
+  component.ts       NEW: componentToHtml (moved out of render.ts), lazy-loaded
+  fonts.ts           NEW: bundled Noto Sans fallback for satori, loaded once via ?url
   engines/
     satori.ts        existing satori.ts + providers.ts merged; exports render()
-    takumi.ts        NEW: wraps server takumi/render.ts, injects fallback fonts
+    takumi.ts        NEW: re-exports server takumi/render.ts; exists only as the
+                     lazy-load boundary (takumi has its own built-in font)
   assets/
     NotoSans-Regular.ttf   (~583 KB)
     NotoSans-Bold.ttf      (~583 KB)
@@ -78,17 +81,34 @@ src/lib/client/
 ### Engine dispatch (`render.ts`)
 
 ```ts
-const html = typeof element === "string" ? element : componentToHtml(element, props ?? {});
-const engine = options.engine === "satori"
+let html: string;
+if (typeof element === "string") {
+	html = element;
+} else {
+	if (typeof document === "undefined") throw new ImageResponseError(ErrorCodes.COMPONENT_IN_WORKER, ...);
+	const { componentToHtml } = await import("./component.js");
+	html = componentToHtml(element, props ?? {});
+}
+
+if (engine === "satori" && !imageOptions.fonts?.length) {
+	imageOptions.fonts = await (await import("./fonts.js")).defaultClientFonts();
+}
+
+const mod = engine === "satori"
 	? await import("./engines/satori.js")
 	: await import("./engines/takumi.js");
-return engine.render(html, imageOptions);
+return mod.render(html, imageOptions);
 ```
 
 Each engine module exports `render(html, options): Promise<Uint8Array | string>`.
-Dynamic import makes Vite emit one chunk per engine; the other engine's JS and wasm
-are never fetched. Response-only keys (`status`, `statusText`, `headers`) are still
-stripped before reaching the engine.
+Dynamic imports make Vite emit one chunk per engine (and one for the component
+mounter, one for the fonts); nothing is fetched unless that path runs. String-only
+users and workers never ship Svelte's `mount` runtime. Response-only keys (`status`,
+`statusText`, `headers`) are still stripped before reaching the engine.
+
+The satori font fallback lives here rather than in `engines/satori.ts` because the
+engine module can't run in node (wasm), and `render.ts` can — so the fallback is
+unit-testable with `fonts.js` mocked.
 
 ### Components and workers (`component.ts`)
 
@@ -101,13 +121,15 @@ stripped before reaching the engine.
 - `COMPONENT_IN_WORKER` is added to `ErrorCodes` in `helpers/error-handler.ts`.
   This is an additive constant in a shared helper, not a server render-path change.
 
-### Default fonts (`fonts.ts`)
+### Default fonts (`fonts.ts`) — satori only
 
 - Two TTFs ship in `client/assets/`, imported with `?url`.
 - `defaultClientFonts()` fetches both once (memoized; a rejected load clears the
-  cache so the next call retries) and returns them in each engine's font shape.
-- Used only when the caller passes no `fonts` (undefined or empty array). Satori
-  no longer touches `default_fonts()` / the CDN on the client path.
+  cache so the next call retries) and returns satori's `{ name, data, weight, style }`
+  shape.
+- Used only when `engine: "satori"` and the caller passes no `fonts` (undefined or
+  empty array). Satori no longer touches `default_fonts()` / the CDN on the client
+  path. Takumi needs nothing: it renders with the font embedded in its wasm.
 - Package size grows by ~1.16 MB; only client-entry users download the fonts at
   runtime, and only when they don't pass their own.
 
@@ -131,8 +153,9 @@ response-only options, `createImage`). Additions:
   `engines/satori.js`, and vice versa.
 - Worker guard: with `document` undefined, a component throws
   `COMPONENT_IN_WORKER`; an HTML string renders.
-- Font fallback: no `fonts` → `defaultClientFonts()` is used; explicit `fonts` →
-  it is not called.
+- Font fallback: `engine: "satori"` with no `fonts` → `defaultClientFonts()` is
+  called and its result reaches the (mocked) engine; explicit `fonts`, or
+  `engine: "takumi"` → it is not called.
 - The satori render case stays `it.skip` in node (its wasm loads via `?url` fetch),
   pointing to the manual checklist below.
 
@@ -166,6 +189,17 @@ Run `pnpm dev` in `packages/sveltekit-og`, Chromium devtools Network tab open:
 - After merge to `dev`: `pnpm release` → `4.4.0-next.0` → CI publishes `next`
   (avoids the already-published `4.3.1-next.x`). Stable `4.4.0` later via
   `dev` → `main`.
+
+## Known costs (accepted)
+
+- `svelte/server` lands in the client bundle: `takumi/render.ts` → `toJSX.ts` →
+  `to-html.ts` imports it statically. Never called on the client (components are
+  pre-rendered to strings), so it is dead weight, not breakage. Removing it means
+  touching shared server files — deferred with the rest of the v3 realignment.
+- The client satori path parses HTML with `satori-html` → `ultrahtml` in the
+  user's bundle. The repo's ultrahtml patch does not ship to consumers; Vite's
+  default esbuild minifier keeps the `¶` sentinel intact, so this only bites users
+  who minify with terser `ascii_only`. Documented, not worked around.
 
 ## Out of scope
 
