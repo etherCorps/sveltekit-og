@@ -15,7 +15,7 @@ Done means:
 - Both engines (takumi, satori) render PNG and SVG on the main thread and in a worker.
 - Users download only the engine they pick.
 - Rendering works with zero config: no font setup, no cross-origin requests.
-- Covered by vitest unit tests and Playwright browser tests.
+- Covered by vitest unit tests, plus a manual browser checklist for what node can't run.
 - Documented, and shipped on the `next` dist-tag from `dev` as `4.4.0-next.0`.
 
 ## Current state
@@ -133,20 +133,21 @@ response-only options, `createImage`). Additions:
   `COMPONENT_IN_WORKER`; an HTML string renders.
 - Font fallback: no `fonts` → `defaultClientFonts()` is used; explicit `fonts` →
   it is not called.
-- The satori render case stays `it.skip` in node, now with a pointer to the
-  Playwright test that covers it.
+- The satori render case stays `it.skip` in node (its wasm loads via `?url` fetch),
+  pointing to the manual checklist below.
 
-### Playwright (Chromium) — new `@playwright/test` devDependency
+No browser test runner and no new CI workflow — tests run locally with `pnpm test`.
 
-Runs against the package's dev app via `pnpm test:e2e`. Dedicated test pages,
-separate from the playground so playground changes can't break tests:
+### Manual browser checklist (before marking the PR ready)
 
-- `/client/test` (main thread): both engines × png/svg, HTML string and component.
-  Assert PNG magic bytes / SVG starts with `<svg`.
-- `/client/test-worker`: a module worker renders an HTML string with both engines;
-  a component posted to the worker fails with `COMPONENT_IN_WORKER`.
-- Network assertions: zero requests to `cdn-sveltekit-og.ethercorps.io`; on a
-  takumi-only page, `yoga.wasm` and `resvg` wasm are never requested.
+Run `pnpm dev` in `packages/sveltekit-og`, Chromium devtools Network tab open:
+
+- `/client` playground: both engines × png/svg render, for the HTML editor and the
+  component tab.
+- No requests to `cdn-sveltekit-og.ethercorps.io` (fonts are same-origin).
+- Takumi selected on a fresh load: no `yoga.wasm` or resvg wasm requested.
+- `/client/worker` (small dev-only route, not shipped): a module worker renders an
+  HTML string with both engines; posting a component shows `COMPONENT_IN_WORKER`.
 
 ## Cleanup
 
@@ -169,7 +170,7 @@ separate from the playground so playground changes can't break tests:
 ## Out of scope
 
 - Takumi option pass-through (SvelteKit v3 major).
-- Firefox/WebKit browser tests; a CI workflow for tests.
+- Automated browser tests (Playwright / vitest browser mode); a CI workflow for tests.
 - Non-Vite bundlers.
 - Font subsetting / WOFF2 to shrink the bundled fonts.
 - Capturing scoped component styles on the client.
