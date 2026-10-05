@@ -7,17 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [4.3.1-next.3] - 2025-12-05
-
-### Changed
-
-- Internal changes and improvements.
-
-## [4.2.0]
+## [4.3.0] - 2026-07-10
 
 ### Added
 
-- Added utilities for fonts.
+- Takumi rendering engine via the new `@ethercorps/sveltekit-og/takumi` export, on takumi-js v2 (2.0.1 stable).
+- `ImageResponseError` for render failures.
+- Runtime-agnostic debug logger.
+- Caching for custom font data.
+- Node.js engine requirement in `package.json`.
+
+### Fixed
+
+- PNG generation on Cloudflare Workers: resvg wasm is now vendored and loaded as bytes on Node, with separate Node/edge paths.
+- Yoga layout error on the Cloudflare runtime.
+- Logger no longer depends on `node:async_hooks` (`enterWith` is unsupported on Cloudflare).
+- Props not passed to the component when rendering.
+- Generic `Component` type in the image creation functions.
+- Takumi input uses the same VNode format as the Satori path.
+- `repository` owner casing, so npm provenance verifies.
+
+## [4.2.1] - 2025-11-28
+
+### Changed
+
+- Package metadata: MIT license, homepage, repository, funding, author and description.
+
+## [4.2.0] - 2025-11-23
+
+### Added
+
+- Font utilities via `@ethercorps/sveltekit-og/fonts`.
 
 ## [4.0.0]
 
