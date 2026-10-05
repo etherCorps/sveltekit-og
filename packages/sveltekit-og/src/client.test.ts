@@ -248,3 +248,14 @@ describe("client ImageResponse: errors reach the caller in browsers", () => {
 		expect(svg.startsWith("<svg")).toBe(true);
 	});
 });
+
+describe("client entry: font helper exports", () => {
+	it("exports CustomFont + resolveFonts, not the browser-incompatible GoogleFont loaders", async () => {
+		const mod = (await import("$lib/client/index.js")) as Record<string, unknown>;
+		expect(typeof mod.CustomFont).toBe("function");
+		expect(typeof mod.resolveFonts).toBe("function");
+		// Google Fonts serves woff2 to browser user agents and loadGoogleFont only accepts ttf/otf
+		expect(mod.GoogleFont).toBeUndefined();
+		expect(mod.loadGoogleFont).toBeUndefined();
+	});
+});

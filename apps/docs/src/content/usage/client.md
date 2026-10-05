@@ -24,7 +24,7 @@ Client-side rendering is available from `sveltekit-og@4.4.0`. Try it early from 
 ## Requirements
 
 - **Vite** (every SvelteKit app). The entry loads its WebAssembly and fonts through Vite `?url` asset imports; other bundlers are not supported.
-- For Takumi, `takumi-js` must be installed (it is an optional peer dependency).
+- `takumi-js` must be installed to use the client entry with **either** engine: the bundler resolves the Takumi chunk at build time even if you only ever pick Satori.
 - Pages that render client-side must run in the browser: set `export const ssr = false;` in the route's `+page.ts`, or only call the API inside `onMount`/event handlers.
 
 ## Usage
@@ -69,6 +69,17 @@ Components are mounted in a detached shadow root and their HTML is captured, so 
 
 Rendering works inside a module worker: `new Worker(new URL("./worker.ts", import.meta.url), { type: "module" })`.
 
+The client entry code-splits (one chunk per engine), and Vite's default worker format (`iife`) can't code-split, so set the ES format in `vite.config`:
+
+```js title="vite.config.js"
+export default defineConfig({
+	plugins: [sveltekit()],
+	worker: { format: "es" },
+});
+```
+
+Without it, `vite dev` works but `vite build` fails with `Invalid value "iife" for option "output.format"`.
+
 Workers have no DOM, so **only HTML strings can be rendered there**. Passing a Svelte component rejects with an error whose `code` is `COMPONENT_IN_WORKER`:
 
 ```ts
@@ -83,23 +94,28 @@ try {
 
 ## Errors
 
-Render failures reject from `.blob()` / `.arrayBuffer()` / `.text()` with an `ImageResponseError` carrying a `code` (`COMPONENT_IN_WORKER`, `FONT_LOAD_FAILED`, `SATORI_RENDER_FAILED`, `TAKUMI_RENDER_FAILED`, …). Read the response through one of those three methods — reading `res.body` with your own reader also works, but any other `Response` helper would surface a browser-generic `TypeError: Failed to fetch` instead.
+Render failures reject from `.blob()` / `.arrayBuffer()` / `.text()` with an `ImageResponseError` carrying a `code` (`COMPONENT_IN_WORKER`, `FONT_LOAD_FAILED`, `SATORI_RENDER_FAILED`, `TAKUMI_RENDER_FAILED`, …). Read the response through one of those three methods. Reading `res.body` with your own reader gives you a wrapper error whose `originalError` holds the coded one; any other `Response` helper (`clone()`, `bytes()`) surfaces a browser-generic `TypeError: Failed to fetch` instead.
 
 ## Fonts
 
 - **Takumi** has a built-in sans-serif: text renders with no setup.
-- **Satori** needs font data. If you pass no `fonts`, the package uses a bundled **Noto Sans** (regular + bold) served from your own site — no cross-origin requests, works offline. Pass `fonts` to use your own; the helpers from the main entry are re-exported here:
+- **Satori** needs font data. If you pass no `fonts`, the package uses a bundled **Noto Sans** (regular + bold) served from your own site — no cross-origin requests, works offline.
+
+To use your own fonts, supply the bytes with `CustomFont` (put the file in `static/` or import it with `?url`). Satori wants resolved data, so pass it through `resolveFonts`; Takumi accepts `CustomFont` instances directly:
 
 ```ts
-import { createImage, GoogleFont, CustomFont } from "@ethercorps/sveltekit-og/client";
+import { createImage, CustomFont, resolveFonts } from "@ethercorps/sveltekit-og/client";
 
-createImage(html, {
-	engine: "satori",
-	width: 1200,
-	height: 630,
-	fonts: [new GoogleFont("Inter", { weight: 700 })],
-});
+const inter = new CustomFont("Inter", () => fetch("/fonts/Inter-Bold.ttf").then((r) => r.arrayBuffer()), { weight: 700 });
+
+// Satori
+createImage(html, { engine: "satori", width: 1200, height: 630, fonts: await resolveFonts([inter]) });
+
+// Takumi
+createImage(html, { engine: "takumi", width: 1200, height: 630, fonts: [inter] });
 ```
+
+`GoogleFont` is **not** available on the client entry: browsers can't change their User-Agent, so Google Fonts serves `woff2`, which neither engine's loader accepts. Download the TTF and use `CustomFont`.
 
 ## Limitations
 
