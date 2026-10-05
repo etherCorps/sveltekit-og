@@ -22,6 +22,11 @@
 			"types": "./dist/ClientDemo.svelte.d.ts",
 			"svelte": "./dist/ClientDemo.svelte",
 			"default": "./dist/ClientDemo.svelte"
+		},
+		"./client-image": {
+			"types": "./dist/ClientImage.svelte.d.ts",
+			"svelte": "./dist/ClientImage.svelte",
+			"default": "./dist/ClientImage.svelte"
 		}
 	},
 	"dependencies": {

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { version } from '@ethercorps/sveltekit-og/package.json';
+	import ClientImage from '@examples/shared/client-image';
 
-	type Route = { kind: string; label: string; href: string; page?: boolean };
+	type Route = { kind: string; label: string; href: string; client?: 'takumi' | 'satori' };
 	type Section = { title: string; tagline: string; accent: 'indigo' | 'emerald' | 'violet' | 'amber'; routes: Route[] };
 
 	const sections: Section[] = [
@@ -39,7 +40,7 @@
 			title: 'Client-side',
 			tagline: 'Rendered in the browser with the /client entry — no server request.',
 			accent: 'amber',
-			routes: [{ kind: 'Browser', label: 'Takumi (default engine)', href: '/client', page: true }]
+			routes: [{ kind: 'Browser', label: 'Takumi (default engine)', href: '/client', client: 'takumi' }]
 		}
 	];
 </script>
@@ -71,9 +72,9 @@
 			<div class="grid">
 				{#each section.routes as route (route.href)}
 					<a class="card" href={route.href}>
-						<div class="thumb" class:page={route.page}>
-							{#if route.page}
-								<span>open page →</span>
+						<div class="thumb">
+							{#if route.client}
+								<ClientImage engine={route.client} alt={`${section.title} — ${route.label}`} />
 							{:else}
 								<img src={route.href} alt={`${section.title} — ${route.label}`} loading="lazy" />
 							{/if}
@@ -209,12 +210,6 @@
 	}
 	[data-accent='amber'] {
 		--accent: #f59e0b;
-	}
-	.thumb.page {
-		display: grid;
-		place-items: center;
-		color: var(--muted);
-		font-size: 0.9rem;
 	}
 	[data-accent='violet'] {
 		--accent: #a855f7;

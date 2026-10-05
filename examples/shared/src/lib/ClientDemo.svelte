@@ -1,144 +1,127 @@
-<!-- Shared `/client` page for every example: renders one OG image in the browser
+<!-- Shared `/client` page for every example: one OG image rendered in the browser
      with `@ethercorps/sveltekit-og/client`, no server request. Default engine is
      Takumi; the satori-only example passes `engine="satori"`. -->
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { createImage } from '@ethercorps/sveltekit-og/client';
-	import { satoriTemplate, takumiTemplate } from './templates.js';
+	import ClientImage from './ClientImage.svelte';
 
 	let { engine = 'takumi' }: { engine?: 'takumi' | 'satori' } = $props();
 
+	let image: ClientImage;
 	let url = $state<string | null>(null);
-	let error = $state<string | null>(null);
 	let bytes = $state(0);
 	let ms = $state(0);
-
-	async function render() {
-		error = null;
-		const provider = engine === 'satori' ? 'Satori · resvg' : 'Takumi';
-		const template = engine === 'satori' ? satoriTemplate : takumiTemplate;
-		const html = template({ provider, format: 'PNG', mode: 'Runtime', timestamp: new Date().toISOString() });
-		const t0 = performance.now();
-		try {
-			const blob = await createImage(html, { engine, width: 1200, height: 630, format: 'png' }).blob();
-			if (url) URL.revokeObjectURL(url);
-			url = URL.createObjectURL(blob);
-			bytes = blob.size;
-			ms = Math.round(performance.now() - t0);
-		} catch (e) {
-			const err = e as { code?: string; message?: string };
-			error = `${err.code ?? 'ERROR'}: ${err.message ?? String(e)}`;
-		}
-	}
-
-	onMount(() => {
-		render();
-		return () => {
-			if (url) URL.revokeObjectURL(url);
-		};
-	});
 </script>
 
 <div class="page">
-	<header>
-		<a class="back" href="/">← examples</a>
+	<header class="hero">
+		<div class="eyebrow">SvelteKit OG · examples · client-side</div>
 		<h1>Client-side rendering</h1>
-		<p>
+		<p class="lede">
 			Rendered in your browser with <code>@ethercorps/sveltekit-og/client</code> — engine
 			<strong>{engine}</strong>, no server request. Only this engine's WebAssembly was downloaded.
 		</p>
+		<div class="meta">
+			<a class="chip link" href="/">← All examples</a>
+			{#if url}
+				<span class="chip">{(bytes / 1024).toFixed(1)} KB · {ms} ms</span>
+				<button class="chip link" onclick={() => image.render()}>Re-render</button>
+				<a class="chip link" href={url} download="og.png">Download</a>
+			{/if}
+		</div>
 	</header>
 
 	<div class="stage">
-		{#if error}
-			<pre class="error">{error}</pre>
-		{:else if url}
-			<img src={url} alt="Open Graph card rendered client-side" width="1200" height="630" />
-		{:else}
-			<span class="placeholder">Rendering…</span>
-		{/if}
+		<ClientImage
+			bind:this={image}
+			{engine}
+			onrender={(info) => {
+				url = info.url;
+				bytes = info.bytes;
+				ms = info.ms;
+			}}
+		/>
 	</div>
-
-	{#if url && !error}
-		<div class="meta">
-			<span>{(bytes / 1024).toFixed(1)} KB · {ms} ms</span>
-			<button onclick={render}>Re-render</button>
-			<a href={url} download="og.png">Download</a>
-		</div>
-	{/if}
 </div>
 
 <style>
 	:global(body) {
 		margin: 0;
+		background: #0a0a0f;
 	}
 	.page {
+		--border: #262633;
+		--text: #ececf1;
+		--muted: #8b8b9a;
 		min-height: 100vh;
-		background: #0a0a0f;
-		color: #ececf1;
-		font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-		padding: 3rem 1.5rem 5rem;
+		background:
+			radial-gradient(1200px 600px at 50% -10%, #1a1a2e 0%, transparent 60%),
+			#0a0a0f;
+		color: var(--text);
+		font-family:
+			ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+		padding: 0 1.5rem 5rem;
+	}
+	.hero {
 		max-width: 1120px;
 		margin: 0 auto;
+		padding: 5rem 0 2.5rem;
+		text-align: center;
 	}
-	.back {
-		color: #8b8b9a;
-		text-decoration: none;
-		font-size: 0.9rem;
+	.eyebrow {
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--muted);
 	}
 	h1 {
-		margin: 0.75rem 0 0.5rem;
-		font-size: 2rem;
+		margin: 0.75rem 0 0;
+		font-size: clamp(2rem, 5vw, 3.25rem);
 		font-weight: 800;
 		letter-spacing: -0.02em;
+		background: linear-gradient(180deg, #fff, #b9b9cf);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
 	}
-	p {
-		color: #8b8b9a;
-		margin: 0 0 1.5rem;
+	.lede {
+		max-width: 44rem;
+		margin: 1rem auto 0;
+		font-size: 1.05rem;
+		line-height: 1.6;
+		color: var(--muted);
 	}
 	code {
 		color: #c7c7ff;
 	}
-	.stage {
-		aspect-ratio: 1200 / 630;
-		display: grid;
-		place-items: center;
-		border: 1px solid #262633;
-		border-radius: 12px;
-		background: #14141c;
-		overflow: hidden;
-	}
-	.stage img {
-		width: 100%;
-		height: auto;
-		display: block;
-	}
-	.placeholder {
-		color: #8b8b9a;
-	}
-	.error {
-		color: #fca5a5;
-		white-space: pre-wrap;
-		padding: 1rem;
-		margin: 0;
-	}
 	.meta {
 		display: flex;
-		gap: 1rem;
-		align-items: center;
-		margin-top: 1rem;
-		color: #8b8b9a;
-		font-size: 0.9rem;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-top: 1.25rem;
 	}
-	.meta a,
-	.meta button {
-		color: #c7c7ff;
-		background: none;
-		border: 1px solid #262633;
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.35rem 0.8rem;
+		border: 1px solid var(--border);
 		border-radius: 999px;
-		padding: 0.3rem 0.8rem;
+		background: #14141c;
+		color: var(--muted);
 		font: inherit;
-		cursor: pointer;
+		font-size: 0.85rem;
 		text-decoration: none;
+	}
+	.chip.link {
+		color: #c7c7ff;
+		cursor: pointer;
+	}
+	.stage {
+		max-width: 1120px;
+		margin: 0 auto;
+		border: 1px solid var(--border);
+		border-radius: 14px;
+		background: #14141c;
+		overflow: hidden;
 	}
 </style>
