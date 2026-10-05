@@ -17,6 +17,11 @@
 			"types": "./dist/takumi.d.ts",
 			"svelte": "./dist/takumi.js",
 			"default": "./dist/takumi.js"
+		},
+		"./client": {
+			"types": "./dist/ClientDemo.svelte.d.ts",
+			"svelte": "./dist/ClientDemo.svelte",
+			"default": "./dist/ClientDemo.svelte"
 		}
 	},
 	"dependencies": {

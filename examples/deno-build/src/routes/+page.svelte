@@ -3,11 +3,11 @@
 <script lang="ts">
 	import { version } from '@ethercorps/sveltekit-og/package.json';
 
-	type Route = { kind: string; label: string; href: string };
+	type Route = { kind: string; label: string; href: string; page?: boolean };
 	type Section = {
 		title: string;
 		tagline: string;
-		accent: 'indigo' | 'emerald' | 'violet';
+		accent: 'indigo' | 'emerald' | 'violet' | 'amber';
 		routes: Route[];
 	};
 
@@ -41,6 +41,12 @@
 				{ kind: 'Component', label: 'Svelte component', href: '/takumi/cog' },
 				{ kind: 'Pre-rendered', label: 'Built at compile time', href: '/takumi/prerendered' }
 			]
+		},
+		{
+			title: 'Client-side',
+			tagline: 'Rendered in the browser with the /client entry — no server request.',
+			accent: 'amber',
+			routes: [{ kind: 'Browser', label: 'Takumi (default engine)', href: '/client', page: true }]
 		}
 	];
 </script>
@@ -79,8 +85,12 @@
 			<div class="grid">
 				{#each section.routes as route (route.href)}
 					<a class="card" href={route.href}>
-						<div class="thumb">
-							<img src={route.href} alt={`${section.title} — ${route.label}`} loading="lazy" />
+						<div class="thumb" class:page={route.page}>
+							{#if route.page}
+								<span>open page →</span>
+							{:else}
+								<img src={route.href} alt={`${section.title} — ${route.label}`} loading="lazy" />
+							{/if}
 						</div>
 						<div class="body">
 							<span class="kind">{route.kind}</span>
@@ -213,6 +223,15 @@
 	}
 	[data-accent='emerald'] {
 		--accent: #10b981;
+	}
+	[data-accent='amber'] {
+		--accent: #f59e0b;
+	}
+	.thumb.page {
+		display: grid;
+		place-items: center;
+		color: var(--muted);
+		font-size: 0.9rem;
 	}
 	[data-accent='violet'] {
 		--accent: #a855f7;
