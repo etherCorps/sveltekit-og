@@ -14,7 +14,8 @@ Done means:
 
 - Both engines (takumi, satori) render PNG and SVG on the main thread and in a worker.
 - Users download only the engine they pick.
-- Rendering works with zero config: no font setup, no cross-origin requests.
+- Rendering works with zero config: no font setup, no cross-origin font requests
+  (emoji still come from jsdelivr, which allows CORS — unchanged from the server).
 - Covered by vitest unit tests, plus a manual browser checklist for what node can't run.
 - Documented, and shipped on the `next` dist-tag from `dev` as `4.4.0-next.0`.
 
@@ -30,7 +31,8 @@ playground at `/client`). It rebases cleanly onto `dev`. Gaps:
    embeds a sans-serif fallback (confirmed by `takumi.test.ts` and the font tables
    in `takumi_wasm_bg.wasm`).
 3. `componentToHtml` uses `document`, so components crash inside workers.
-4. The satori client test is `it.skip` (node `fetch` can't read `file:` wasm).
+4. Satori client rendering can't run under vitest in node (its wasm loads via
+   `?url` fetch). Stays manual — see Testing.
 5. Unrelated changes ride along: playground adapter switched to `adapter-node`,
    a comment fix in the shared `fonts.ts`, a devDependency reorder.
 6. No docs.
@@ -41,8 +43,9 @@ playground at `/client`). It rebases cleanly onto `dev`. Gaps:
   client may import shared, engine-agnostic helpers and the server takumi render
   function, but must not modify them.
 - Takumi option pass-through is deferred to the SvelteKit v3 major.
-- Wasm and fonts load via Vite `?url` + `fetch(new URL(url, import.meta.url))`:
-  same-origin, no CORS, worker-safe. Vite-only by design.
+- Satori/yoga/resvg wasm and the bundled fonts load via Vite `?url` +
+  `fetch(new URL(url, import.meta.url))`: same-origin, no CORS, worker-safe.
+  Takumi wasm loads through takumi-js's own `auto` loader. Vite-only by design.
 
 ## Public API (unchanged)
 
@@ -85,7 +88,12 @@ let html: string;
 if (typeof element === "string") {
 	html = element;
 } else {
-	if (typeof document === "undefined") throw new ImageResponseError(ErrorCodes.COMPONENT_IN_WORKER, ...);
+	if (typeof document === "undefined") {
+		throw new ImageResponseError(
+			"Svelte components can't be rendered in a worker; pass an HTML string instead.",
+			ErrorCodes.COMPONENT_IN_WORKER
+		);
+	}
 	const { componentToHtml } = await import("./component.js");
 	html = componentToHtml(element, props ?? {});
 }
@@ -120,6 +128,8 @@ unit-testable with `fonts.js` mocked.
   user to pass an HTML string. HTML strings work normally.
 - `COMPONENT_IN_WORKER` is added to `ErrorCodes` in `helpers/error-handler.ts`.
   This is an additive constant in a shared helper, not a server render-path change.
+- `ImageResponseError` is not exported from the client entry (parity with the
+  server entry); users check `error.code === "COMPONENT_IN_WORKER"`.
 
 ### Default fonts (`fonts.ts`) — satori only
 
@@ -148,7 +158,7 @@ Existing cases stay (takumi default, satori format pinning, svg content-type,
 response-only options, `createImage`). Additions:
 
 - `vi.mock("$lib/client/fonts.js")` returns in-memory font bytes, because the real
-  `?url` fetch can't run in node. The takumi render cases keep working through it.
+  `?url` fetch can't run in node. Only the satori fallback path touches it.
 - Lazy dispatch: with engines mocked, `engine: "takumi"` never imports
   `engines/satori.js`, and vice versa.
 - Worker guard: with `document` undefined, a component throws
@@ -169,6 +179,7 @@ Run `pnpm dev` in `packages/sveltekit-og`, Chromium devtools Network tab open:
   component tab.
 - No requests to `cdn-sveltekit-og.ethercorps.io` (fonts are same-origin).
 - Takumi selected on a fresh load: no `yoga.wasm` or resvg wasm requested.
+- Satori selected on a fresh load: no `takumi_wasm_bg.wasm` requested.
 - `/client/worker` (small dev-only route, not shipped): a module worker renders an
   HTML string with both engines; posting a component shows `COMPONENT_IN_WORKER`.
 
