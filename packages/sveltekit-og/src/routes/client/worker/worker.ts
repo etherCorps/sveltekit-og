@@ -1,9 +1,11 @@
+import type { Component } from "svelte";
 import { createImage } from "$lib/client/index.js";
-import Card from "../Card.svelte";
 
-// Dev-only worker for the manual checklist. Components can't cross postMessage, so
-// the worker imports Card itself and passes it when asked — that path must fail with
-// COMPONENT_IN_WORKER.
+// Dev-only worker for the manual checklist. Components can't cross postMessage and
+// Vite's worker sub-build has no Svelte plugin, so stand in with a non-string element:
+// the guard only checks `typeof element === "string"` and must reject it with
+// COMPONENT_IN_WORKER before anything is mounted or downloaded.
+const FakeCard = (() => {}) as unknown as Component<{ title: string }>;
 type Req = { id: number; engine: "takumi" | "satori"; kind: "html" | "component" };
 type Res = { id: number; ok: true; bytes: ArrayBuffer } | { id: number; ok: false; code: string; message: string };
 
@@ -22,7 +24,7 @@ ctx.onmessage = async (e: MessageEvent<Req>) => {
 		const res =
 			kind === "html"
 				? createImage(html, { engine, width: 800, height: 400, format: "png" })
-				: createImage(Card, { engine, width: 800, height: 400, format: "png" }, { title: "Card", subtitle: "in a worker", num1: 1, num2: 2 });
+				: createImage(FakeCard, { engine, width: 800, height: 400, format: "png" }, { title: "Card" });
 		const bytes = await res.arrayBuffer();
 		const out: Res = { id, ok: true, bytes };
 		ctx.postMessage(out, [bytes]);
