@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- `sveltekitOG()` Vite plugin now applies the wasm rollup plugin to the SSR build only. It used to run on the client build too, which broke the `/client` entry's Takumi wasm (`WebAssembly.instantiate(): Import #0 "./takumi_wasm_bg.js"`).
+- `sveltekitOG()` Vite plugin now applies the wasm loader to the SSR build only. It used to run on the client build too, which broke the `/client` entry's Takumi wasm (`WebAssembly.instantiate(): Import #0 "./takumi_wasm_bg.js"`). Gated per environment, so it works on SvelteKit 2 (Vite 5/6) and SvelteKit 3 (Vite 8, Environment API).
 
 ## [4.3.0] - 2026-07-10
 
