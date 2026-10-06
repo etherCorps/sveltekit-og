@@ -40,7 +40,10 @@
 			title: 'Client-side',
 			tagline: 'Rendered in the browser with the /client entry — no server request.',
 			accent: 'amber',
-			routes: [{ kind: 'Browser', label: 'Takumi (default engine)', href: '/client', client: 'takumi' }]
+			routes: [
+				{ kind: 'Browser', label: 'Takumi (default engine)', href: '/client', client: 'takumi' },
+				{ kind: 'Browser', label: 'Satori · resvg', href: '/client?engine=satori', client: 'satori' }
+			]
 		}
 	];
 </script>

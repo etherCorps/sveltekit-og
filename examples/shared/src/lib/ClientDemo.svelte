@@ -2,11 +2,15 @@
      with `@ethercorps/sveltekit-og/client`, no server request. Default engine is
      Takumi; the satori-only example passes `engine="satori"`. -->
 <script lang="ts">
+	import { page } from '$app/state';
 	import ClientImage from './ClientImage.svelte';
 
-	let { engine = 'takumi' }: { engine?: 'takumi' | 'satori' } = $props();
+	type Engine = 'takumi' | 'satori';
+	// explicit prop wins (satori-only example); otherwise `?engine=satori` picks the engine
+	let { engine: fixed }: { engine?: Engine } = $props();
+	const engine = $derived<Engine>(fixed ?? (page.url.searchParams.get('engine') === 'satori' ? 'satori' : 'takumi'));
 
-	let image: ClientImage;
+	let image = $state<ClientImage>();
 	let url = $state<string | null>(null);
 	let bytes = $state(0);
 	let ms = $state(0);
@@ -22,24 +26,30 @@
 		</p>
 		<div class="meta">
 			<a class="chip link" href="/">← All examples</a>
+			{#if !fixed}
+				<a class="chip link" class:active={engine === 'takumi'} href="/client">Takumi</a>
+				<a class="chip link" class:active={engine === 'satori'} href="/client?engine=satori">Satori</a>
+			{/if}
 			{#if url}
 				<span class="chip">{(bytes / 1024).toFixed(1)} KB · {ms} ms</span>
-				<button class="chip link" onclick={() => image.render()}>Re-render</button>
+				<button class="chip link" onclick={() => image?.render()}>Re-render</button>
 				<a class="chip link" href={url} download="og.png">Download</a>
 			{/if}
 		</div>
 	</header>
 
 	<div class="stage">
-		<ClientImage
-			bind:this={image}
-			{engine}
-			onrender={(info) => {
-				url = info.url;
-				bytes = info.bytes;
-				ms = info.ms;
-			}}
-		/>
+		{#key engine}
+			<ClientImage
+				bind:this={image}
+				{engine}
+				onrender={(info) => {
+					url = info.url;
+					bytes = info.bytes;
+					ms = info.ms;
+				}}
+			/>
+		{/key}
 	</div>
 </div>
 
@@ -115,6 +125,10 @@
 	.chip.link {
 		color: #c7c7ff;
 		cursor: pointer;
+	}
+	.chip.active {
+		border-color: #f59e0b;
+		color: #fcd34d;
 	}
 	.stage {
 		max-width: 1120px;
