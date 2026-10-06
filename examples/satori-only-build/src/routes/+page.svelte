@@ -3,7 +3,12 @@
 	import ClientImage from '@examples/shared/client-image';
 
 	type Route = { kind: string; label: string; href: string; client?: 'takumi' | 'satori' };
-	type Section = { title: string; tagline: string; accent: 'indigo' | 'emerald' | 'violet' | 'amber'; routes: Route[] };
+	type Section = {
+		title: string;
+		tagline: string;
+		accent: 'indigo' | 'emerald' | 'violet' | 'amber';
+		routes: Route[];
+	};
 
 	const sections: Section[] = [
 		{
@@ -40,13 +45,20 @@
 		<div class="eyebrow">SvelteKit OG · examples · adapter-cloudflare · Satori only</div>
 		<h1>@ethercorps/sveltekit-og</h1>
 		<p class="lede">
-			The Satori engine (no Takumi) — PNG via resvg and vector SVG, each as an HTML string, a
-			Svelte component, and a pre-rendered build-time image.
+			The Satori engine (no Takumi) — PNG via resvg and vector SVG, each as an HTML string, a Svelte
+			component, and a pre-rendered build-time image.
 		</p>
 		<div class="meta">
 			<span class="chip">v{version}</span>
-			<a class="chip link" href="https://sveltekit-og.dev" target="_blank" rel="noreferrer">Docs ↗</a>
-			<a class="chip link" href="https://github.com/ethercorps/sveltekit-og" target="_blank" rel="noreferrer">
+			<a class="chip link" href="https://sveltekit-og.dev" target="_blank" rel="noreferrer"
+				>Docs ↗</a
+			>
+			<a
+				class="chip link"
+				href="https://github.com/ethercorps/sveltekit-og"
+				target="_blank"
+				rel="noreferrer"
+			>
 				GitHub ↗
 			</a>
 		</div>
@@ -99,12 +111,15 @@
 		--text: #ececf1;
 		--muted: #8b8b9a;
 		min-height: 100vh;
-		background:
-			radial-gradient(1200px 600px at 50% -10%, #1a1a2e 0%, transparent 60%),
-			var(--bg);
+		background: radial-gradient(1200px 600px at 50% -10%, #1a1a2e 0%, transparent 60%), var(--bg);
 		color: var(--text);
 		font-family:
-			ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+			ui-sans-serif,
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			Roboto,
+			sans-serif;
 		padding: 0 1.5rem 5rem;
 	}
 
