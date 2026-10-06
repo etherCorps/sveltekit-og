@@ -14,7 +14,13 @@ export function rollupWasm(options?: UnwasmPluginOptions): Plugin {
 export function sveltekitOG(options?: UnwasmPluginOptions): VitePlugin {
 	return {
 		name: "vite-plugin-sveltekit-og",
-		config() {
+		// run after sveltekit(), whose config hook is what sets build.ssr
+		enforce: "post",
+		// SSR bundle only: the client build (e.g. the /client entry) loads its wasm
+		// through Vite's own asset handling, and unwasm would break that. Vite computes
+		// env.isSsrBuild before SvelteKit sets build.ssr, so check the merged config too.
+		config(config, { isSsrBuild }) {
+			if (!isSsrBuild && !config.build?.ssr) return;
 			return {
 				build: {
 					rollupOptions: {

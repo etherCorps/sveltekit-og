@@ -2,12 +2,13 @@
 
 <script lang="ts">
 	import { version } from '@ethercorps/sveltekit-og/package.json';
+	import ClientImage from '@examples/shared/client-image';
 
-	type Route = { kind: string; label: string; href: string };
+	type Route = { kind: string; label: string; href: string; client?: 'takumi' | 'satori' };
 	type Section = {
 		title: string;
 		tagline: string;
-		accent: 'indigo' | 'emerald' | 'violet';
+		accent: 'indigo' | 'emerald' | 'violet' | 'amber';
 		routes: Route[];
 	};
 
@@ -40,6 +41,15 @@
 				{ kind: 'Default', label: 'HTML string', href: '/takumi/default' },
 				{ kind: 'Component', label: 'Svelte component', href: '/takumi/cog' },
 				{ kind: 'Pre-rendered', label: 'Built at compile time', href: '/takumi/prerendered' }
+			]
+		},
+		{
+			title: 'Client-side',
+			tagline: 'Rendered in the browser with the /client entry — no server request.',
+			accent: 'amber',
+			routes: [
+				{ kind: 'Browser', label: 'Takumi (default engine)', href: '/client', client: 'takumi' },
+				{ kind: 'Browser', label: 'Satori · resvg', href: '/client?engine=satori', client: 'satori' }
 			]
 		}
 	];
@@ -80,7 +90,11 @@
 				{#each section.routes as route (route.href)}
 					<a class="card" href={route.href}>
 						<div class="thumb">
-							<img src={route.href} alt={`${section.title} — ${route.label}`} loading="lazy" />
+							{#if route.client}
+								<ClientImage engine={route.client} alt={`${section.title} — ${route.label}`} />
+							{:else}
+								<img src={route.href} alt={`${section.title} — ${route.label}`} loading="lazy" />
+							{/if}
 						</div>
 						<div class="body">
 							<span class="kind">{route.kind}</span>
@@ -213,6 +227,9 @@
 	}
 	[data-accent='emerald'] {
 		--accent: #10b981;
+	}
+	[data-accent='amber'] {
+		--accent: #f59e0b;
 	}
 	[data-accent='violet'] {
 		--accent: #a855f7;

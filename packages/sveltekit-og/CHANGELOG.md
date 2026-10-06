@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `@ethercorps/sveltekit-og/client`: render OG images in the browser or a web worker with Takumi (default) or Satori + ReSVG, no server request. Engines load lazily (only the one you pick is downloaded); Satori falls back to bundled Noto Sans served same-origin; components render on the main thread, HTML strings everywhere; passing a component in a worker rejects with `COMPONENT_IN_WORKER`. Errors reach `.blob()`/`.arrayBuffer()`/`.text()` as `ImageResponseError` with a `code`. Requires `takumi-js` with either engine; workers need `worker: { format: "es" }` in `vite.config`.
+
+### Fixed
+
+- `sveltekitOG()` Vite plugin now applies the wasm rollup plugin to the SSR build only. It used to run on the client build too, which broke the `/client` entry's Takumi wasm (`WebAssembly.instantiate(): Import #0 "./takumi_wasm_bg.js"`).
+
 ## [4.3.0] - 2026-07-10
 
 ### Added

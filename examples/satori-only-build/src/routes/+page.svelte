@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { version } from '@ethercorps/sveltekit-og/package.json';
+	import ClientImage from '@examples/shared/client-image';
 
-	type Route = { kind: string; label: string; href: string };
-	type Section = { title: string; tagline: string; accent: 'indigo' | 'emerald' | 'violet'; routes: Route[] };
+	type Route = { kind: string; label: string; href: string; client?: 'takumi' | 'satori' };
+	type Section = { title: string; tagline: string; accent: 'indigo' | 'emerald' | 'violet' | 'amber'; routes: Route[] };
 
 	const sections: Section[] = [
 		{
@@ -24,6 +25,12 @@
 				{ kind: 'Component', label: 'Svelte component', href: '/svg/cog.svg' },
 				{ kind: 'Pre-rendered', label: 'Built at compile time', href: '/svg/prerendered.svg' }
 			]
+		},
+		{
+			title: 'Client-side',
+			tagline: 'Rendered in the browser with the /client entry — no server request.',
+			accent: 'amber',
+			routes: [{ kind: 'Browser', label: 'Satori · resvg', href: '/client', client: 'satori' }]
 		}
 	];
 </script>
@@ -56,7 +63,11 @@
 				{#each section.routes as route (route.href)}
 					<a class="card" href={route.href}>
 						<div class="thumb">
-							<img src={route.href} alt={`${section.title} — ${route.label}`} loading="lazy" />
+							{#if route.client}
+								<ClientImage engine={route.client} alt={`${section.title} — ${route.label}`} />
+							{:else}
+								<img src={route.href} alt={`${section.title} — ${route.label}`} loading="lazy" />
+							{/if}
 						</div>
 						<div class="body">
 							<span class="kind">{route.kind}</span>
@@ -186,6 +197,9 @@
 	}
 	[data-accent='emerald'] {
 		--accent: #10b981;
+	}
+	[data-accent='amber'] {
+		--accent: #f59e0b;
 	}
 	[data-accent='violet'] {
 		--accent: #a855f7;

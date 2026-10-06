@@ -66,6 +66,11 @@
 			"svelte": "./dist/takumi/index.js",
 			"import": "./dist/takumi/index.js"
 		},
+		"./client": {
+			"types": "./dist/client/index.d.ts",
+			"svelte": "./dist/client/index.js",
+			"import": "./dist/client/index.js"
+		},
 		"./plugin": {
 			"types": "./dist/plugin.d.ts",
 			"import": "./dist/plugin.js"
