@@ -1,0 +1,10 @@
+{
+	"extends": "$app/tsconfig",
+	"compilerOptions": {
+		"sourceMap": true,
+		"strict": true,
+		"moduleResolution": "NodeNext",
+		"module": "NodeNext"
+	},
+	"include": ["src", "vite.config.js", "playwright.config.js", "tests"]
+}
