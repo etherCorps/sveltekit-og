@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Tabs, TabItem } from '@svecodocs/kit';
-	const managers = ['pnpm', 'npm', 'yarn', 'deno'];
+	const managers = ['pnpm', 'npm', 'yarn', 'bun', 'deno'];
 	import type { Component } from 'svelte';
 
 	type Props = {

@@ -26,6 +26,14 @@ yarn add -D @sveltejs/adapter-netlify
 
 {/if}
 
+{#if packageManager === 'bun'}
+
+```shell
+bun add -D @sveltejs/adapter-netlify
+```
+
+{/if}
+
 {#if packageManager === 'deno'}
 
 ```shell

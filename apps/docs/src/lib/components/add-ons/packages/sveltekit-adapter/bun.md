@@ -5,7 +5,7 @@
 {#if packageManager === 'pnpm'}
 
 ```shell
-pnpm i -D svelte-adapter-deno
+pnpm i -D @sveltejs/adapter-bun
 ```
 
 {/if}
@@ -13,7 +13,7 @@ pnpm i -D svelte-adapter-deno
 {#if packageManager === 'npm'}
 
 ```shell
-npm i -D svelte-adapter-deno
+npm i -D @sveltejs/adapter-bun
 ```
 
 {/if}
@@ -21,7 +21,7 @@ npm i -D svelte-adapter-deno
 {#if packageManager === 'yarn'}
 
 ```shell
-yarn add -D svelte-adapter-deno
+yarn add -D @sveltejs/adapter-bun
 ```
 
 {/if}
@@ -29,7 +29,7 @@ yarn add -D svelte-adapter-deno
 {#if packageManager === 'bun'}
 
 ```shell
-bun add -D svelte-adapter-deno
+bun add -D @sveltejs/adapter-bun
 ```
 
 {/if}
@@ -37,7 +37,7 @@ bun add -D svelte-adapter-deno
 {#if packageManager === 'deno'}
 
 ```shell
-deno add --dev npm:svelte-adapter-deno
+deno add --dev npm:@sveltejs/adapter-bun
 ```
 
 {/if}
