@@ -21,7 +21,16 @@
 	import Thumb from './Thumb.svelte';
 	import HtmlEditor from './HtmlEditor.svelte';
 	import cardSource from './Card.svelte?raw';
-	import { DEFAULT_EXAMPLE, VARIANTS, examples, type Engine, type Example, type Variant } from './examples.js';
+	import {
+		DEFAULT_EXAMPLE,
+		STYLES,
+		examples,
+		styleHint,
+		templateFor,
+		type Engine,
+		type Example,
+		type Style
+	} from './examples.js';
 	import { formatHtml } from './format.js';
 
 	// takumi encodes more raster formats than satori; only preview-able ones are listed
@@ -43,8 +52,8 @@
 	let quality = $state(90);
 
 	let exampleId = $state(DEFAULT_EXAMPLE.id);
-	let variant = $state<Variant>('satori');
-	let html = $state(DEFAULT_EXAMPLE.html?.satori ?? '');
+	let style = $state<Style>('css');
+	let html = $state(templateFor(DEFAULT_EXAMPLE, 'css', 'takumi'));
 	let title = $state('Open Graph, from a component');
 	let subtitle = $state('Rendered in your browser');
 	let tag = $state('sveltekit-og');
@@ -65,10 +74,10 @@
 	const isComponent = $derived(example.id === 'component');
 	const formats = $derived(FORMATS[engine]);
 	const showQuality = $derived(engine === 'takumi' && (format === 'jpeg' || format === 'webp'));
-	// the template's markup for the current variant; what Reset restores
-	const template = $derived(example.html?.[variant] ?? '');
+	// the template's markup for the current styling and engine; what Reset restores
+	const template = $derived(templateFor(example, style, engine));
 	const dirty = $derived(!isComponent && html !== template);
-	const variantHint = $derived(VARIANTS.find((v) => v.id === variant)?.hint ?? '');
+	const hint = $derived(styleHint(style, engine));
 	const tabs = $derived<[typeof view, string][]>([
 		['edit', isComponent ? 'Props' : 'Edit'],
 		['image', engine],
@@ -78,21 +87,22 @@
 
 	function selectExample(next: Example) {
 		exampleId = next.id;
-		if (next.html) html = next.html[variant];
+		if (next.html) html = templateFor(next, style, engine);
 		picker?.hidePopover();
 	}
 
-	// the takumi variant uses grid, which Satori rejects — follow it with the engine
-	function selectVariant(next: Variant) {
-		variant = next;
-		if (example.html) html = example.html[next];
-		if (next === 'takumi') setEngine('takumi');
+	function selectStyle(next: Style) {
+		style = next;
+		if (example.html) html = templateFor(example, next, engine);
 	}
 
+	// the vanilla template is per engine (grid on takumi, flex on satori), so an engine
+	// change reloads it — unless the markup was edited, which is kept as is
 	function setEngine(next: Engine) {
+		const untouched = !dirty;
 		engine = next;
-		// keep format valid when the engine (and its format list) changes
 		if (!FORMATS[next].includes(format)) format = 'png';
+		if (untouched && example.html) html = templateFor(example, style, next);
 	}
 
 	// ⌘/Ctrl+Enter in the editor renders without waiting for the debounce
@@ -229,7 +239,7 @@
 		'group flex min-w-0 flex-col overflow-hidden rounded-xl border text-left transition-colors duration-150 active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 </script>
 
-{#snippet segmented(name: string, value: string, options: readonly string[], set: (v: string) => void)}
+{#snippet segmented(name: string, value: string, options: readonly string[], set: (v: string) => void, label: (v: string) => string = (v) => v)}
 	<div
 		class="flex h-9 shrink-0 items-center gap-0.5 rounded-lg border border-border bg-background p-0.5 dark:bg-muted"
 		role="radiogroup"
@@ -243,7 +253,7 @@
 				class="{segment} {value === o ? 'bg-foreground text-background' : 'text-muted-foreground hover:text-foreground'}"
 				onclick={() => set(o)}
 			>
-				{o}
+				{label(o)}
 			</button>
 		{/each}
 	</div>
@@ -257,7 +267,7 @@
 				<span>Props · Card.svelte</span>
 				<span>markup below is read-only</span>
 			{:else}
-				<span>HTML · live · {variantHint}</span>
+				<span>HTML · live · {hint}</span>
 				<span class="flex items-center gap-3">
 					<span class="truncate"><kbd class="font-mono">⌘↩</kbd> renders now</span>
 					<button
@@ -379,10 +389,10 @@
 			<CaretDown class="size-3.5 text-muted-foreground" aria-hidden="true" />
 		</button>
 
-		{#if !isComponent}
-			{@render segmented('Variant', variant, VARIANTS.map((v) => v.id), (v) => selectVariant(v as Variant))}
-		{/if}
 		{@render segmented('Engine', engine, ENGINES, (v) => setEngine(v as Engine))}
+		{#if !isComponent}
+			{@render segmented('Styling', style, STYLES.map((s) => s.id), (v) => selectStyle(v as Style), (id) => STYLES.find((s) => s.id === id)?.label ?? id)}
+		{/if}
 		{@render segmented('Format', format, formats, (v) => (format = v))}
 
 		<div class="flex shrink-0 items-center gap-1.5">

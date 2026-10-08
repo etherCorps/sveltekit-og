@@ -3,19 +3,29 @@
 // styles alone. Keep every template to one accent on a plain surface; the point is the
 // API, not the art.
 //
-// Every HTML template comes in three variants:
-//   satori   — flex only, the subset both engines share
-//   takumi   — CSS grid, box-shadow, gradients: what Takumi adds on top (Satori rejects grid)
-//   tailwind — the same layout as a `tw` attribute, rendered by both engines
+// Every HTML template is written two ways — vanilla CSS and Tailwind (`tw` attribute) —
+// and the vanilla one is per engine: Satori gets flex only, Takumi gets CSS grid,
+// box-shadow and gradients on top, since that is what it adds.
 
 export type Engine = 'takumi' | 'satori';
-export type Variant = 'satori' | 'takumi' | 'tailwind';
+export type Style = 'css' | 'tailwind';
 
-export const VARIANTS: { id: Variant; label: string; hint: string }[] = [
-	{ id: 'satori', label: 'satori', hint: 'flex only · both engines' },
-	{ id: 'takumi', label: 'takumi', hint: 'grid, shadows, gradients · Takumi only' },
-	{ id: 'tailwind', label: 'tailwind', hint: 'tw attribute · both engines' }
+export const STYLES: { id: Style; label: string }[] = [
+	{ id: 'css', label: 'Vanilla CSS' },
+	{ id: 'tailwind', label: 'Tailwind' }
 ];
+
+/** one-line description of what the current template uses, for the editor head */
+export function styleHint(style: Style, engine: Engine): string {
+	if (style === 'tailwind') return 'tw attribute';
+	return engine === 'takumi' ? 'grid, shadows, gradients' : 'flex only';
+}
+
+/** the markup to load for a template given the styling and the engine */
+export function templateFor(example: Example, style: Style, engine: Engine): string {
+	if (!example.html) return '';
+	return style === 'tailwind' ? example.html.tailwind : example.html[engine];
+}
 
 export type Example = {
 	id: string;
@@ -23,7 +33,7 @@ export type Example = {
 	/** one line under the template picker explaining what this template shows */
 	hint: string;
 	/** empty for the component template, which renders Card.svelte instead */
-	html: Record<Variant, string> | null;
+	html: Record<Engine | 'tailwind', string> | null;
 };
 
 const FONT = 'font-family:ui-sans-serif,system-ui,sans-serif';
