@@ -125,8 +125,10 @@
 				bytes = blob.size;
 				ms = Math.round(performance.now() - t0);
 			} catch (e) {
-				const err = e as { code?: string; message?: string };
-				error = `${err.code ?? 'ERROR'}: ${err.message ?? String(e)}`;
+				const err = e as { code?: string; message?: string; originalError?: Error };
+				// ImageResponseError wraps the engine's own error; its message is the useful one
+				const cause = err.originalError?.message;
+				error = `${err.code ?? 'ERROR'}: ${err.message ?? String(e)}${cause && cause !== err.message ? `\n\n${cause}` : ''}`;
 			} finally {
 				loading = false;
 			}
