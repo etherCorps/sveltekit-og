@@ -372,8 +372,9 @@
 	</section>
 {/snippet}
 
-<!-- full-bleed inside DocsLayout's padded content area; one screen tall on lg -->
-<div class="-mx-4 -my-8 flex min-w-0 flex-1 flex-col lg:-mr-8 lg:ml-0 lg:h-[calc(100dvh-4rem)] lg:min-h-[36rem]">
+<!-- full-bleed inside DocsLayout's padded content area; on lg exactly one screen minus the
+     sticky header and the footer, so the page itself never scrolls -->
+<div class="-mx-4 -my-8 flex min-w-0 flex-1 flex-col lg:-mr-8 lg:ml-0 lg:h-[calc(100dvh-8rem)]">
 	<!-- toolbar -->
 	<div class="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-border bg-background-secondary px-4 py-2.5">
 		<!-- controls scroll sideways on narrow screens instead of stacking four rows deep -->
