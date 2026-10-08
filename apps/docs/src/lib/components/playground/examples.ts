@@ -81,18 +81,23 @@ export const examples: Example[] = [
 	{
 		id: 'post',
 		label: 'Blog post',
-		hint: 'Headline with author and date on a light surface.',
+		hint: 'Headline, author row and a series card — the same layout in every styling.',
 		html: {
-			satori: `<div style="display:flex;flex-direction:column;justify-content:space-between;width:100%;height:100%;padding:72px 80px;background:#fafaf9;color:#1c1917;${FONT}">
+			satori: `<div style="display:flex;flex-direction:column;gap:24px;width:100%;height:100%;padding:72px 80px;background:#fafaf9;color:#1c1917;${FONT}">
   <div style="display:flex;font-size:26px;font-weight:600;color:#be123c">Engineering notes</div>
-  <div style="display:flex;font-size:68px;font-weight:700;line-height:1.08;letter-spacing:-0.02em;max-width:980px">Why we render OG images on the client now</div>
-  <div style="display:flex;align-items:center;gap:18px;font-size:26px;color:#57534e">
-    <div style="width:52px;height:52px;border-radius:9999px;background:#1c1917;color:#fafaf9;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700">SM</div>
-    <div style="display:flex">Shivam Meena</div>
-    <div style="display:flex;color:#a8a29e">·</div>
-    <div style="display:flex">8 Oct 2026</div>
-    <div style="display:flex;color:#a8a29e">·</div>
-    <div style="display:flex">6 min read</div>
+  <div style="display:flex;flex:1;gap:56px">
+    <div style="display:flex;flex:1;flex-direction:column;justify-content:space-between">
+      <div style="display:flex;flex:1;align-items:center;font-size:64px;font-weight:700;line-height:1.08;letter-spacing:-0.02em">Why we render OG images on the client now</div>
+      <div style="display:flex;align-items:center;gap:18px;font-size:26px;color:#57534e">
+        <div style="display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:9999px;background:#1c1917;color:#fafaf9;font-size:22px;font-weight:700">SM</div>
+        <div style="display:flex">Shivam Meena · 8 Oct 2026 · 6 min read</div>
+      </div>
+    </div>
+    <div style="display:flex;width:300px;flex-direction:column;justify-content:flex-end;gap:10px;padding:28px;border-radius:22px;background:linear-gradient(160deg,#fff1f2,#fecdd3);box-shadow:0 16px 40px rgba(190,18,60,0.18);font-size:24px;color:#881337">
+      <div style="display:flex;font-size:20px;font-weight:600;letter-spacing:0.04em">SERIES</div>
+      <div style="display:flex;font-size:30px;font-weight:700;line-height:1.2">Open Graph, everywhere</div>
+      <div style="display:flex">Part 3 of 3</div>
+    </div>
   </div>
 </div>`,
 			takumi: `<div style="display:grid;grid-template-columns:1fr 300px;grid-template-rows:auto 1fr auto;gap:24px 56px;width:100%;height:100%;padding:72px 80px;background:#fafaf9;color:#1c1917;${FONT}">
@@ -108,16 +113,21 @@ export const examples: Example[] = [
     <div style="display:flex">Shivam Meena · 8 Oct 2026 · 6 min read</div>
   </div>
 </div>`,
-			tailwind: `<div tw="flex flex-col justify-between w-full h-full p-20 bg-stone-50 text-stone-900">
+			tailwind: `<div tw="flex flex-col w-full h-full p-20 bg-stone-50 text-stone-900">
   <div tw="flex text-2xl font-semibold text-rose-700">Engineering notes</div>
-  <div tw="flex text-6xl font-bold leading-tight tracking-tight max-w-[980px]">Why we render OG images on the client now</div>
-  <div tw="flex items-center text-2xl text-stone-600">
-    <div tw="flex items-center justify-center w-14 h-14 mr-4 rounded-full bg-stone-900 text-stone-50 text-xl font-bold">SM</div>
-    <div tw="flex">Shivam Meena</div>
-    <div tw="flex mx-4 text-stone-400">·</div>
-    <div tw="flex">8 Oct 2026</div>
-    <div tw="flex mx-4 text-stone-400">·</div>
-    <div tw="flex">6 min read</div>
+  <div tw="flex flex-1 mt-6">
+    <div tw="flex flex-1 flex-col justify-between mr-14">
+      <div tw="flex flex-1 items-center text-6xl font-bold leading-tight tracking-tight">Why we render OG images on the client now</div>
+      <div tw="flex items-center text-2xl text-stone-600">
+        <div tw="flex items-center justify-center w-14 h-14 mr-4 rounded-full bg-stone-900 text-stone-50 text-xl font-bold">SM</div>
+        <div tw="flex">Shivam Meena · 8 Oct 2026 · 6 min read</div>
+      </div>
+    </div>
+    <div tw="flex w-[300px] flex-col justify-end p-7 rounded-3xl bg-rose-100 shadow-xl text-2xl text-rose-900">
+      <div tw="flex text-xl font-semibold tracking-wider">SERIES</div>
+      <div tw="flex mt-2 text-3xl font-bold leading-tight">Open Graph, everywhere</div>
+      <div tw="flex mt-2">Part 3 of 3</div>
+    </div>
   </div>
 </div>`
 		}
