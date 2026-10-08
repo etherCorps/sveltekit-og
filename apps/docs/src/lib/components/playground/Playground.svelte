@@ -22,6 +22,7 @@
 	import HtmlEditor from './HtmlEditor.svelte';
 	import cardSource from './Card.svelte?raw';
 	import { DEFAULT_EXAMPLE, examples, type Engine, type Example } from './examples.js';
+	import { formatHtml } from './format.js';
 
 	// takumi encodes more raster formats than satori; only preview-able ones are listed
 	const FORMATS: Record<Engine, string[]> = {
@@ -153,8 +154,14 @@
 	// the HTML templates, as the browser lays them out: a sandboxed (no scripts) iframe
 	// sized to the OG canvas; the body is a flex box so the template's 100% × 100% root fills
 	// it, and border-box matches what satori and takumi assume
+	// `tw` is an engine attribute the browser ignores: map it to class and let the Tailwind
+	// browser build style it. Scripts are only enabled for that case; the origin stays opaque.
+	const usesTw = $derived(/\stw=/.test(html));
 	const srcdoc = $derived(
-		`<!doctype html><style>*{box-sizing:border-box}html,body{margin:0;width:${width}px;height:${height}px;display:flex;overflow:hidden}</style>${html}`
+		`<!doctype html><style>*{box-sizing:border-box}html,body{margin:0;width:${width}px;height:${height}px;display:flex;overflow:hidden}</style>` +
+			(usesTw
+				? `<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"><\/script>${html.replace(/\stw=/g, ' class=')}`
+				: html)
 	);
 
 	const optionLines = $derived([
@@ -240,7 +247,16 @@
 				<span>markup below is read-only</span>
 			{:else}
 				<span>HTML · live</span>
-				<span>inline styles only · <kbd class="font-mono">⌘↩</kbd> renders now</span>
+				<span class="flex items-center gap-3">
+					<span class="truncate">inline styles or tw · <kbd class="font-mono">⌘↩</kbd> renders now</span>
+					<button
+						type="button"
+						class="shrink-0 rounded px-1.5 py-0.5 font-medium text-foreground transition-colors duration-150 hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+						onclick={() => (html = formatHtml(html))}
+					>
+						Format
+					</button>
+				</span>
 			{/if}
 		</div>
 		{#if isComponent}
@@ -322,7 +338,12 @@
 					{#if isComponent}
 						<Card {title} {subtitle} {tag} />
 					{:else}
-						<iframe sandbox="" {srcdoc} title="HTML as rendered by your browser" class="h-full w-full border-0"></iframe>
+						<iframe
+						sandbox={usesTw ? 'allow-scripts' : ''}
+						{srcdoc}
+						title="HTML as rendered by your browser"
+						class="h-full w-full border-0"
+					></iframe>
 					{/if}
 				</div>
 			</figure>
