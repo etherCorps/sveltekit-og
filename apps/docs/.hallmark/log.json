@@ -1,6 +1,13 @@
 [
 	{
 		"date": "2026-10-08",
+		"macrostructure": "Narrative Workflow",
+		"theme": "project tokens (svecodocs rose)",
+		"enrichment": "none",
+		"brief": "sveltekit-og docs · /docs/playground redesigned as a four-stage flow with twinkleplop highlighting"
+	},
+	{
+		"date": "2026-10-08",
 		"macrostructure": "Component Playground",
 		"theme": "project tokens (svecodocs rose)",
 		"enrichment": "none",
