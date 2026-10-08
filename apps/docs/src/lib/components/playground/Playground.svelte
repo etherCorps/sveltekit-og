@@ -20,6 +20,8 @@
 	import Check from 'phosphor-svelte/lib/Check';
 	import Copy from 'phosphor-svelte/lib/Copy';
 	import DownloadSimple from 'phosphor-svelte/lib/DownloadSimple';
+	import Play from 'phosphor-svelte/lib/Play';
+	import TextIndent from 'phosphor-svelte/lib/TextIndent';
 	import SlidersHorizontal from 'phosphor-svelte/lib/SlidersHorizontal';
 	import Card from './Card.svelte';
 	import Thumb from './Thumb.svelte';
@@ -118,11 +120,14 @@
 	// ⌘/Ctrl+Enter in the editor renders without waiting for the debounce
 	let delay = 300;
 	let nonce = $state(0);
+	function renderNow() {
+		delay = 0;
+		nonce++;
+	}
 	function onkeydown(e: KeyboardEvent) {
 		if (e.key !== 'Enter' || !(e.metaKey || e.ctrlKey)) return;
 		e.preventDefault();
-		delay = 0;
-		nonce++;
+		renderNow();
 	}
 
 	// current object URL, kept across renders so we only revoke the old one once its
@@ -242,8 +247,11 @@
 		'flex h-9 shrink-0 items-center justify-between gap-3 border-b border-border px-4 text-xs text-muted-foreground [&>span]:min-w-0 [&>span]:truncate';
 	// fills its shell; a size container so the frame can size itself from the shell height
 	const canvas = 'flex min-h-0 flex-1 flex-col items-center justify-center bg-muted/40 p-4 sm:p-6 [container-type:size]';
+	// small bordered buttons for the pane heads; the kbd inside reads as a keycap
 	const headButton =
-		'inline-flex h-7 shrink-0 items-center gap-1 rounded px-1.5 font-medium text-foreground transition-colors duration-150 hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+		'inline-flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-border bg-background px-2 text-xs font-medium text-foreground transition-colors duration-150 hover:bg-foreground/5 active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-55 [&_svg]:size-3.5 [&_svg]:text-muted-foreground';
+	const keycap =
+		'rounded border border-border bg-muted px-1 font-mono text-[10px] leading-4 text-muted-foreground';
 	// hairline that grows a hit area on hover/drag; paneforge sets data-active while dragging
 	const resizer =
 		'group/r relative shrink-0 bg-border transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring data-[active]:bg-brand hover:bg-foreground/40';
@@ -330,16 +338,24 @@
 				<span>markup below is read-only</span>
 			{:else}
 				<span>HTML<span class="hidden sm:inline"> · live</span> · {hint}</span>
-				<span class="flex items-center gap-2">
-					<span class="hidden truncate lg:inline"><kbd class="font-mono">⌘↩</kbd> renders now</span>
+				<!-- a div, so the head's span-truncation leaves the buttons alone; labels drop below sm -->
+				<div class="flex shrink-0 items-center gap-1.5">
 					{#if dirty}
-						<button type="button" class="{headButton} lg:hidden" onclick={() => (html = template)}>
-							<ArrowCounterClockwise class="size-3.5" aria-hidden="true" />
-							Reset
+						<button type="button" class="{headButton} lg:hidden" onclick={() => (html = template)} aria-label="Reset to template">
+							<ArrowCounterClockwise aria-hidden="true" />
+							<span class="hidden sm:inline">Reset</span>
 						</button>
 					{/if}
-					<button type="button" class={headButton} onclick={() => (html = formatHtml(html))}>Format</button>
-				</span>
+					<button type="button" class={headButton} onclick={() => (html = formatHtml(html))} aria-label="Format">
+						<TextIndent aria-hidden="true" />
+						<span class="hidden sm:inline">Format</span>
+					</button>
+					<button type="button" class={headButton} onclick={renderNow} aria-label="Render now" title="Render now, skipping the debounce">
+						<Play weight="fill" aria-hidden="true" />
+						<span class="hidden sm:inline">Render</span>
+						<kbd class="{keycap} hidden lg:inline">⌘↩</kbd>
+					</button>
+				</div>
 			{/if}
 		</div>
 		{#if isComponent}
@@ -380,8 +396,8 @@
 			<span class="flex items-center gap-2 tabular-nums" aria-live="polite">
 				{#if url && !error}
 					{(bytes / 1024).toFixed(1)} KB · {ms} ms
-					<a class="{headButton} lg:hidden" href={url} download={downloadName} aria-label="Download">
-						<DownloadSimple class="size-4" aria-hidden="true" />
+					<a class="{headButton} px-1.5 lg:hidden" href={url} download={downloadName} aria-label="Download">
+						<DownloadSimple aria-hidden="true" />
 					</a>
 				{:else if loading}
 					Rendering…
@@ -573,10 +589,10 @@
 					<span>createImage</span>
 					<button type="button" class={headButton} onclick={copySnippet} aria-live="polite">
 						{#if copied}
-							<Check class="size-3.5" aria-hidden="true" />
+							<Check aria-hidden="true" />
 							Copied
 						{:else}
-							<Copy class="size-3.5" aria-hidden="true" />
+							<Copy aria-hidden="true" />
 							Copy
 						{/if}
 					</button>
