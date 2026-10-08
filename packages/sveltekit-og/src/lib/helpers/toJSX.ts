@@ -12,7 +12,10 @@ export function createVNode(
 		() => {
 			if (typeof element === "string") return html(element.replaceAll("\n", "").trim());
 			const { body, head } = renderComponentToHtml(element, componentOptions?.props);
-			return html(body + head);
+			// satori's CSS value parsers (e.g. linear-gradient) reject any line break or tab
+			// inside a value, and `css="injected"` emits the component's <style> verbatim into
+			// head — collapse its whitespace. The body gets the same treatment as HTML strings.
+			return html(body.replaceAll("\n", "") + head.replace(/\s+/g, " "));
 		},
 		ErrorCodes.VNODE_CREATION_FAILED,
 		"Failed to create VNode"

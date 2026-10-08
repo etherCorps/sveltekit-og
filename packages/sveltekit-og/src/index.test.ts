@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { ImageResponse } from "$lib/index.js";
 import { createSvg } from "$lib/helpers/create.js";
+import InjectedStyles from "./routes/(components)/InjectedStyles.svelte";
 
 // local font so the satori path runs offline (no default_fonts fetch)
 const fontData = readFileSync(
@@ -24,5 +25,15 @@ describe("satori ImageResponse", () => {
 		expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
 		const text = await res.text();
 		expect(text).toContain("<svg");
+	});
+});
+
+describe("component rendering", () => {
+	// satori rejects newlines inside CSS values (e.g. a multi-line linear-gradient) with
+	// "object null is not iterable"; the injected <style> must be normalized like strings are
+	it("renders a component whose injected <style> spans multiple lines", async () => {
+		const svg = await createSvg(InjectedStyles, { width: 400, height: 200, fonts });
+		expect(svg).toContain("<svg");
+		expect(svg).toContain("linearGradient");
 	});
 });
