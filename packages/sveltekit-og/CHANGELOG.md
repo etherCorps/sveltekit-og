@@ -7,17 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [4.3.1-next.3] - 2025-12-05
+### Added
 
-### Changed
+- `@ethercorps/sveltekit-og/client`: render OG images in the browser or a web worker with Takumi (default) or Satori + ReSVG, no server request. Engines load lazily (only the one you pick is downloaded); Satori falls back to bundled Noto Sans served same-origin; components render on the main thread, HTML strings everywhere; passing a component in a worker rejects with `COMPONENT_IN_WORKER`. Errors reach `.blob()`/`.arrayBuffer()`/`.text()` as `ImageResponseError` with a `code`. Requires `takumi-js` with either engine; workers need `worker: { format: "es" }` in `vite.config`.
 
-- Internal changes and improvements.
+### Fixed
 
-## [4.2.0]
+- Empty elements (`<div style="width:14px;height:14px"></div>` as a dot or divider) made Satori throw `Expected <div> to have explicit "display: flex" … if it has more than one child node`: satori-html emits `children: []` for them and Satori reads any array as "multiple children". Empty children are now dropped before rendering, in both the server and client paths.
+- Svelte components with `css="injected"` styles spanning multiple lines (e.g. a multi-line `linear-gradient(...)`) failed with `object null is not iterable` on satori 0.25. The injected `<style>` is now whitespace-normalized before parsing, like HTML strings already were.
+- `sveltekitOG()` Vite plugin now applies the wasm loader to the SSR build only. It used to run on the client build too, which broke the `/client` entry's Takumi wasm (`WebAssembly.instantiate(): Import #0 "./takumi_wasm_bg.js"`). Gated per environment, so it works on SvelteKit 2 (Vite 5/6) and SvelteKit 3 (Vite 8, Environment API).
+
+## [4.3.0] - 2026-07-10
 
 ### Added
 
-- Added utilities for fonts.
+- Takumi rendering engine via the new `@ethercorps/sveltekit-og/takumi` export, on takumi-js v2 (2.0.1 stable).
+- `ImageResponseError` for render failures.
+- Runtime-agnostic debug logger.
+- Caching for custom font data.
+- Node.js engine requirement in `package.json`.
+
+### Fixed
+
+- PNG generation on Cloudflare Workers: resvg wasm is now vendored and loaded as bytes on Node, with separate Node/edge paths.
+- Yoga layout error on the Cloudflare runtime.
+- Logger no longer depends on `node:async_hooks` (`enterWith` is unsupported on Cloudflare).
+- Props not passed to the component when rendering.
+- Generic `Component` type in the image creation functions.
+- Takumi input uses the same VNode format as the Satori path.
+- `repository` owner casing, so npm provenance verifies.
+
+## [4.2.1] - 2025-11-28
+
+### Changed
+
+- Package metadata: MIT license, homepage, repository, funding, author and description.
+
+## [4.2.0] - 2025-11-23
+
+### Added
+
+- Font utilities via `@ethercorps/sveltekit-og/fonts`.
 
 ## [4.0.0]
 

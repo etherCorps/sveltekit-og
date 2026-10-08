@@ -4,6 +4,7 @@ import RocketLaunch from 'phosphor-svelte/lib/RocketLaunch';
 import { defineNavigation } from '@svecodocs/kit';
 import { getSectionItems } from './utils.js';
 import Tag from 'phosphor-svelte/lib/Tag';
+import Flask from 'phosphor-svelte/lib/Flask';
 
 const runtime = getSectionItems('Runtime');
 
@@ -28,6 +29,12 @@ export const navigation = defineNavigation({
 			href: '/docs/getting-started',
 			description: 'A quick guide to get started using Sveltekit OG',
 			icon: RocketLaunch
+		},
+		{
+			title: 'Playground',
+			description: 'Render an OG image in your browser with the client API',
+			href: '/docs/playground',
+			icon: Flask
 		},
 		{
 			title: 'Releases',
