@@ -15,6 +15,12 @@ The `@ethercorps/sveltekit-og/client` entry renders images **in the browser** â€
 
 Use it for live previews in an editor or CMS, or for sites with no server (`adapter-static`) that still want images generated at runtime.
 
+<Callout type="note" title="Try it">
+
+Open the [Playground](/docs/playground) â€” it renders in your browser with this API and shows the matching `createImage(...)` call.
+
+</Callout>
+
 <Callout type="note" title="Available from v4.4.0">
 
 Client-side rendering is available from `sveltekit-og@4.4.0`. Try it early from the `next` tag: `npm i @ethercorps/sveltekit-og@next`.
