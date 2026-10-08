@@ -53,6 +53,10 @@
 	let copied = $state(false);
 	// below lg the three panes are tabs; lg shows all of them at once
 	let view = $state<'edit' | 'preview' | 'code'>('preview');
+	// what the preview pane shows: our render, the browser's own rendering of the same
+	// markup, or both stacked for comparison
+	let compare = $state<'image' | 'browser' | 'both'>('image');
+	let frameWidth = $state(0);
 	let picker = $state<HTMLDivElement>();
 
 	const example = $derived<Example>(examples.find((e) => e.id === exampleId) ?? DEFAULT_EXAMPLE);
@@ -139,6 +143,18 @@
 
 	const downloadName = $derived(`og.${format === 'jpeg' ? 'jpg' : format}`);
 
+	// frame width: fill the pane, but never taller than the pane (or half of it when two frames
+	// stack). cqh resolves against the preview canvas on lg and the viewport below it.
+	const frameSize = (half: boolean) =>
+		`min(100%, calc((${half ? '50cqh - 2.5rem' : '100cqh - 2rem'}) * ${width / height}))`;
+
+	// the HTML templates, as the browser lays them out: a sandboxed (no scripts) iframe
+	// sized to the OG canvas; the body is a flex box so the template's 100% × 100% root fills
+	// it, and border-box matches what satori and takumi assume
+	const srcdoc = $derived(
+		`<!doctype html><style>*{box-sizing:border-box}html,body{margin:0;width:${width}px;height:${height}px;display:flex;overflow:hidden}</style>${html}`
+	);
+
 	const optionLines = $derived([
 		`engine: '${engine}'`,
 		`format: '${format}'`,
@@ -205,6 +221,50 @@
 			</button>
 		{/each}
 	</div>
+{/snippet}
+
+<!-- our render. Width is derived from the pane height (cqh) so that in compare mode two
+     frames stack without cropping; the aspect box then sets the height. -->
+{#snippet imageFigure(labelled: boolean)}
+	<figure class="m-0 flex min-w-0 flex-col gap-1.5" style:width={frameSize(labelled)}>
+		<div
+			class="relative overflow-hidden rounded-lg border border-border bg-background shadow-sm transition-opacity duration-150 ease-out motion-reduce:transition-none {loading && url ? 'opacity-60' : ''}"
+			style:aspect-ratio="{width} / {height}"
+		>
+			{#if error}
+				<pre class="m-0 h-full overflow-auto whitespace-pre-wrap p-4 font-mono text-xs leading-relaxed text-destructive">{error}</pre>
+			{:else if url}
+				<img src={url} alt="Rendered Open Graph preview" class="h-full w-full object-contain" />
+			{:else}
+				<div class="h-full w-full animate-pulse bg-muted" aria-hidden="true"></div>
+			{/if}
+		</div>
+		{#if labelled}
+			<figcaption class="text-[11px] font-medium text-muted-foreground">{engine} · {format}</figcaption>
+		{/if}
+	</figure>
+{/snippet}
+
+<!-- the same markup laid out by the browser, at full OG size and scaled to fit -->
+{#snippet browserFigure(labelled: boolean)}
+	<figure class="m-0 flex min-w-0 flex-col gap-1.5" style:width={frameSize(labelled)}>
+		<div
+			class="relative overflow-hidden rounded-lg border border-border bg-background shadow-sm"
+			style:aspect-ratio="{width} / {height}"
+			bind:clientWidth={frameWidth}
+		>
+			<div class="flex origin-top-left" style:width="{width}px" style:height="{height}px" style:transform="scale({frameWidth / width})">
+				{#if isComponent}
+					<Card {title} {subtitle} {tag} />
+				{:else}
+					<iframe sandbox="" {srcdoc} title="HTML as rendered by your browser" class="h-full w-full border-0"></iframe>
+				{/if}
+			</div>
+		</div>
+		{#if labelled}
+			<figcaption class="text-[11px] font-medium text-muted-foreground">browser</figcaption>
+		{/if}
+	</figure>
 {/snippet}
 
 <!-- full-bleed inside DocsLayout's padded content area; one screen tall on lg -->
@@ -370,7 +430,21 @@
 			aria-label="Preview"
 		>
 			<div class={paneHead}>
-				<span>Preview</span>
+				<div class="flex items-center gap-0.5 rounded-md bg-muted p-0.5" role="radiogroup" aria-label="Preview source">
+					{#each [['image', engine], ['browser', 'browser'], ['both', 'both']] as [id, label] (id)}
+						<button
+							type="button"
+							role="radio"
+							aria-checked={compare === id}
+							class="h-6 rounded px-2 text-xs font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring {compare === id
+								? 'bg-background text-foreground shadow-sm'
+								: 'text-muted-foreground hover:text-foreground'}"
+							onclick={() => (compare = id as typeof compare)}
+						>
+							{label}
+						</button>
+					{/each}
+				</div>
 				<span class="tabular-nums" aria-live="polite">
 					{#if url && !error}
 						{(bytes / 1024).toFixed(1)} KB · {ms} ms · {engine}
@@ -379,19 +453,13 @@
 					{/if}
 				</span>
 			</div>
-			<div class="grid min-h-0 flex-1 place-items-center bg-muted/40 p-4 sm:p-6 lg:min-h-0">
-				<figure
-					class="relative m-0 max-h-full w-full max-w-[64rem] overflow-hidden rounded-lg border border-border bg-background shadow-sm transition-opacity duration-150 ease-out motion-reduce:transition-none {loading && url ? 'opacity-60' : ''}"
-					style:aspect-ratio="{width} / {height}"
-				>
-					{#if error}
-						<pre class="m-0 h-full overflow-auto whitespace-pre-wrap p-4 font-mono text-xs leading-relaxed text-destructive">{error}</pre>
-					{:else if url}
-						<img src={url} alt="Rendered Open Graph preview" class="h-full w-full object-contain" />
-					{:else}
-						<div class="h-full w-full animate-pulse bg-muted" aria-hidden="true"></div>
-					{/if}
-				</figure>
+			<div class="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 bg-muted/40 p-4 sm:p-6 lg:[container-type:size]">
+				{#if compare !== 'browser'}
+					{@render imageFigure(compare === 'both')}
+				{/if}
+				{#if compare !== 'image'}
+					{@render browserFigure(compare === 'both')}
+				{/if}
 			</div>
 		</section>
 	</div>
