@@ -26,8 +26,8 @@ importers:
   apps/docs:
     dependencies:
       '@ethercorps/sveltekit-og':
-        specifier: ^4.4.0-next.1
-        version: 4.4.0-next.1(@sveltejs/kit@2.55.0(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.53.10)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2)))(svelte@5.53.10)(typescript@5.9.3)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2)))(takumi-js@2.0.1(csstype@3.2.3))
+        specifier: ^4.4.0-next.2
+        version: 4.4.0-next.2(@sveltejs/kit@2.55.0(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.53.10)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2)))(svelte@5.53.10)(typescript@5.9.3)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2)))(takumi-js@2.0.1(csstype@3.2.3))
       '@twinkleplop/html':
         specifier: ^0.1.7
         version: 0.1.7
@@ -1438,8 +1438,8 @@ packages:
       svelte: ^5.0.0
       tailwindcss: ^4.0.0
 
-  '@ethercorps/sveltekit-og@4.4.0-next.1':
-    resolution: {integrity: sha512-lMhHjLrTSiOveixwg6+2hF9GPJ8Wwovri+0Tk1gM6xvIg1Tx6LA5C7N2BkGEAdJr4npcuAd3Zn1a685YiGBRmw==}
+  '@ethercorps/sveltekit-og@4.4.0-next.2':
+    resolution: {integrity: sha512-EHrr4aqSahYyjI+lcORvcVx27NlefUpedMXUMFOCpvUyMhWW3bO9Si1gm0rSN12ABpO5qm2bwasKZOlX2+chzg==}
     peerDependencies:
       '@sveltejs/kit': '>=2.0.0'
       takumi-js: ^2.0.1
@@ -6247,7 +6247,7 @@ snapshots:
       - supports-color
       - vite
 
-  '@ethercorps/sveltekit-og@4.4.0-next.1(@sveltejs/kit@2.55.0(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.53.10)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2)))(svelte@5.53.10)(typescript@5.9.3)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2)))(takumi-js@2.0.1(csstype@3.2.3))':
+  '@ethercorps/sveltekit-og@4.4.0-next.2(@sveltejs/kit@2.55.0(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.53.10)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2)))(svelte@5.53.10)(typescript@5.9.3)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2)))(takumi-js@2.0.1(csstype@3.2.3))':
     dependencies:
       '@resvg/resvg-wasm': 2.6.2
       '@sveltejs/kit': 2.55.0(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.53.10)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2)))(svelte@5.53.10)(typescript@5.9.3)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2))
