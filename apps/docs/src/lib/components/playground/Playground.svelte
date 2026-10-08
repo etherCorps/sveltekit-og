@@ -17,6 +17,7 @@
 	import Check from 'phosphor-svelte/lib/Check';
 	import Copy from 'phosphor-svelte/lib/Copy';
 	import DownloadSimple from 'phosphor-svelte/lib/DownloadSimple';
+	import SlidersHorizontal from 'phosphor-svelte/lib/SlidersHorizontal';
 	import Card from './Card.svelte';
 	import Thumb from './Thumb.svelte';
 	import HtmlEditor from './HtmlEditor.svelte';
@@ -39,6 +40,9 @@
 		satori: ['png', 'svg']
 	};
 	const ENGINES: Engine[] = ['takumi', 'satori'];
+	// display names; the code snippet keeps the lowercase API values
+	const NAMES: Record<string, string> = { takumi: 'Takumi', satori: 'Satori', png: 'PNG', jpeg: 'JPEG', webp: 'WebP', svg: 'SVG' };
+	const pretty = (v: string) => NAMES[v] ?? v;
 	const INSTALL = 'npm i @ethercorps/sveltekit-og@next takumi-js';
 
 	const highlight = language();
@@ -80,7 +84,7 @@
 	const hint = $derived(styleHint(style, engine));
 	const tabs = $derived<[typeof view, string][]>([
 		['edit', isComponent ? 'Props' : 'Edit'],
-		['image', engine],
+		['image', pretty(engine)],
 		['browser', 'Browser'],
 		['code', 'Code']
 	]);
@@ -230,8 +234,10 @@
 	// children truncate instead of wrapping when a pane is dragged narrow
 	const paneHead =
 		'flex h-9 shrink-0 items-center justify-between gap-3 border-b border-border px-4 text-xs text-muted-foreground [&>span]:min-w-0 [&>span]:truncate';
-	// grows to fill its pane on lg; below lg the shell is as tall as its frame
-	const canvas = 'flex min-h-0 flex-col items-center justify-center bg-muted/40 p-4 sm:p-6 lg:flex-1 lg:[container-type:size]';
+	// fills its shell; a size container so the frame can size itself from the shell height
+	const canvas = 'flex min-h-0 flex-1 flex-col items-center justify-center bg-muted/40 p-4 sm:p-6 [container-type:size]';
+	const headButton =
+		'inline-flex h-7 shrink-0 items-center gap-1 rounded px-1.5 font-medium text-foreground transition-colors duration-150 hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 	// hairline that grows a hit area on hover/drag; paneforge sets data-active while dragging
 	const resizer =
 		'group/r relative shrink-0 bg-border transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring data-[active]:bg-brand hover:bg-foreground/40';
@@ -259,24 +265,74 @@
 	</div>
 {/snippet}
 
+<!-- secondary controls: inline in the toolbar on lg, stacked under labels in the Options popover -->
+{#snippet labelled(stacked: boolean, text: string, body: import('svelte').Snippet)}
+	{#if stacked}
+		<div class="flex flex-col gap-1.5">
+			<span class="text-xs font-medium text-muted-foreground">{text}</span>
+			{@render body()}
+		</div>
+	{:else}
+		{@render body()}
+	{/if}
+{/snippet}
+
+{#snippet options(stacked: boolean)}
+	{#if !isComponent}
+		{#snippet styling()}
+			{@render segmented('Styling', style, STYLES.map((s) => s.id), (v) => selectStyle(v as Style), (id) => STYLES.find((s) => s.id === id)?.label ?? id)}
+		{/snippet}
+		{@render labelled(stacked, 'Styling', styling)}
+	{/if}
+	{#snippet fmt()}
+		{@render segmented('Format', format, formats, (v) => (format = v), pretty)}
+	{/snippet}
+	{@render labelled(stacked, 'Format', fmt)}
+	{#snippet size()}
+		<div class="flex shrink-0 items-center gap-1.5">
+			<Label for="pg-width" class="sr-only">Width</Label>
+			<Input id="pg-width" type="number" min="1" inputmode="numeric" bind:value={width} class="h-9 w-[4.5rem] px-2 tabular-nums" />
+			<span class="text-xs text-muted-foreground" aria-hidden="true">×</span>
+			<Label for="pg-height" class="sr-only">Height</Label>
+			<Input id="pg-height" type="number" min="1" inputmode="numeric" bind:value={height} class="h-9 w-[4.5rem] px-2 tabular-nums" />
+		</div>
+	{/snippet}
+	{@render labelled(stacked, 'Size', size)}
+	{#if showQuality}
+		<div class="flex shrink-0 items-center gap-2">
+			<Label for="pg-quality" class="text-xs text-muted-foreground">
+				Quality <span class="tabular-nums text-foreground">{quality}</span>
+			</Label>
+			<input
+				id="pg-quality"
+				type="range"
+				min="1"
+				max="100"
+				bind:value={quality}
+				class="h-9 w-24 accent-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+			/>
+		</div>
+	{/if}
+{/snippet}
+
 <!-- the editor: HTML, or the component's props over its read-only markup -->
 {#snippet editorPane()}
-	<section class="flex h-full min-h-0 min-w-0 flex-col" aria-label={isComponent ? 'Props' : 'HTML'}>
+	<section class="flex h-full min-h-0 min-w-0 flex-1 flex-col" aria-label={isComponent ? 'Props' : 'HTML'}>
 		<div class={paneHead}>
 			{#if isComponent}
 				<span>Props · Card.svelte</span>
 				<span>markup below is read-only</span>
 			{:else}
-				<span>HTML · live · {hint}</span>
-				<span class="flex items-center gap-3">
-					<span class="truncate"><kbd class="font-mono">⌘↩</kbd> renders now</span>
-					<button
-						type="button"
-						class="shrink-0 rounded px-1.5 py-0.5 font-medium text-foreground transition-colors duration-150 hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-						onclick={() => (html = formatHtml(html))}
-					>
-						Format
-					</button>
+				<span>HTML<span class="hidden sm:inline"> · live</span> · {hint}</span>
+				<span class="flex items-center gap-2">
+					<span class="hidden truncate lg:inline"><kbd class="font-mono">⌘↩</kbd> renders now</span>
+					{#if dirty}
+						<button type="button" class="{headButton} lg:hidden" onclick={() => (html = template)}>
+							<ArrowCounterClockwise class="size-3.5" aria-hidden="true" />
+							Reset
+						</button>
+					{/if}
+					<button type="button" class={headButton} onclick={() => (html = formatHtml(html))}>Format</button>
 				</span>
 			{/if}
 		</div>
@@ -312,12 +368,15 @@
 <!-- our render, in its own shell. The frame's width follows the shell height (cqh) and the
      aspect box sets its height, so it never crops as the panes are resized. -->
 {#snippet engineShell()}
-	<section class="flex min-h-0 min-w-0 flex-col lg:h-full" aria-label="Engine render">
+	<section class="flex h-full min-h-0 min-w-0 flex-1 flex-col" aria-label="Engine render">
 		<div class={paneHead}>
-			<span><span class="font-medium text-foreground">{engine}</span> · {format}</span>
-			<span class="tabular-nums" aria-live="polite">
+			<span><span class="font-medium text-foreground">{pretty(engine)}</span> · {pretty(format)}</span>
+			<span class="flex items-center gap-2 tabular-nums" aria-live="polite">
 				{#if url && !error}
 					{(bytes / 1024).toFixed(1)} KB · {ms} ms
+					<a class="{headButton} lg:hidden" href={url} download={downloadName} aria-label="Download">
+						<DownloadSimple class="size-4" aria-hidden="true" />
+					</a>
 				{:else if loading}
 					Rendering…
 				{/if}
@@ -343,7 +402,7 @@
 
 <!-- the same markup laid out by the browser, at full OG size and scaled to fit -->
 {#snippet browserShell()}
-	<section class="flex min-h-0 min-w-0 flex-col lg:h-full" aria-label="Browser render">
+	<section class="flex h-full min-h-0 min-w-0 flex-1 flex-col" aria-label="Browser render">
 		<div class={paneHead}>
 			<span><span class="font-medium text-foreground">browser</span> · same markup, no engine</span>
 			<span class="tabular-nums">{width} × {height}</span>
@@ -372,77 +431,66 @@
 	</section>
 {/snippet}
 
-<!-- full-bleed inside DocsLayout's padded content area; on lg exactly one screen minus the
-     sticky header and the footer, so the page itself never scrolls -->
-<div class="-mx-4 -my-8 flex min-w-0 flex-1 flex-col lg:-mr-8 lg:ml-0 lg:h-[calc(100dvh-8rem)]">
-	<!-- toolbar -->
+<!-- full-bleed inside DocsLayout's padded content area; exactly one screen minus the sticky
+     header and the footer, so the page itself never scrolls and the panes do -->
+<div class="-mx-4 -my-8 flex h-[calc(100dvh-8rem)] min-w-0 flex-1 flex-col lg:-mr-8 lg:ml-0">
+	<!-- toolbar: everything inline on lg; below, the secondary controls live in an Options
+	     popover and the actions move into the pane heads, so it stays one row -->
 	<div class="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-border bg-background-secondary px-4 py-2.5">
-		<!-- controls scroll sideways on narrow screens instead of stacking four rows deep -->
-		<div class="relative flex min-w-0 max-w-full items-center gap-3 overflow-x-auto pb-0.5 [scrollbar-width:none] lg:flex-1 lg:flex-wrap">
 		<button
 			type="button"
 			popovertarget="pg-templates"
-			class="{field} inline-flex shrink-0 items-center gap-2 pr-2 font-medium"
+			class="{field} inline-flex min-w-0 shrink items-center gap-2 pr-2 font-medium"
 			aria-haspopup="dialog"
 		>
-			<span class="text-muted-foreground">Template</span>
-			{example.label}
-			<CaretDown class="size-3.5 text-muted-foreground" aria-hidden="true" />
+			<span class="hidden text-muted-foreground sm:inline">Template</span>
+			<span class="truncate">{example.label}</span>
+			<CaretDown class="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
 		</button>
 
-		{@render segmented('Engine', engine, ENGINES, (v) => setEngine(v as Engine))}
-		{#if !isComponent}
-			{@render segmented('Styling', style, STYLES.map((s) => s.id), (v) => selectStyle(v as Style), (id) => STYLES.find((s) => s.id === id)?.label ?? id)}
-		{/if}
-		{@render segmented('Format', format, formats, (v) => (format = v))}
+		{@render segmented('Engine', engine, ENGINES, (v) => setEngine(v as Engine), pretty)}
 
-		<div class="flex shrink-0 items-center gap-1.5">
-			<Label for="pg-width" class="sr-only">Width</Label>
-			<Input id="pg-width" type="number" min="1" inputmode="numeric" bind:value={width} class="h-9 w-[4.5rem] px-2 tabular-nums" />
-			<span class="text-xs text-muted-foreground" aria-hidden="true">×</span>
-			<Label for="pg-height" class="sr-only">Height</Label>
-			<Input id="pg-height" type="number" min="1" inputmode="numeric" bind:value={height} class="h-9 w-[4.5rem] px-2 tabular-nums" />
-		</div>
-
-		{#if showQuality}
-			<div class="flex shrink-0 items-center gap-2">
-				<Label for="pg-quality" class="text-xs text-muted-foreground">
-					Quality <span class="tabular-nums text-foreground">{quality}</span>
-				</Label>
-				<input
-					id="pg-quality"
-					type="range"
-					min="1"
-					max="100"
-					bind:value={quality}
-					class="h-9 w-24 accent-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-				/>
-			</div>
-		{/if}
-		</div>
-
-		<div class="ml-auto flex items-center gap-2">
-			{#if dirty}
-				<Button variant="subtle" size="sm" onclick={() => (html = template)}>
-					<ArrowCounterClockwise class="size-4" aria-hidden="true" />
-					Reset
-				</Button>
-			{/if}
-			<Button variant="outline" size="sm" href={url && !error ? url : undefined} download={downloadName} disabled={!url || !!error}>
-				<DownloadSimple class="size-4" aria-hidden="true" />
-				Download
-			</Button>
-			<Button size="sm" onclick={copySnippet} aria-live="polite">
-				{#if copied}
-					<Check class="size-4" aria-hidden="true" />
-					Copied
-				{:else}
-					<Copy class="size-4" aria-hidden="true" />
-					Copy code
+		{#if lg.current}
+			{@render options(false)}
+			<div class="ml-auto flex items-center gap-2">
+				{#if dirty}
+					<Button variant="subtle" size="sm" onclick={() => (html = template)}>
+						<ArrowCounterClockwise class="size-4" aria-hidden="true" />
+						Reset
+					</Button>
 				{/if}
-			</Button>
-		</div>
+				<Button variant="outline" size="sm" href={url && !error ? url : undefined} download={downloadName} disabled={!url || !!error}>
+					<DownloadSimple class="size-4" aria-hidden="true" />
+					Download
+				</Button>
+				<Button size="sm" onclick={copySnippet} aria-live="polite">
+					{#if copied}
+						<Check class="size-4" aria-hidden="true" />
+						Copied
+					{:else}
+						<Copy class="size-4" aria-hidden="true" />
+						Copy code
+					{/if}
+				</Button>
+			</div>
+		{:else}
+			<button type="button" popovertarget="pg-options" class="{field} ml-auto inline-flex items-center gap-2" aria-haspopup="dialog">
+				<SlidersHorizontal class="size-4" aria-hidden="true" />
+				<span class="hidden sm:inline">Options</span>
+			</button>
+		{/if}
 	</div>
+
+	{#if !lg.current}
+		<div
+			id="pg-options"
+			popover="auto"
+			class="fixed inset-auto top-[4.5rem] left-1/2 m-0 w-[min(100vw-2rem,24rem)] -translate-x-1/2 rounded-xl border border-border bg-background p-4 shadow-lg backdrop:bg-foreground/20"
+			aria-label="Options"
+		>
+			<div class="grid gap-4">{@render options(true)}</div>
+		</div>
+	{/if}
 
 	<!-- template picker: native popover in the top layer, hung below the header -->
 	<div
@@ -508,16 +556,37 @@
 			{/each}
 		</div>
 		{#if view === 'edit'}
-			<div class="min-h-[24rem]">{@render editorPane()}</div>
+			{@render editorPane()}
 		{:else if view === 'image'}
 			{@render engineShell()}
 		{:else if view === 'browser'}
 			{@render browserShell()}
+		{:else}
+			<section class="flex min-h-0 flex-1 flex-col" aria-label="Code">
+				<div class={paneHead}>
+					<span>createImage</span>
+					<button type="button" class={headButton} onclick={copySnippet} aria-live="polite">
+						{#if copied}
+							<Check class="size-3.5" aria-hidden="true" />
+							Copied
+						{:else}
+							<Copy class="size-3.5" aria-hidden="true" />
+							Copy
+						{/if}
+					</button>
+				</div>
+				<!-- {@html} is safe here: twinkleplop escapes its input (see the drawer below) -->
+				<div class="code min-h-0 flex-1 overflow-auto bg-muted/40">
+					{@html snippetHtml}
+					<p class="px-4 pb-4 font-mono text-xs text-muted-foreground">{INSTALL}</p>
+				</div>
+			</section>
 		{/if}
 	{/if}
 
-	<!-- code drawer: collapsed shows the call on one line; open shows the full snippet -->
-	<details class="group {view === 'code' || lg.current ? 'block' : 'hidden'} shrink-0 border-t border-border bg-background" open={view === 'code' && !lg.current}>
+	<!-- code drawer (lg): collapsed shows the call on one line; open shows the full snippet -->
+	{#if lg.current}
+	<details class="group shrink-0 border-t border-border bg-background">
 		<summary
 			class="flex h-10 cursor-pointer list-none items-center gap-3 px-4 text-xs text-muted-foreground hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring [&::-webkit-details-marker]:hidden"
 		>
@@ -529,9 +598,9 @@
 		     string built above (user-typed props pass through JSON.stringify first). -->
 		<div class="code max-h-[40vh] overflow-auto border-t border-border bg-muted/40">
 			{@html snippetHtml}
-			<p class="px-4 pb-4 font-mono text-xs text-muted-foreground sm:hidden">{INSTALL}</p>
 		</div>
 	</details>
+	{/if}
 </div>
 
 <style>
