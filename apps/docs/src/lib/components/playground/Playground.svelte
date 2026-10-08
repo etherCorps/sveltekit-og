@@ -10,6 +10,9 @@
 	import { Button, Input, Label } from '@svecodocs/kit';
 	import { Pane, PaneGroup, PaneResizer } from 'paneforge';
 	import { MediaQuery } from 'svelte/reactivity';
+	import { prefersReducedMotion } from 'svelte/motion';
+	import { slide } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 	import { language } from '@twinkleplop/typescript';
 	import '@twinkleplop/theme-github';
 	import ArrowCounterClockwise from 'phosphor-svelte/lib/ArrowCounterClockwise';
@@ -73,6 +76,9 @@
 	let view = $state<'edit' | 'image' | 'browser' | 'code'>('image');
 	let frameWidth = $state(0);
 	let picker = $state<HTMLDivElement>();
+	let drawerOpen = $state(false);
+	// one duration for every transition; zero when the user asked for less motion
+	const dur = $derived(prefersReducedMotion.current ? 0 : 180);
 
 	const example = $derived<Example>(examples.find((e) => e.id === exampleId) ?? DEFAULT_EXAMPLE);
 	const isComponent = $derived(example.id === 'component');
@@ -485,7 +491,7 @@
 		<div
 			id="pg-options"
 			popover="auto"
-			class="fixed inset-auto top-[4.5rem] left-1/2 m-0 w-[min(100vw-2rem,24rem)] -translate-x-1/2 rounded-xl border border-border bg-background p-4 shadow-lg backdrop:bg-foreground/20"
+			class="pop fixed inset-auto top-[4.5rem] left-1/2 m-0 w-[min(100vw-2rem,24rem)] rounded-xl border border-border bg-background p-4 shadow-lg backdrop:bg-foreground/20"
 			aria-label="Options"
 		>
 			<div class="grid gap-4">{@render options(true)}</div>
@@ -497,7 +503,7 @@
 		id="pg-templates"
 		popover="auto"
 		bind:this={picker}
-		class="fixed inset-auto top-[4.5rem] left-1/2 m-0 w-[min(100vw-2rem,52rem)] -translate-x-1/2 rounded-xl border border-border bg-background p-4 shadow-lg backdrop:bg-foreground/20"
+		class="pop fixed inset-auto top-[4.5rem] left-1/2 m-0 w-[min(100vw-2rem,52rem)] rounded-xl border border-border bg-background p-4 shadow-lg backdrop:bg-foreground/20"
 		aria-label="Templates"
 	>
 		<div class="grid grid-cols-2 gap-3 sm:grid-cols-3" role="group" aria-label="Templates">
@@ -586,24 +592,59 @@
 
 	<!-- code drawer (lg): collapsed shows the call on one line; open shows the full snippet -->
 	{#if lg.current}
-	<details class="group shrink-0 border-t border-border bg-background">
-		<summary
-			class="flex h-10 cursor-pointer list-none items-center gap-3 px-4 text-xs text-muted-foreground hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring [&::-webkit-details-marker]:hidden"
+	<div class="shrink-0 border-t border-border bg-background">
+		<button
+			type="button"
+			class="flex h-10 w-full items-center gap-3 px-4 text-xs text-muted-foreground transition-colors duration-150 hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+			aria-expanded={drawerOpen}
+			aria-controls="pg-drawer"
+			onclick={() => (drawerOpen = !drawerOpen)}
 		>
-			<CaretDown class="size-3.5 shrink-0 transition-transform duration-150 group-open:rotate-180" aria-hidden="true" />
+			<CaretDown
+				class="size-3.5 shrink-0 transition-transform duration-150 ease-out motion-reduce:transition-none {drawerOpen ? 'rotate-180' : ''}"
+				aria-hidden="true"
+			/>
 			<code class="min-w-0 truncate font-mono text-foreground">{callLine}</code>
 			<code class="ml-auto hidden shrink-0 font-mono sm:block">{INSTALL}</code>
-		</summary>
-		<!-- {@html} is safe here: twinkleplop escapes its input, and the input is the snippet
-		     string built above (user-typed props pass through JSON.stringify first). -->
-		<div class="code max-h-[40vh] overflow-auto border-t border-border bg-muted/40">
-			{@html snippetHtml}
-		</div>
-	</details>
+		</button>
+		{#if drawerOpen}
+			<!-- {@html} is safe here: twinkleplop escapes its input, and the input is the snippet
+			     string built above (user-typed props pass through JSON.stringify first). -->
+			<div id="pg-drawer" class="code max-h-[40vh] overflow-auto border-t border-border bg-muted/40" transition:slide={{ duration: dur, easing: cubicOut }}>
+				{@html snippetHtml}
+			</div>
+		{/if}
+	</div>
 	{/if}
 </div>
 
 <style>
+	/* popovers fade and drop in (and out — display/overlay are discrete, so allow-discrete
+	   keeps them in the top layer while the exit plays). Centered here, not via a utility,
+	   because the enter/exit frames need the same x translate. */
+	.pop {
+		translate: -50% -0.25rem;
+		opacity: 0;
+		transition:
+			opacity 150ms var(--ease-out, cubic-bezier(0.2, 0, 0, 1)),
+			translate 150ms var(--ease-out, cubic-bezier(0.2, 0, 0, 1)),
+			overlay 150ms allow-discrete,
+			display 150ms allow-discrete;
+	}
+	.pop:popover-open {
+		translate: -50% 0;
+		opacity: 1;
+		@starting-style {
+			translate: -50% -0.25rem;
+			opacity: 0;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.pop {
+			transition-duration: 0ms;
+		}
+	}
+
 	/* twinkleplop emits <pre class="twinkleplop"><code>…; the theme sets token colours and a
 	   paper background — we supply the surface, so only the box styling lives here. */
 	.code :global(pre.twinkleplop) {
