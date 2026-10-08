@@ -52,6 +52,7 @@
 		"@twinkleplop/html": "^0.1.7",
 		"@twinkleplop/theme-github": "^0.2.4",
 		"@twinkleplop/typescript": "^0.1.7",
-		"octokit": "^5.0.5"
+		"octokit": "^5.0.5",
+		"paneforge": "1.0.2"
 	}
 }

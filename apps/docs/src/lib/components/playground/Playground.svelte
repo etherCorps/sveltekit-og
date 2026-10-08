@@ -8,6 +8,8 @@
 <script lang="ts">
 	import { createImage, type ClientImageResponseOptions } from '@ethercorps/sveltekit-og/client';
 	import { Button, Input, Label } from '@svecodocs/kit';
+	import { Pane, PaneGroup, PaneResizer } from 'paneforge';
+	import { MediaQuery } from 'svelte/reactivity';
 	import { language } from '@twinkleplop/typescript';
 	import '@twinkleplop/theme-github';
 	import ArrowCounterClockwise from 'phosphor-svelte/lib/ArrowCounterClockwise';
@@ -51,11 +53,9 @@
 	let bytes = $state(0);
 	let ms = $state(0);
 	let copied = $state(false);
-	// below lg the three panes are tabs; lg shows all of them at once
-	let view = $state<'edit' | 'preview' | 'code'>('preview');
-	// what the preview pane shows: our render, the browser's own rendering of the same
-	// markup, or both stacked for comparison
-	let compare = $state<'image' | 'browser' | 'both'>('image');
+	// lg: resizable panes, all visible. Below: one pane at a time, picked by tabs.
+	const lg = new MediaQuery('(min-width: 64rem)');
+	let view = $state<'edit' | 'image' | 'browser' | 'code'>('image');
 	let frameWidth = $state(0);
 	let picker = $state<HTMLDivElement>();
 
@@ -66,7 +66,8 @@
 	const dirty = $derived(!isComponent && html !== example.html);
 	const tabs = $derived<[typeof view, string][]>([
 		['edit', isComponent ? 'Props' : 'Edit'],
-		['preview', 'Preview'],
+		['image', engine],
+		['browser', 'Browser'],
 		['code', 'Code']
 	]);
 
@@ -143,10 +144,9 @@
 
 	const downloadName = $derived(`og.${format === 'jpeg' ? 'jpg' : format}`);
 
-	// frame width: fill the pane, but never taller than the pane (or half of it when two frames
-	// stack). cqh resolves against the preview canvas on lg and the viewport below it.
-	const frameSize = (half: boolean) =>
-		`min(100%, calc((${half ? '50cqh - 2.5rem' : '100cqh - 2rem'}) * ${width / height}))`;
+	// frame width: fill the shell, but never taller than it. cqh resolves against the shell's
+	// canvas on lg (a size container) and the viewport below it.
+	const frameSize = $derived(`min(100%, calc((100cqh - 2rem) * ${width / height}))`);
 
 	// the HTML templates, as the browser lays them out: a sandboxed (no scripts) iframe
 	// sized to the OG canvas; the body is a flex box so the template's 100% × 100% root fills
@@ -197,8 +197,14 @@
 		'h-7 rounded-md px-2.5 text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 	const tab =
 		'h-9 flex-1 border-b-2 text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring';
+	// children truncate instead of wrapping when a pane is dragged narrow
 	const paneHead =
-		'flex h-9 shrink-0 items-center justify-between gap-3 border-b border-border px-4 text-xs text-muted-foreground';
+		'flex h-9 shrink-0 items-center justify-between gap-3 border-b border-border px-4 text-xs text-muted-foreground [&>span]:min-w-0 [&>span]:truncate';
+	// grows to fill its pane on lg; below lg the shell is as tall as its frame
+	const canvas = 'flex min-h-0 flex-col items-center justify-center bg-muted/40 p-4 sm:p-6 lg:flex-1 lg:[container-type:size]';
+	// hairline that grows a hit area on hover/drag; paneforge sets data-active while dragging
+	const resizer =
+		'group/r relative shrink-0 bg-border transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring data-[active]:bg-brand hover:bg-foreground/40';
 	const thumbCard =
 		'group flex min-w-0 flex-col overflow-hidden rounded-xl border text-left transition-colors duration-150 active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 </script>
@@ -223,48 +229,103 @@
 	</div>
 {/snippet}
 
-<!-- our render. Width is derived from the pane height (cqh) so that in compare mode two
-     frames stack without cropping; the aspect box then sets the height. -->
-{#snippet imageFigure(labelled: boolean)}
-	<figure class="m-0 flex min-w-0 flex-col gap-1.5" style:width={frameSize(labelled)}>
-		<div
-			class="relative overflow-hidden rounded-lg border border-border bg-background shadow-sm transition-opacity duration-150 ease-out motion-reduce:transition-none {loading && url ? 'opacity-60' : ''}"
-			style:aspect-ratio="{width} / {height}"
-		>
-			{#if error}
-				<pre class="m-0 h-full overflow-auto whitespace-pre-wrap p-4 font-mono text-xs leading-relaxed text-destructive">{error}</pre>
-			{:else if url}
-				<img src={url} alt="Rendered Open Graph preview" class="h-full w-full object-contain" />
+<!-- the editor: HTML, or the component's props over its read-only markup -->
+{#snippet editorPane()}
+	<section class="flex h-full min-h-0 min-w-0 flex-col" aria-label={isComponent ? 'Props' : 'HTML'}>
+		<div class={paneHead}>
+			{#if isComponent}
+				<span>Props · Card.svelte</span>
+				<span>markup below is read-only</span>
 			{:else}
-				<div class="h-full w-full animate-pulse bg-muted" aria-hidden="true"></div>
+				<span>HTML · live</span>
+				<span>inline styles only · <kbd class="font-mono">⌘↩</kbd> renders now</span>
 			{/if}
 		</div>
-		{#if labelled}
-			<figcaption class="text-[11px] font-medium text-muted-foreground">{engine} · {format}</figcaption>
+		{#if isComponent}
+			<div class="flex min-h-0 flex-1 flex-col overflow-auto">
+				<div class="grid shrink-0 gap-3 border-b border-border p-4 sm:grid-cols-3">
+					<div class="flex flex-col gap-1.5">
+						<Label for="pg-title">title</Label>
+						<Input id="pg-title" bind:value={title} />
+					</div>
+					<div class="flex flex-col gap-1.5">
+						<Label for="pg-subtitle">subtitle</Label>
+						<Input id="pg-subtitle" bind:value={subtitle} />
+					</div>
+					<div class="flex flex-col gap-1.5">
+						<Label for="pg-tag">tag</Label>
+						<Input id="pg-tag" bind:value={tag} />
+					</div>
+				</div>
+				<div class="min-h-[14rem] flex-1">
+					<HtmlEditor id="pg-card" value={cardMarkup} readonly fill />
+				</div>
+			</div>
+		{:else}
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
+			<div class="min-h-0 flex-1" {onkeydown}>
+				<HtmlEditor id="pg-html" bind:value={html} fill />
+			</div>
 		{/if}
-	</figure>
+	</section>
+{/snippet}
+
+<!-- our render, in its own shell. The frame's width follows the shell height (cqh) and the
+     aspect box sets its height, so it never crops as the panes are resized. -->
+{#snippet engineShell()}
+	<section class="flex min-h-0 min-w-0 flex-col lg:h-full" aria-label="Engine render">
+		<div class={paneHead}>
+			<span><span class="font-medium text-foreground">{engine}</span> · {format}</span>
+			<span class="tabular-nums" aria-live="polite">
+				{#if url && !error}
+					{(bytes / 1024).toFixed(1)} KB · {ms} ms
+				{:else if loading}
+					Rendering…
+				{/if}
+			</span>
+		</div>
+		<div class={canvas}>
+			<figure
+				class="relative m-0 overflow-hidden rounded-lg border border-border bg-background shadow-sm transition-opacity duration-150 ease-out motion-reduce:transition-none {loading && url ? 'opacity-60' : ''}"
+				style:width={frameSize}
+				style:aspect-ratio="{width} / {height}"
+			>
+				{#if error}
+					<pre class="m-0 h-full overflow-auto whitespace-pre-wrap p-4 font-mono text-xs leading-relaxed text-destructive">{error}</pre>
+				{:else if url}
+					<img src={url} alt="Rendered Open Graph preview" class="h-full w-full object-contain" />
+				{:else}
+					<div class="h-full w-full animate-pulse bg-muted" aria-hidden="true"></div>
+				{/if}
+			</figure>
+		</div>
+	</section>
 {/snippet}
 
 <!-- the same markup laid out by the browser, at full OG size and scaled to fit -->
-{#snippet browserFigure(labelled: boolean)}
-	<figure class="m-0 flex min-w-0 flex-col gap-1.5" style:width={frameSize(labelled)}>
-		<div
-			class="relative overflow-hidden rounded-lg border border-border bg-background shadow-sm"
-			style:aspect-ratio="{width} / {height}"
-			bind:clientWidth={frameWidth}
-		>
-			<div class="flex origin-top-left" style:width="{width}px" style:height="{height}px" style:transform="scale({frameWidth / width})">
-				{#if isComponent}
-					<Card {title} {subtitle} {tag} />
-				{:else}
-					<iframe sandbox="" {srcdoc} title="HTML as rendered by your browser" class="h-full w-full border-0"></iframe>
-				{/if}
-			</div>
+{#snippet browserShell()}
+	<section class="flex min-h-0 min-w-0 flex-col lg:h-full" aria-label="Browser render">
+		<div class={paneHead}>
+			<span><span class="font-medium text-foreground">browser</span> · same markup, no engine</span>
+			<span class="tabular-nums">{width} × {height}</span>
 		</div>
-		{#if labelled}
-			<figcaption class="text-[11px] font-medium text-muted-foreground">browser</figcaption>
-		{/if}
-	</figure>
+		<div class={canvas}>
+			<figure
+				class="relative m-0 overflow-hidden rounded-lg border border-border bg-background shadow-sm"
+				style:width={frameSize}
+				style:aspect-ratio="{width} / {height}"
+				bind:clientWidth={frameWidth}
+			>
+				<div class="flex origin-top-left" style:width="{width}px" style:height="{height}px" style:transform="scale({frameWidth / width})">
+					{#if isComponent}
+						<Card {title} {subtitle} {tag} />
+					{:else}
+						<iframe sandbox="" {srcdoc} title="HTML as rendered by your browser" class="h-full w-full border-0"></iframe>
+					{/if}
+				</div>
+			</figure>
+		</div>
+	</section>
 {/snippet}
 
 <!-- full-bleed inside DocsLayout's padded content area; one screen tall on lg -->
@@ -365,107 +426,50 @@
 		<p class="mt-3 text-sm text-muted-foreground">{example.hint}</p>
 	</div>
 
-	<!-- mobile tabs -->
-	<div class="flex shrink-0 border-b border-border lg:hidden" role="tablist" aria-label="Playground panes">
-		{#each tabs as [id, label] (id)}
-			<button
-				type="button"
-				role="tab"
-				aria-selected={view === id}
-				class="{tab} {view === id ? 'border-foreground text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}"
-				onclick={() => (view = id)}
-			>
-				{label}
-			</button>
-		{/each}
-	</div>
-
-	<!-- workspace -->
-	<div class="grid min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-		<!-- editor pane -->
-		<section
-			class="{view === 'edit' ? 'flex' : 'hidden'} min-h-[24rem] min-w-0 flex-col lg:flex lg:min-h-0"
-			aria-label={isComponent ? 'Props' : 'HTML'}
-		>
-			<div class={paneHead}>
-				{#if isComponent}
-					<span>Props · Card.svelte</span>
-					<span>markup below is read-only</span>
-				{:else}
-					<span>HTML · live</span>
-					<span>inline styles only · <kbd class="font-mono">⌘↩</kbd> renders now</span>
-				{/if}
-			</div>
-			{#if isComponent}
-				<div class="flex min-h-0 flex-1 flex-col overflow-auto">
-					<div class="grid shrink-0 gap-3 border-b border-border p-4 sm:grid-cols-3">
-						<div class="flex flex-col gap-1.5">
-							<Label for="pg-title">title</Label>
-							<Input id="pg-title" bind:value={title} />
-						</div>
-						<div class="flex flex-col gap-1.5">
-							<Label for="pg-subtitle">subtitle</Label>
-							<Input id="pg-subtitle" bind:value={subtitle} />
-						</div>
-						<div class="flex flex-col gap-1.5">
-							<Label for="pg-tag">tag</Label>
-							<Input id="pg-tag" bind:value={tag} />
-						</div>
-					</div>
-					<div class="min-h-[14rem] flex-1">
-						<HtmlEditor id="pg-card" value={cardMarkup} readonly fill />
-					</div>
-				</div>
-			{:else}
-				<!-- svelte-ignore a11y_no_static_element_interactions -->
-				<div class="min-h-0 flex-1" {onkeydown}>
-					<HtmlEditor id="pg-html" bind:value={html} fill />
-				</div>
-			{/if}
-		</section>
-
-		<!-- preview pane -->
-		<section
-			class="{view === 'preview' ? 'flex' : 'hidden'} min-w-0 flex-col border-border lg:flex lg:border-l"
-			aria-label="Preview"
-		>
-			<div class={paneHead}>
-				<div class="flex items-center gap-0.5 rounded-md bg-muted p-0.5" role="radiogroup" aria-label="Preview source">
-					{#each [['image', engine], ['browser', 'browser'], ['both', 'both']] as [id, label] (id)}
-						<button
-							type="button"
-							role="radio"
-							aria-checked={compare === id}
-							class="h-6 rounded px-2 text-xs font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring {compare === id
-								? 'bg-background text-foreground shadow-sm'
-								: 'text-muted-foreground hover:text-foreground'}"
-							onclick={() => (compare = id as typeof compare)}
-						>
-							{label}
-						</button>
-					{/each}
-				</div>
-				<span class="tabular-nums" aria-live="polite">
-					{#if url && !error}
-						{(bytes / 1024).toFixed(1)} KB · {ms} ms · {engine}
-					{:else if loading}
-						Rendering…
-					{/if}
-				</span>
-			</div>
-			<div class="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 bg-muted/40 p-4 sm:p-6 lg:[container-type:size]">
-				{#if compare !== 'browser'}
-					{@render imageFigure(compare === 'both')}
-				{/if}
-				{#if compare !== 'image'}
-					{@render browserFigure(compare === 'both')}
-				{/if}
-			</div>
-		</section>
-	</div>
+	{#if lg.current}
+		<!-- workspace: editor | (engine / browser), every divider draggable; layout persists -->
+		<PaneGroup direction="horizontal" autoSaveId="playground" class="min-h-0 flex-1">
+			<Pane defaultSize={50} minSize={25}>
+				{@render editorPane()}
+			</Pane>
+			<PaneResizer class="{resizer} w-px after:absolute after:inset-y-0 after:-left-1 after:w-2" aria-label="Resize editor" />
+			<Pane defaultSize={50} minSize={25}>
+				<PaneGroup direction="vertical" autoSaveId="playground-preview" class="h-full">
+					<Pane defaultSize={50} minSize={15} collapsible>
+						{@render engineShell()}
+					</Pane>
+					<PaneResizer class="{resizer} h-px after:absolute after:inset-x-0 after:-top-1 after:h-2" aria-label="Resize preview" />
+					<Pane defaultSize={50} minSize={15} collapsible>
+						{@render browserShell()}
+					</Pane>
+				</PaneGroup>
+			</Pane>
+		</PaneGroup>
+	{:else}
+		<div class="flex shrink-0 border-b border-border" role="tablist" aria-label="Playground panes">
+			{#each tabs as [id, label] (id)}
+				<button
+					type="button"
+					role="tab"
+					aria-selected={view === id}
+					class="{tab} {view === id ? 'border-foreground text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}"
+					onclick={() => (view = id)}
+				>
+					{label}
+				</button>
+			{/each}
+		</div>
+		{#if view === 'edit'}
+			<div class="min-h-[24rem]">{@render editorPane()}</div>
+		{:else if view === 'image'}
+			{@render engineShell()}
+		{:else if view === 'browser'}
+			{@render browserShell()}
+		{/if}
+	{/if}
 
 	<!-- code drawer: collapsed shows the call on one line; open shows the full snippet -->
-	<details class="group {view === 'code' ? 'block' : 'hidden'} shrink-0 border-t border-border bg-background lg:block" open={view === 'code'}>
+	<details class="group {view === 'code' || lg.current ? 'block' : 'hidden'} shrink-0 border-t border-border bg-background" open={view === 'code' && !lg.current}>
 		<summary
 			class="flex h-10 cursor-pointer list-none items-center gap-3 px-4 text-xs text-muted-foreground hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring [&::-webkit-details-marker]:hidden"
 		>

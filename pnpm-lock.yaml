@@ -40,6 +40,9 @@ importers:
       octokit:
         specifier: ^5.0.5
         version: 5.0.5
+      paneforge:
+        specifier: 1.0.2
+        version: 1.0.2(svelte@5.53.10)
     devDependencies:
       '@svecodocs/kit':
         specifier: npm:@ethercorps/svecodocs@0.5.4
@@ -4507,6 +4510,11 @@ packages:
   pako@0.2.9:
     resolution: {integrity: sha512-NUcwaKxUxWrZLpDG+z/xZaCgQITkA/Dv4V/T6bw7VON6l1Xz/VnrBqrYjZQ12TamKHzITTfOEIYUj48y2KXImA==}
 
+  paneforge@1.0.2:
+    resolution: {integrity: sha512-KzmIXQH1wCfwZ4RsMohD/IUtEjVhteR+c+ulb/CHYJHX8SuDXoJmChtsc/Xs5Wl8NHS4L5Q7cxL8MG40gSU1bA==}
+    peerDependencies:
+      svelte: ^5.29.0
+
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
@@ -4920,6 +4928,11 @@ packages:
     peerDependencies:
       svelte: ^5.7.0
 
+  runed@0.29.2:
+    resolution: {integrity: sha512-0cq6cA6sYGZwl/FvVqjx9YN+1xEBu9sDDyuWdDW1yWX7JF2wmvmVKfH+hVCZs+csW+P3ARH92MjI3H9QTagOQA==}
+    peerDependencies:
+      svelte: ^5.7.0
+
   runed@0.35.1:
     resolution: {integrity: sha512-2F4Q/FZzbeJTFdIS/PuOoPRSm92sA2LhzTnv6FXhCoENb3huf5+fDuNOg1LNvGOouy3u/225qxmuJvcV3IZK5Q==}
     peerDependencies:
@@ -5099,6 +5112,12 @@ packages:
     engines: {node: '>=18', pnpm: '>=8.7.0'}
     peerDependencies:
       svelte: ^5.0.0
+
+  svelte-toolbelt@0.9.3:
+    resolution: {integrity: sha512-HCSWxCtVmv+c6g1ACb8LTwHVbDqLKJvHpo6J8TaqwUme2hj9ATJCpjCPNISR1OCq2Q4U1KT41if9ON0isINQZw==}
+    engines: {node: '>=18', pnpm: '>=8.7.0'}
+    peerDependencies:
+      svelte: ^5.30.2
 
   svelte2tsx@0.7.52:
     resolution: {integrity: sha512-svdT1FTrCLpvlU62evO5YdJt/kQ7nxgQxII/9BpQUvKr+GJRVdAXNVw8UWOt0fhoe5uWKyU0WsUTMRVAtRbMQg==}
@@ -9830,6 +9849,12 @@ snapshots:
 
   pako@0.2.9: {}
 
+  paneforge@1.0.2(svelte@5.53.10):
+    dependencies:
+      runed: 0.23.4(svelte@5.53.10)
+      svelte: 5.53.10
+      svelte-toolbelt: 0.9.3(svelte@5.53.10)
+
   parent-module@1.0.1:
     dependencies:
       callsites: 3.1.0
@@ -10272,6 +10297,11 @@ snapshots:
       esm-env: 1.2.2
       svelte: 5.53.10
 
+  runed@0.29.2(svelte@5.53.10):
+    dependencies:
+      esm-env: 1.2.2
+      svelte: 5.53.10
+
   runed@0.35.1(@sveltejs/kit@2.55.0(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.53.10)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2)))(svelte@5.53.10)(typescript@5.9.3)(vite@7.3.2(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.33.0)(terser@5.46.0)(yaml@2.8.2)))(svelte@5.53.10):
     dependencies:
       dequal: 2.0.3
@@ -10494,6 +10524,13 @@ snapshots:
     dependencies:
       clsx: 2.1.1
       runed: 0.23.4(svelte@5.53.10)
+      style-to-object: 1.0.14
+      svelte: 5.53.10
+
+  svelte-toolbelt@0.9.3(svelte@5.53.10):
+    dependencies:
+      clsx: 2.1.1
+      runed: 0.29.2(svelte@5.53.10)
       style-to-object: 1.0.14
       svelte: 5.53.10
 
