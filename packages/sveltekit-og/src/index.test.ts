@@ -19,6 +19,18 @@ describe("satori ImageResponse", () => {
 		expect(svg).toContain("<svg");
 	});
 
+	// regression: satori-html gives every empty element `children: []`, and satori treats any
+	// array of children on a non-flex <div> as "more than one child" — so an empty decorative
+	// <div> (a dot, a rule) always threw. Empty children must be dropped before satori sees them.
+	it("renders an empty non-flex <div> next to text", async () => {
+		const dot = `<div style="display:flex;width:100%;height:100%;align-items:center;gap:8px">
+  <div style="width:14px;height:14px;border-radius:9999px;background:#f43f5e"></div>
+  site.dev
+</div>`;
+		const svg = await createSvg(dot, { width: 400, height: 100, fonts });
+		expect(svg).toContain("<svg");
+	});
+
 	// regression: the svg body used to enqueue a raw string and throw on read
 	it("svg body is readable bytes", async () => {
 		const res = new ImageResponse(html, { format: "svg", width: 200, height: 100, fonts });

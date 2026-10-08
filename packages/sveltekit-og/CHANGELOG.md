@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Empty elements (`<div style="width:14px;height:14px"></div>` as a dot or divider) made Satori throw `Expected <div> to have explicit "display: flex" … if it has more than one child node`: satori-html emits `children: []` for them and Satori reads any array as "multiple children". Empty children are now dropped before rendering, in both the server and client paths.
 - Svelte components with `css="injected"` styles spanning multiple lines (e.g. a multi-line `linear-gradient(...)`) failed with `object null is not iterable` on satori 0.25. The injected `<style>` is now whitespace-normalized before parsing, like HTML strings already were.
 - `sveltekitOG()` Vite plugin now applies the wasm loader to the SSR build only. It used to run on the client build too, which broke the `/client` entry's Takumi wasm (`WebAssembly.instantiate(): Import #0 "./takumi_wasm_bg.js"`). Gated per environment, so it works on SvelteKit 2 (Vite 5/6) and SvelteKit 3 (Vite 8, Environment API).
 
