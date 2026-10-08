@@ -21,7 +21,7 @@
 	import Thumb from './Thumb.svelte';
 	import HtmlEditor from './HtmlEditor.svelte';
 	import cardSource from './Card.svelte?raw';
-	import { DEFAULT_EXAMPLE, examples, type Engine, type Example } from './examples.js';
+	import { DEFAULT_EXAMPLE, VARIANTS, examples, type Engine, type Example, type Variant } from './examples.js';
 	import { formatHtml } from './format.js';
 
 	// takumi encodes more raster formats than satori; only preview-able ones are listed
@@ -43,7 +43,8 @@
 	let quality = $state(90);
 
 	let exampleId = $state(DEFAULT_EXAMPLE.id);
-	let html = $state(DEFAULT_EXAMPLE.html);
+	let variant = $state<Variant>('satori');
+	let html = $state(DEFAULT_EXAMPLE.html?.satori ?? '');
 	let title = $state('Open Graph, from a component');
 	let subtitle = $state('Rendered in your browser');
 	let tag = $state('sveltekit-og');
@@ -64,7 +65,10 @@
 	const isComponent = $derived(example.id === 'component');
 	const formats = $derived(FORMATS[engine]);
 	const showQuality = $derived(engine === 'takumi' && (format === 'jpeg' || format === 'webp'));
-	const dirty = $derived(!isComponent && html !== example.html);
+	// the template's markup for the current variant; what Reset restores
+	const template = $derived(example.html?.[variant] ?? '');
+	const dirty = $derived(!isComponent && html !== template);
+	const variantHint = $derived(VARIANTS.find((v) => v.id === variant)?.hint ?? '');
 	const tabs = $derived<[typeof view, string][]>([
 		['edit', isComponent ? 'Props' : 'Edit'],
 		['image', engine],
@@ -74,8 +78,15 @@
 
 	function selectExample(next: Example) {
 		exampleId = next.id;
-		if (next.html) html = next.html;
+		if (next.html) html = next.html[variant];
 		picker?.hidePopover();
+	}
+
+	// the takumi variant uses grid, which Satori rejects — follow it with the engine
+	function selectVariant(next: Variant) {
+		variant = next;
+		if (example.html) html = example.html[next];
+		if (next === 'takumi') setEngine('takumi');
 	}
 
 	function setEngine(next: Engine) {
@@ -246,9 +257,9 @@
 				<span>Props · Card.svelte</span>
 				<span>markup below is read-only</span>
 			{:else}
-				<span>HTML · live</span>
+				<span>HTML · live · {variantHint}</span>
 				<span class="flex items-center gap-3">
-					<span class="truncate">inline styles or tw · <kbd class="font-mono">⌘↩</kbd> renders now</span>
+					<span class="truncate"><kbd class="font-mono">⌘↩</kbd> renders now</span>
 					<button
 						type="button"
 						class="shrink-0 rounded px-1.5 py-0.5 font-medium text-foreground transition-colors duration-150 hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -368,6 +379,9 @@
 			<CaretDown class="size-3.5 text-muted-foreground" aria-hidden="true" />
 		</button>
 
+		{#if !isComponent}
+			{@render segmented('Variant', variant, VARIANTS.map((v) => v.id), (v) => selectVariant(v as Variant))}
+		{/if}
 		{@render segmented('Engine', engine, ENGINES, (v) => setEngine(v as Engine))}
 		{@render segmented('Format', format, formats, (v) => (format = v))}
 
@@ -398,7 +412,7 @@
 
 		<div class="ml-auto flex items-center gap-2">
 			{#if dirty}
-				<Button variant="subtle" size="sm" onclick={() => (html = example.html)}>
+				<Button variant="subtle" size="sm" onclick={() => (html = template)}>
 					<ArrowCounterClockwise class="size-4" aria-hidden="true" />
 					Reset
 				</Button>
@@ -439,7 +453,7 @@
 						{#if ex.id === 'component'}
 							<Thumb component={Card} alt="" />
 						{:else}
-							<Thumb html={ex.html} alt="" />
+							<Thumb html={ex.html?.satori} alt="" />
 						{/if}
 					</div>
 					<span class="px-3 py-2 text-sm font-medium text-foreground">{ex.label}</span>
