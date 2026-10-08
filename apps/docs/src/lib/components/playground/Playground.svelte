@@ -88,7 +88,10 @@
 	const showQuality = $derived(engine === 'takumi' && (format === 'jpeg' || format === 'webp'));
 	// the template's markup for the current styling and engine; what Reset restores
 	const template = $derived(templateFor(example, style, engine));
-	const dirty = $derived(!isComponent && html !== template);
+	// compared formatted, so Format alone doesn't count as an edit (the formatter is
+	// idempotent, and an engine switch must still swap a merely reformatted template)
+	const dirty = $derived(!isComponent && formatHtml(html) !== formatHtml(template));
+	const formatted = $derived(!isComponent && html === formatHtml(template));
 	const hint = $derived(styleHint(style, engine));
 	const tabs = $derived<[typeof view, string][]>([
 		['edit', isComponent ? 'Props' : 'Edit'],
@@ -97,24 +100,32 @@
 		['code', 'Code']
 	]);
 
+	// load a template, keeping it pretty-printed if the current one was
+	function load(ex: Example, st: Style, en: Engine, keepFormatted = formatted) {
+		if (!ex.html) return;
+		const next = templateFor(ex, st, en);
+		html = keepFormatted ? formatHtml(next) : next;
+	}
+
 	function selectExample(next: Example) {
 		exampleId = next.id;
-		if (next.html) html = templateFor(next, style, engine);
+		load(next, style, engine);
 		picker?.hidePopover();
 	}
 
 	function selectStyle(next: Style) {
 		style = next;
-		if (example.html) html = templateFor(example, next, engine);
+		load(example, next, engine);
 	}
 
 	// the vanilla template is per engine (grid on takumi, flex on satori), so an engine
 	// change reloads it — unless the markup was edited, which is kept as is
 	function setEngine(next: Engine) {
 		const untouched = !dirty;
+		const pretty = formatted;
 		engine = next;
 		if (!FORMATS[next].includes(format)) format = 'png';
-		if (untouched && example.html) html = templateFor(example, style, next);
+		if (untouched) load(example, style, next, pretty);
 	}
 
 	// ⌘/Ctrl+Enter in the editor renders without waiting for the debounce
