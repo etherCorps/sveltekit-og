@@ -8,8 +8,9 @@
 		value = $bindable(''),
 		id,
 		readonly = false,
-		minHeight = '16rem'
-	}: { value?: string; id: string; readonly?: boolean; minHeight?: string } = $props();
+		minHeight = '16rem',
+		fill = false
+	}: { value?: string; id: string; readonly?: boolean; minHeight?: string; fill?: boolean } = $props();
 
 	const highlight = language();
 	// a trailing newline would collapse in the pre and misalign the caret on the last line
@@ -34,7 +35,11 @@
 	}
 </script>
 
-<div class="editor relative min-w-0 overflow-hidden rounded-xl border border-border bg-muted/40" style:min-height={minHeight}>
+<!-- fill: stretch to the parent's height (workbench pane) instead of growing with min-height -->
+<div
+	class="editor relative min-w-0 overflow-hidden {fill ? 'h-full' : 'rounded-xl border border-border bg-muted/40'}"
+	style:min-height={fill ? '0' : minHeight}
+>
 	<!-- {@html} is safe: twinkleplop HTML-escapes the source it highlights -->
 	<pre bind:this={pre} class="paint" aria-hidden="true">{@html painted}</pre>
 	<textarea
@@ -66,6 +71,7 @@
 	}
 	.paint {
 		min-height: inherit;
+		height: 100%;
 		overflow: hidden;
 		pointer-events: none;
 	}
