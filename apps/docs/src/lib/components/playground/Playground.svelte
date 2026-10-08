@@ -6,7 +6,7 @@
 -->
 <script lang="ts">
 	import { createImage, type ClientImageResponseOptions } from '@ethercorps/sveltekit-og/client';
-	import { Button, Input, Label, Textarea } from '@svecodocs/kit';
+	import { Button, Input, Label } from '@svecodocs/kit';
 	import { language } from '@twinkleplop/typescript';
 	import '@twinkleplop/theme-github';
 	import Check from 'phosphor-svelte/lib/Check';
@@ -14,6 +14,8 @@
 	import DownloadSimple from 'phosphor-svelte/lib/DownloadSimple';
 	import Card from './Card.svelte';
 	import Thumb from './Thumb.svelte';
+	import HtmlEditor from './HtmlEditor.svelte';
+	import cardSource from './Card.svelte?raw';
 	import { DEFAULT_EXAMPLE, examples, type Engine, type Example } from './examples.js';
 
 	// takumi encodes more raster formats than satori; only preview-able ones are listed
@@ -23,6 +25,8 @@
 	};
 
 	const highlight = language();
+	// the component template shows Card.svelte's markup read-only; strip the <script> block
+	const cardMarkup = cardSource.replace(/<!--[\s\S]*?-->\s*/, '').replace(/<script[\s\S]*?<\/script>\s*/, '').trim();
 
 	let engine = $state<Engine>('takumi');
 	let format = $state('png');
@@ -52,6 +56,7 @@
 		exampleId = next.id;
 		if (next.html) html = next.html;
 	}
+	const dirty = $derived(!isComponent && html !== example.html);
 
 	// keep format valid when the engine (and its format list) changes
 	function onEngineChange() {
@@ -192,83 +197,86 @@
 			<p class="mt-3 min-h-[1lh] text-sm text-muted-foreground">{example.hint}</p>
 		</div>
 
-		<!-- 2 · Tune -->
+		<!-- 2 · Edit -->
 		<div class="min-w-0 lg:col-start-1 lg:row-start-2">
-			{@render stage('02', 'Tune it', 'Engine, output format and size apply to every render. Satori emits png or svg; Takumi adds jpeg and webp.')}
-			<div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-				<div class="flex flex-col gap-1.5">
-					<Label for="pg-engine">Engine</Label>
-					<select id="pg-engine" class={field} bind:value={engine} onchange={onEngineChange}>
-						<option value="takumi">takumi</option>
-						<option value="satori">satori</option>
-					</select>
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<Label for="pg-format">Format</Label>
-					<select id="pg-format" class={field} bind:value={format}>
-						{#each formats as f (f)}
-							<option value={f}>{f}</option>
-						{/each}
-					</select>
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<Label for="pg-width">Width</Label>
-					<Input id="pg-width" type="number" min="1" inputmode="numeric" bind:value={width} />
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<Label for="pg-height">Height</Label>
-					<Input id="pg-height" type="number" min="1" inputmode="numeric" bind:value={height} />
-				</div>
-				{#if showQuality}
-					<div class="col-span-2 flex flex-col gap-1.5 sm:col-span-4">
-						<Label for="pg-quality">Quality · {quality}</Label>
-						<input
-							id="pg-quality"
-							type="range"
-							min="1"
-							max="100"
-							bind:value={quality}
-							class="h-10 w-full accent-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-						/>
-					</div>
-				{/if}
-			</div>
-
-			<div class="mt-5">
-				{#if isComponent}
-					<div class="grid gap-3">
-						<div class="flex flex-col gap-1.5">
-							<Label for="pg-title">title</Label>
-							<Input id="pg-title" bind:value={title} />
-						</div>
-						<div class="flex flex-col gap-1.5">
-							<Label for="pg-subtitle">subtitle</Label>
-							<Input id="pg-subtitle" bind:value={subtitle} />
-						</div>
-						<div class="flex flex-col gap-1.5">
-							<Label for="pg-tag">tag</Label>
-							<Input id="pg-tag" bind:value={tag} />
-						</div>
-					</div>
-				{:else}
+			{@render stage('02', isComponent ? 'Set the props' : 'Edit the HTML', isComponent ? 'Card.svelte renders these props. The markup below is what the engine sees.' : 'Inline styles only — both engines read them. The preview re-renders as you type.')}
+			{#if isComponent}
+				<div class="mt-5 grid gap-3">
 					<div class="flex flex-col gap-1.5">
-						<Label for="pg-html">HTML</Label>
-						<Textarea
-							id="pg-html"
-							class="min-h-[260px] resize-y font-mono text-xs leading-relaxed"
-							spellcheck={false}
-							bind:value={html}
-						/>
+						<Label for="pg-title">title</Label>
+						<Input id="pg-title" bind:value={title} />
 					</div>
-				{/if}
-			</div>
+					<div class="flex flex-col gap-1.5">
+						<Label for="pg-subtitle">subtitle</Label>
+						<Input id="pg-subtitle" bind:value={subtitle} />
+					</div>
+					<div class="flex flex-col gap-1.5">
+						<Label for="pg-tag">tag</Label>
+						<Input id="pg-tag" bind:value={tag} />
+					</div>
+				</div>
+				<div class="mt-5 flex min-h-9 items-center justify-between">
+					<Label for="pg-card">Card.svelte · read-only</Label>
+				</div>
+				<div class="mt-2">
+					<HtmlEditor id="pg-card" value={cardMarkup} readonly minHeight="10rem" />
+				</div>
+			{:else}
+				<div class="mt-5 flex min-h-9 items-center justify-between gap-3">
+					<Label for="pg-html">HTML <span class="font-normal text-muted-foreground">· live</span></Label>
+					<Button variant="subtle" size="sm" disabled={!dirty} onclick={() => (html = example.html)}>
+						Reset to template
+					</Button>
+				</div>
+				<div class="mt-2">
+					<HtmlEditor id="pg-html" bind:value={html} minHeight="18rem" />
+				</div>
+			{/if}
 		</div>
 
 		<!-- 3 · Preview — sticky beside stages 1–2 on wide screens, in sequence on narrow ones -->
 		<aside class="min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-3">
 			<div class="lg:sticky lg:top-24">
-				{@render stage('03', 'Preview', 'Re-renders as you change anything above.')}
-				<div class="mt-5 flex min-h-5 items-center justify-end">
+				{@render stage('03', 'Preview', 'Pick the engine and output; the image re-renders as you change anything.')}
+				<div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+					<div class="flex flex-col gap-1.5">
+						<Label for="pg-engine">Engine</Label>
+						<select id="pg-engine" class={field} bind:value={engine} onchange={onEngineChange}>
+							<option value="takumi">takumi</option>
+							<option value="satori">satori</option>
+						</select>
+					</div>
+					<div class="flex flex-col gap-1.5">
+						<Label for="pg-format">Format</Label>
+						<select id="pg-format" class={field} bind:value={format}>
+							{#each formats as f (f)}
+								<option value={f}>{f}</option>
+							{/each}
+						</select>
+					</div>
+					<div class="flex flex-col gap-1.5">
+						<Label for="pg-width">Width</Label>
+						<Input id="pg-width" type="number" min="1" inputmode="numeric" bind:value={width} />
+					</div>
+					<div class="flex flex-col gap-1.5">
+						<Label for="pg-height">Height</Label>
+						<Input id="pg-height" type="number" min="1" inputmode="numeric" bind:value={height} />
+					</div>
+					{#if showQuality}
+						<div class="col-span-2 flex flex-col gap-1.5 sm:col-span-4">
+							<Label for="pg-quality">Quality · {quality}</Label>
+							<input
+								id="pg-quality"
+								type="range"
+								min="1"
+								max="100"
+								bind:value={quality}
+								class="h-10 w-full accent-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+							/>
+						</div>
+					{/if}
+				</div>
+				<div class="mt-4 flex min-h-5 items-center justify-end">
 					<span class="text-sm tabular-nums text-muted-foreground" aria-live="polite">
 						{#if url && !error}
 							{(bytes / 1024).toFixed(1)} KB · {ms} ms
