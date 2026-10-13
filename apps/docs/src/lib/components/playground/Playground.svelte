@@ -48,7 +48,7 @@
 	// display names; the code snippet keeps the lowercase API values
 	const NAMES: Record<string, string> = { takumi: 'Takumi', satori: 'Satori', png: 'PNG', jpeg: 'JPEG', webp: 'WebP', svg: 'SVG' };
 	const pretty = (v: string) => NAMES[v] ?? v;
-	const INSTALL = 'npm i @ethercorps/sveltekit-og@next takumi-js';
+	const INSTALL = 'npm i @ethercorps/sveltekit-og takumi-js';
 
 	const highlight = language();
 	// the component template shows Card.svelte's markup read-only; strip the <script> block

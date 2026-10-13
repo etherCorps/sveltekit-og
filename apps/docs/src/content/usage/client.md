@@ -23,7 +23,7 @@ Open the [Playground](/docs/playground) — it renders in your browser with this
 
 <Callout type="note" title="Available from v4.4.0">
 
-Client-side rendering is available from `sveltekit-og@4.4.0`. Try it early from the `next` tag: `npm i @ethercorps/sveltekit-og@next`.
+Client-side rendering is available from `sveltekit-og@4.4.0`: `npm i @ethercorps/sveltekit-og takumi-js`.
 
 </Callout>
 
