@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.4.0] - 2026-10-13
+
 ### Added
 
+- SvelteKit 3 (Vite 8) support alongside SvelteKit 2; the `sveltekitOG()` plugin uses the Environment API when present. Examples for Satori, Takumi and Bun run on Kit 3.
+- Official `@sveltejs/adapter-bun` example (`examples/bun-build`) and a Bun runtime guide.
 - `@ethercorps/sveltekit-og/client`: render OG images in the browser or a web worker with Takumi (default) or Satori + ReSVG, no server request. Engines load lazily (only the one you pick is downloaded); Satori falls back to bundled Noto Sans served same-origin; components render on the main thread, HTML strings everywhere; passing a component in a worker rejects with `COMPONENT_IN_WORKER`. Errors reach `.blob()`/`.arrayBuffer()`/`.text()` as `ImageResponseError` with a `code`. Requires `takumi-js` with either engine; workers need `worker: { format: "es" }` in `vite.config`.
 
 ### Fixed
