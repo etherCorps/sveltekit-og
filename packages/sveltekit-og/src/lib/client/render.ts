@@ -1,7 +1,7 @@
+import type { Element, ImageResponseOptions, PropsArg } from "../core/types.js";
 import { ImageResponseError, ErrorCodes } from "../helpers/error-handler.js";
 import { renderImage as coreRender, type Platform } from "../core/render.js";
-import type { ClientImageResponseOptions } from "./types.js";
-import type { Element } from "../core/types.js";
+import { ImageResponse as CoreImageResponse } from "../core/image-response.js";
 
 /**
  * Client platform: components are mounted in a detached shadow root (needs a
@@ -27,11 +27,31 @@ export const clientPlatform: Platform = {
 	},
 };
 
-/** Client-side render to bytes (svg → string). Defaults to Takumi. */
-export function renderImage(
-	element: Element,
-	options: ClientImageResponseOptions = {},
-	props?: Record<string, unknown>
+/**
+ * OG image as a `Response`, rendered in the browser (or a worker) with the engine
+ * picked by `options.engine` (Takumi by default). Consume it with
+ * `URL.createObjectURL(await res.blob())`.
+ */
+export class ImageResponse<T extends Element> extends CoreImageResponse<T> {
+	constructor(element: T, options?: ImageResponseOptions, ...[props]: PropsArg<T>) {
+		super(clientPlatform, element, options, props);
+	}
+}
+
+/** Same as `new ImageResponse(...)`, as a function. */
+export function createImage<T extends Element>(
+	element: T,
+	options?: ImageResponseOptions,
+	...props: PropsArg<T>
+): ImageResponse<T> {
+	return new ImageResponse(element, options, ...props);
+}
+
+/** Render to bytes (`svg` → string) instead of a `Response`. */
+export function renderImage<T extends Element>(
+	element: T,
+	options?: ImageResponseOptions,
+	...[props]: PropsArg<T>
 ): Promise<Uint8Array | string> {
-	return coreRender(element, options, props, clientPlatform);
+	return coreRender(element, options ?? {}, props, clientPlatform);
 }

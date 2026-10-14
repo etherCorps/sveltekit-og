@@ -1,17 +1,19 @@
-import type { ClientImageResponseOptions } from "./types.js";
-import type { Element, PropsArg } from "../core/types.js";
-import { clientPlatform } from "./render.js";
-import { imageResponseInit } from "../core/render.js";
+import type { Element, ImageResponseOptions } from "./types.js";
+import { imageResponseInit, type Platform } from "./render.js";
 import { ImageResponseError, ErrorCodes } from "../helpers/error-handler.js";
 
 /**
- * Client-side OG image, rendered in the browser (or a worker) with the engine
- * you pick via `options.engine` ("takumi" | "satori", defaults to "takumi").
- * Extends `Response`, so consume it with `URL.createObjectURL(await res.blob())`.
+ * A `Response` whose body is the rendered image. The server and client entries
+ * subclass this with their platform; everything else is shared.
  */
 export class ImageResponse<T extends Element> extends Response {
-	constructor(element: T, options?: ClientImageResponseOptions, ...[props]: PropsArg<T>) {
-		const { body, init } = imageResponseInit(element, options, props, clientPlatform);
+	constructor(
+		platform: Platform,
+		element: T,
+		options: ImageResponseOptions | undefined,
+		props: Record<string, unknown> | undefined
+	) {
+		const { body, init } = imageResponseInit(element, options, props, platform);
 		super(body, init);
 	}
 
@@ -19,7 +21,8 @@ export class ImageResponse<T extends Element> extends Response {
 	 * Browsers turn an errored body stream into a bare `TypeError: Failed to fetch`
 	 * when read through Response's own arrayBuffer()/blob()/text(), which drops the
 	 * ImageResponseError (and its .code). Reading the stream directly keeps the
-	 * original error, so override the three readers users actually call.
+	 * original error, so override the three readers users actually call. The same
+	 * path on the server means every runtime surfaces the same error codes.
 	 */
 	override async arrayBuffer(): Promise<ArrayBuffer> {
 		const reader = this.body!.getReader();
@@ -59,8 +62,7 @@ export class ImageResponse<T extends Element> extends Response {
 /**
  * The shared body builder wraps every failure as UNKNOWN_ERROR "Failed to generate X"
  * with the real error in `originalError`. Surface the inner one so callers can check
- * `error.code` (e.g. COMPONENT_IN_WORKER, FONT_LOAD_FAILED).
- * ponytail: unwrap here rather than change the shared helper; fold into the v3 realignment.
+ * `error.code` (e.g. UNSUPPORTED_FORMAT, FONT_LOAD_FAILED).
  */
 function unwrapRenderError(error: unknown): unknown {
 	return error instanceof ImageResponseError &&

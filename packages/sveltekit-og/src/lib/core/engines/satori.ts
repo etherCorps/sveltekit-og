@@ -43,6 +43,7 @@ export async function render(
 	const satoriOptions = {
 		...options,
 		loadAdditionalAsset: loadDynamicAsset({ emoji: options.emoji as EmojiType }),
+		...options.satori,
 	} as unknown as SatoriLibOptions;
 
 	log.debug("Generating SVG with Satori");
@@ -64,6 +65,7 @@ export async function render(
 		() => {
 			const resvg = new Resvg(svg, {
 				fitTo: { mode: "width", value: options.width || DEFAULT_WIDTH },
+				...options.resvg,
 			});
 			const rendered = resvg.render();
 			// free the wasm-backed objects so long-lived isolates don't grow wasm memory

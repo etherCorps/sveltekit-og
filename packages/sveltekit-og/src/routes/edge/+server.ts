@@ -14,6 +14,7 @@ export const GET: RequestHandler = async () => {
 		.trim();
 
 	return new ImageResponse(html, {
+		engine: "satori",
 		format: "png",
 		debug: false,
 		height: 300,

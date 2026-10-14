@@ -39,7 +39,13 @@ describe("satori ImageResponse", () => {
 
 	// regression: the svg body used to enqueue a raw string and throw on read
 	it("svg body is readable bytes", async () => {
-		const res = new ImageResponse(html, { format: "svg", width: 200, height: 100, fonts });
+		const res = new ImageResponse(html, {
+			engine: "satori",
+			format: "svg",
+			width: 200,
+			height: 100,
+			fonts,
+		});
 		expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
 		const text = await res.text();
 		expect(text).toContain("<svg");

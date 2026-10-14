@@ -2,6 +2,8 @@ import type { Component } from "svelte";
 import type { SatoriOptions as SatoriLibOptions } from "satori";
 import type { EmojiType as TakumiEmoji } from "takumi-js/helpers/emoji";
 import type { OutputFormat } from "takumi-js/node";
+import type { RenderOptions as TakumiRenderOptions } from "takumi-js";
+import type { ResvgRenderOptions } from "@resvg/resvg-wasm";
 import type { EmojiType as SatoriEmoji } from "../helpers/emoji.js";
 import type { BaseFont } from "../fonts.js";
 import type { MayBePromise } from "../types.js";
@@ -91,6 +93,10 @@ export type TakumiOptions = BaseOptions & {
 	 * @default twemoji
 	 * */
 	emoji?: TakumiEmoji | "from-font";
+	/**
+	 * Passed straight to takumi-js `render`/`renderSvg`, after the options above.
+	 * */
+	takumi?: Partial<TakumiRenderOptions>;
 };
 
 export type SatoriOptions = BaseOptions & {
@@ -110,11 +116,22 @@ export type SatoriOptions = BaseOptions & {
 	 * @default provided by satori
 	 * */
 	tailwindConfig?: SatoriLibOptions["tailwindConfig"];
+	/**
+	 * Passed straight to `satori()`, after the options above.
+	 * */
+	satori?: Partial<SatoriLibOptions>;
+	/**
+	 * Passed straight to the ReSVG constructor (png only), after `fitTo`.
+	 * */
+	resvg?: ResvgRenderOptions;
 };
 
 export type ImageOptions = TakumiOptions | SatoriOptions;
 
 export type Format = NonNullable<TakumiOptions["format"]>;
+
+/** Everything `ImageResponse` / `createImage` take: engine options plus the Response bits. */
+export type ImageResponseOptions = ImageOptions & ResponseOptions;
 
 export type ResponseOptions = {
 	/**

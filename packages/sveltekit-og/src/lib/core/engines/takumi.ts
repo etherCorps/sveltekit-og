@@ -1,5 +1,6 @@
 import { render as takumiRender, renderSvg } from "takumi-js";
 import type { Renderer, FontDetails } from "takumi-js/node";
+import type { RenderSvgOptions } from "takumi-js";
 import autoModule, { init as initTakumiWasm, Renderer as WasmRenderer } from "takumi-js/wasm";
 import type { ResolvedFont, TakumiOptions } from "../types.js";
 import type { VNode } from "../../types.js";
@@ -66,21 +67,22 @@ export async function render(
 	const renderer = await useRenderer();
 	await registerFonts(renderer, options.fonts);
 
-	const { width, height, format = "png", quality, stylesheets, emoji } = options;
+	const { width, height, format = "png", quality, stylesheets, emoji, takumi } = options;
 	const shared = { renderer, width, height, stylesheets, emoji };
 
 	createLogger(options.debug ?? false).debug(`Rendering ${format.toUpperCase()} with Takumi`);
 
 	if (format === "svg") {
 		return handleAsync(
-			() => renderSvg(vnode, shared),
+			// `takumi` is typed against the raster options; takumi-js ignores keys svg has no use for
+			() => renderSvg(vnode, { ...shared, ...takumi } as RenderSvgOptions),
 			ErrorCodes.TAKUMI_RENDER_FAILED,
 			"Failed to render SVG with Takumi"
 		);
 	}
 
 	return handleAsync(
-		() => takumiRender(vnode, { ...shared, format, quality }),
+		() => takumiRender(vnode, { ...shared, format, quality, ...takumi }),
 		ErrorCodes.TAKUMI_RENDER_FAILED,
 		"Failed to render image with Takumi"
 	);

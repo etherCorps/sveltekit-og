@@ -26,6 +26,7 @@ export const GET: RequestHandler = async () => {
 `;
 
 	return new ImageResponse(html, {
+		engine: "satori",
 		format: "png",
 		debug: false,
 		height: 600,

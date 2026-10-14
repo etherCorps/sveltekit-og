@@ -1,4 +1,10 @@
-export { ImageResponse } from "./image-response.js";
+/**
+ * Alias of the root entry: Takumi has been the default engine there since v5.
+ * Kept so `@ethercorps/sveltekit-og/takumi` imports keep working; removed in v6.
+ */
+export * from "../index.js";
+
+// v4 names for the takumi types, mapped onto the shared ones
 export type {
 	TakumiImageResponseOptions,
 	TakumiImageOptions,
@@ -7,6 +13,3 @@ export type {
 } from "./types.js";
 export type { TakumiFontInput, TakumiFontDescriptor } from "./fonts.js";
 export { resolveTakumiFonts } from "./fonts.js";
-
-// re-export the font helpers so the takumi path works from one import
-export { GoogleFont, CustomFont, loadGoogleFont } from "../fonts.js";

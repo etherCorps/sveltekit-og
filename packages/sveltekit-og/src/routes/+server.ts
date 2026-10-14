@@ -1,5 +1,5 @@
 import { type RequestHandler } from "@sveltejs/kit";
-import { ImageResponse, type ImageResponseOptions } from "#lib/index.js";
+import { ImageResponse } from "#lib/index.js";
 import { CustomFont, GoogleFont, resolveFonts } from "#lib/fonts.js";
 import RegularFont from "./(components)/SpaceMono-Regular.ttf?url";
 import { read } from "$app/server";
@@ -15,7 +15,7 @@ const customRegular = new CustomFont("Space Mono", () => read(RegularFont).array
 });
 
 export const GET: RequestHandler = async ({ url }) => {
-	const format = (url.searchParams.get("format") as ImageResponseOptions["format"]) || "png";
+	const format = (url.searchParams.get("format") as "png" | "svg") || "png";
 	const html = `
 		<div class="h-full w-full flex flex-col items-center justify-center bg-white text-6xl">
   	<img class="h-96 w-96" src="${logo}"/>
@@ -27,6 +27,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		.trim();
 
 	return new ImageResponse(html, {
+		engine: "satori",
 		format: format,
 		debug: true,
 		height: 600,
