@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { sveltekitOG } from "$lib/plugin.js";
+import { sveltekitOG } from "#lib/plugin.js";
 
 // The unwasm hooks must only touch the SSR bundle. On the client build they rewrite
 // the /client entry's takumi wasm into something WebAssembly.instantiate can't load
@@ -26,28 +26,39 @@ describe("sveltekitOG vite plugin", () => {
 		const p = plugin();
 		expect(p.apply).toBe("build");
 		expect(p.config).toBeUndefined();
-		for (const h of ["resolveId", "load", "transform"] as const) expect(typeof p[h]?.handler).toBe("function");
+		for (const h of ["resolveId", "load", "transform"] as const)
+			expect(typeof p[h]?.handler).toBe("function");
 	});
 
 	it("applies only to server environments (Vite 6+ / SvelteKit 3)", () => {
 		const p = plugin();
 		expect(p.applyToEnvironment?.({ name: "ssr", config: { consumer: "server" } })).toBe(true);
-		expect(p.applyToEnvironment?.({ name: "client", config: { consumer: "client" } })).toBe(false);
+		expect(p.applyToEnvironment?.({ name: "client", config: { consumer: "client" } })).toBe(
+			false
+		);
 	});
 
 	it("skips hooks on the client build when there is no environment (Vite 5 / SvelteKit 2)", async () => {
 		const p = plugin();
 		const ctx = { resolve: vi.fn(async () => ({ id: "/abs/yoga.wasm?module" })) };
-		expect(await p.resolveId!.handler.call(ctx, "satori/yoga.wasm?module", "/app.js", { ssr: false })).toBeNull();
+		expect(
+			await p.resolveId!.handler.call(ctx, "satori/yoga.wasm?module", "/app.js", {
+				ssr: false,
+			})
+		).toBeNull();
 		expect(await p.load!.handler.call(ctx, "/abs/yoga.wasm?module", { ssr: false })).toBeNull();
-		expect(await p.transform!.handler.call(ctx, "code", "/abs/yoga.wasm?module", { ssr: false })).toBeNull();
+		expect(
+			await p.transform!.handler.call(ctx, "code", "/abs/yoga.wasm?module", { ssr: false })
+		).toBeNull();
 		expect(ctx.resolve).not.toHaveBeenCalled();
 	});
 
 	it("runs hooks on the SSR build (Vite 5 / SvelteKit 2)", async () => {
 		const p = plugin();
 		const ctx = { resolve: vi.fn(async () => ({ id: "/abs/yoga.wasm?module" })) };
-		const r = await p.resolveId!.handler.call(ctx, "satori/yoga.wasm?module", "/app.js", { ssr: true });
+		const r = await p.resolveId!.handler.call(ctx, "satori/yoga.wasm?module", "/app.js", {
+			ssr: true,
+		});
 		expect(ctx.resolve).toHaveBeenCalledTimes(1);
 		expect(r).toMatchObject({ id: "/abs/yoga.wasm?module" });
 	});
@@ -55,7 +66,11 @@ describe("sveltekitOG vite plugin", () => {
 	it("defers to the environment when one exists (Vite 6+)", async () => {
 		const p = plugin();
 		const client = { environment: { config: { consumer: "client" } }, resolve: vi.fn() };
-		expect(await p.resolveId!.handler.call(client, "satori/yoga.wasm?module", "/app.js", { ssr: true })).toBeNull();
+		expect(
+			await p.resolveId!.handler.call(client, "satori/yoga.wasm?module", "/app.js", {
+				ssr: true,
+			})
+		).toBeNull();
 		expect(client.resolve).not.toHaveBeenCalled();
 	});
 });

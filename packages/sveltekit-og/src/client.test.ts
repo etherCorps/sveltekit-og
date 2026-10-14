@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ImageResponse, createImage } from "$lib/client/index.js";
-import { ErrorCodes } from "$lib/helpers/error-handler.js";
+import { ImageResponse, createImage } from "#lib/client/index.js";
+import { ErrorCodes } from "#lib/helpers/error-handler.js";
 import Card from "./routes/client/Card.svelte";
 
 // Vitest runs in node: no `document` (same as a worker), and the satori wasm
@@ -19,7 +19,7 @@ function mockSatoriEngine() {
 			options.format === "svg" ? "<svg/>" : new Uint8Array([0x89, 0x50, 0x4e, 0x47])
 		),
 	};
-	vi.doMock("$lib/core/engines/satori.js", () => {
+	vi.doMock("#lib/core/engines/satori.js", () => {
 		state.evaluated = true;
 		return { render: state.render };
 	});
@@ -34,7 +34,7 @@ const FALLBACK_FONTS = [
 /** Same per-test pattern as mockSatoriEngine: the real module's `?url` fetch can't run in node. */
 function mockClientFonts() {
 	const defaultClientFonts = vi.fn(async () => FALLBACK_FONTS);
-	vi.doMock("$lib/client/fonts.js", () => ({ defaultClientFonts }));
+	vi.doMock("#lib/client/fonts.js", () => ({ defaultClientFonts }));
 	return defaultClientFonts;
 }
 
@@ -56,7 +56,7 @@ describe("client ImageResponse", () => {
 	// No silent png fallback: a format the engine can't emit rejects before any engine loads.
 	it("rejects satori raster formats other than png with UNSUPPORTED_FORMAT", async () => {
 		const satori = mockSatoriEngine();
-		const { ImageResponse } = await import("$lib/client/index.js");
+		const { ImageResponse } = await import("#lib/client/index.js");
 		const res = new ImageResponse(html, {
 			engine: "satori",
 			format: "webp" as never,
@@ -112,7 +112,7 @@ describe("client ImageResponse", () => {
 
 describe("client render: components in a worker", () => {
 	it("rejects a component with COMPONENT_IN_WORKER when there is no document", async () => {
-		const { renderImage } = await import("$lib/client/render.js");
+		const { renderImage } = await import("#lib/client/render.js");
 		expect(typeof document).toBe("undefined");
 		await expect(
 			renderImage(
@@ -127,7 +127,7 @@ describe("client render: components in a worker", () => {
 	});
 
 	it("still renders HTML strings without a document", async () => {
-		const { renderImage } = await import("$lib/client/render.js");
+		const { renderImage } = await import("#lib/client/render.js");
 		const out = (await renderImage(html, {
 			engine: "takumi",
 			width: 600,
@@ -140,7 +140,7 @@ describe("client render: components in a worker", () => {
 describe("client render: lazy engine dispatch", () => {
 	it("defaults to takumi and never loads the satori engine module", async () => {
 		const satori = mockSatoriEngine();
-		const { renderImage } = await import("$lib/client/render.js");
+		const { renderImage } = await import("#lib/client/render.js");
 		const out = (await renderImage(html, { width: 600, height: 300 })) as Uint8Array;
 		expect(Array.from(out.subarray(0, 4))).toEqual([0x89, 0x50, 0x4e, 0x47]);
 		expect(satori.evaluated).toBe(false);
@@ -149,7 +149,7 @@ describe("client render: lazy engine dispatch", () => {
 	it("loads the satori engine module only when engine is satori", async () => {
 		mockClientFonts();
 		const satori = mockSatoriEngine();
-		const { renderImage } = await import("$lib/client/render.js");
+		const { renderImage } = await import("#lib/client/render.js");
 		const out = await renderImage(html, {
 			engine: "satori",
 			width: 600,
@@ -163,7 +163,7 @@ describe("client render: lazy engine dispatch", () => {
 
 	it("does not load any engine when the worker guard fires", async () => {
 		const satori = mockSatoriEngine();
-		const { renderImage } = await import("$lib/client/render.js");
+		const { renderImage } = await import("#lib/client/render.js");
 		await expect(
 			renderImage(
 				Card,
@@ -183,7 +183,7 @@ describe("client render: satori default fonts", () => {
 	it("fills in the bundled fonts when satori gets no fonts", async () => {
 		const fonts = mockClientFonts();
 		const satori = mockSatoriEngine();
-		const { renderImage } = await import("$lib/client/render.js");
+		const { renderImage } = await import("#lib/client/render.js");
 		await renderImage(html, { engine: "satori", width: 600, height: 300, format: "png" });
 		expect(fonts).toHaveBeenCalledTimes(1);
 		expect(satori.render.mock.calls[0][1]).toMatchObject({ fonts: FALLBACK_FONTS });
@@ -192,7 +192,7 @@ describe("client render: satori default fonts", () => {
 	it("treats an empty fonts array as 'no fonts'", async () => {
 		mockClientFonts();
 		const satori = mockSatoriEngine();
-		const { renderImage } = await import("$lib/client/render.js");
+		const { renderImage } = await import("#lib/client/render.js");
 		await renderImage(html, {
 			engine: "satori",
 			width: 600,
@@ -206,7 +206,7 @@ describe("client render: satori default fonts", () => {
 	it("applies the fallback to svg output too", async () => {
 		mockClientFonts();
 		const satori = mockSatoriEngine();
-		const { renderImage } = await import("$lib/client/render.js");
+		const { renderImage } = await import("#lib/client/render.js");
 		const out = await renderImage(html, {
 			engine: "satori",
 			width: 600,
@@ -220,7 +220,7 @@ describe("client render: satori default fonts", () => {
 	it("leaves caller fonts alone", async () => {
 		const fonts = mockClientFonts();
 		const satori = mockSatoriEngine();
-		const { renderImage } = await import("$lib/client/render.js");
+		const { renderImage } = await import("#lib/client/render.js");
 		await renderImage(html, {
 			engine: "satori",
 			width: 600,
@@ -235,7 +235,7 @@ describe("client render: satori default fonts", () => {
 	it("never loads the bundled fonts for takumi", async () => {
 		const fonts = mockClientFonts();
 		mockSatoriEngine();
-		const { renderImage } = await import("$lib/client/render.js");
+		const { renderImage } = await import("#lib/client/render.js");
 		await renderImage(html, { width: 600, height: 300 });
 		expect(fonts).not.toHaveBeenCalled();
 	});
@@ -245,14 +245,14 @@ describe("client fonts: defaultClientFonts (real module)", () => {
 	// Vitest can't resolve the `?url` TTF imports to fetchable URLs, so stub fetch and
 	// test the memo/retry behaviour, which is what can go wrong in a consumer's build.
 	it("surfaces a failed fetch as FONT_LOAD_FAILED and retries on the next call", async () => {
-		vi.doUnmock("$lib/client/fonts.js");
+		vi.doUnmock("#lib/client/fonts.js");
 		const fetchMock = vi
 			.fn()
 			.mockRejectedValueOnce(new Error("404"))
 			.mockResolvedValue({ ok: true, arrayBuffer: async () => new ArrayBuffer(8) });
 		vi.stubGlobal("fetch", fetchMock);
 		try {
-			const { defaultClientFonts } = await import("$lib/client/fonts.js");
+			const { defaultClientFonts } = await import("#lib/client/fonts.js");
 			await expect(defaultClientFonts()).rejects.toMatchObject({
 				code: ErrorCodes.FONT_LOAD_FAILED,
 			});
@@ -322,7 +322,7 @@ describe("client ImageResponse: errors reach the caller in browsers", () => {
 
 describe("client entry: font helper exports", () => {
 	it("exports CustomFont + resolveFonts, not the browser-incompatible GoogleFont loaders", async () => {
-		const mod = (await import("$lib/client/index.js")) as Record<string, unknown>;
+		const mod = (await import("#lib/client/index.js")) as Record<string, unknown>;
 		expect(typeof mod.CustomFont).toBe("function");
 		expect(typeof mod.resolveFonts).toBe("function");
 		// Google Fonts serves woff2 to browser user agents and loadGoogleFont only accepts ttf/otf

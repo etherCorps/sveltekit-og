@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { readFileSync } from "node:fs";
-import { CustomFont } from "$lib/fonts.js";
-import { ErrorCodes } from "$lib/helpers/error-handler.js";
-import type { Platform } from "$lib/core/render.js";
+import { CustomFont } from "#lib/fonts.js";
+import { ErrorCodes } from "#lib/helpers/error-handler.js";
+import type { Platform } from "#lib/core/render.js";
 
 // core/render.ts is the one pipeline behind the root, ./takumi and /client entries.
 // Engines are mocked per test (fresh module graph) so we can see which one loaded
@@ -20,8 +20,8 @@ function mockEngines() {
 		satori: vi.fn(async (..._args: unknown[]) => "<svg/>"),
 		takumi: vi.fn(async (..._args: unknown[]) => "<svg/>"),
 	};
-	vi.doMock("$lib/core/engines/satori.js", () => ({ render: state.satori }));
-	vi.doMock("$lib/core/engines/takumi.js", () => ({ render: state.takumi }));
+	vi.doMock("#lib/core/engines/satori.js", () => ({ render: state.satori }));
+	vi.doMock("#lib/core/engines/takumi.js", () => ({ render: state.takumi }));
 	return state;
 }
 
@@ -32,7 +32,7 @@ function fakePlatform(): Platform {
 	};
 }
 
-const load = () => import("$lib/core/render.js");
+const load = () => import("#lib/core/render.js");
 
 beforeEach(() => {
 	vi.resetModules();
@@ -176,8 +176,8 @@ describe("core: font resolution", () => {
 
 describe("core: real render on the server platform", () => {
 	it("satori takes a CustomFont directly, no resolveFonts needed", async () => {
-		vi.doUnmock("$lib/core/engines/satori.js");
-		const { renderImage } = await import("$lib/server/render.js");
+		vi.doUnmock("#lib/core/engines/satori.js");
+		const { renderImage } = await import("#lib/ssr/render.js");
 		const svg = await renderImage(html, {
 			engine: "satori",
 			format: "svg",
@@ -191,7 +191,7 @@ describe("core: real render on the server platform", () => {
 
 describe("core: component typing (checked by svelte-check, not at runtime)", () => {
 	it("requires a component's props and rejects props on HTML strings", async () => {
-		const { ImageResponse } = await import("$lib/takumi/index.js");
+		const { ImageResponse } = await import("#lib/takumi/index.js");
 		const { default: OG } = await import("./routes/(components)/OG.svelte");
 		const typeChecks = () => {
 			new ImageResponse(OG, {}, { text: "a", spanText: "b" });

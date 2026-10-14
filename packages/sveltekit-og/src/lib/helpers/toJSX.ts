@@ -1,5 +1,5 @@
 import { html } from "satori-html";
-import type { VNode } from "$lib/types.js";
+import type { VNode } from "../types.js";
 import { handleSync, ErrorCodes } from "./error-handler.js";
 
 // satori-html gives every empty element `children: []`, and satori treats any array of

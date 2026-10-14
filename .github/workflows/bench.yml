@@ -1,9 +1,10 @@
 name: Bench
 
-# Compares every PR into v5, dev or main against v4.4.0. Both sides run on the same runner:
-# the committed baselines were recorded on a laptop and aren't comparable to CI
-# hardware. The PR's bench files are copied onto the 4.4.0 checkout, which works
-# because they only touch the public API. Non-blocking until the v5 bench gate (#8).
+# Compares every PR into v5, dev or main against v4.4.0. Both sides run on the same
+# runner and the same toolchain: scripts/bench-baseline.sh swaps v4.4.0's src/lib
+# into a copy of the PR checkout, so only library code differs. (The committed
+# baselines were recorded on a laptop and aren't comparable to CI hardware.)
+# Non-blocking until the v5 bench gate (#8).
 on:
   pull_request:
     branches: [v5, dev, main]
@@ -28,23 +29,14 @@ jobs:
         with:
           node-version: 24
 
-      - name: Baseline (v4.4.0)
-        run: |
-          git worktree add ../base v4.4.0
-          cp $PKG/src/image-response.bench.ts ../base/$PKG/src/
-          cp $PKG/benchmarks/cold.mjs ../base/$PKG/benchmarks/
-          cd ../base
-          pnpm install --frozen-lockfile
-          cd $PKG
-          pnpm package
-          pnpm bench:save
-          node benchmarks/cold.mjs --save
+      - run: pnpm install --frozen-lockfile
+
+      - name: Baseline (v4.4.0 lib, PR toolchain)
+        run: bash $PKG/scripts/bench-baseline.sh v4.4.0
 
       - name: PR head
+        working-directory: ${{ env.PKG }}
         run: |
-          pnpm install --frozen-lockfile
-          cp ../base/$PKG/benchmarks/baseline.json ../base/$PKG/benchmarks/cold-baseline.json $PKG/benchmarks/
-          cd $PKG
           pnpm package
           pnpm bench:compare
           echo '```' >> "$GITHUB_STEP_SUMMARY"

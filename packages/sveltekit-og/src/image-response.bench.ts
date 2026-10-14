@@ -3,8 +3,8 @@ import { bench, describe } from "vitest";
 
 // Public API only: CI overlays this file onto the v4.4.0 sources to build the
 // baseline on the same runner, so it must not import anything that moves in v5.
-import { ImageResponse as RootImageResponse } from "$lib/index.js";
-import { ImageResponse as TakumiImageResponse } from "$lib/takumi/index.js";
+import { ImageResponse as RootImageResponse } from "#lib/index.js";
+import { ImageResponse as TakumiImageResponse } from "#lib/takumi/index.js";
 import OG from "./routes/(components)/OG.svelte";
 
 // Local font so we measure pure generation cost, not a network font fetch.

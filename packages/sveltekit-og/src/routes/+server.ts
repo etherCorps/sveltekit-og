@@ -1,8 +1,10 @@
 import { type RequestHandler } from "@sveltejs/kit";
-import { ImageResponse, type ImageResponseOptions } from "$lib/index.js";
-import { CustomFont, GoogleFont, resolveFonts } from "$lib/fonts.js";
+import { ImageResponse, type ImageResponseOptions } from "#lib/index.js";
+import { CustomFont, GoogleFont, resolveFonts } from "#lib/fonts.js";
 import RegularFont from "./(components)/SpaceMono-Regular.ttf?url";
 import { read } from "$app/server";
+// inlined at build so dev, prerender and edge never fetch a remote logo
+import logo from "../../static/ethercorps-logo.png?inline";
 
 const spaceMonoBold = new GoogleFont("Space Mono", {
 	weight: 700,
@@ -16,7 +18,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	const format = (url.searchParams.get("format") as ImageResponseOptions["format"]) || "png";
 	const html = `
 		<div class="h-full w-full flex flex-col items-center justify-center bg-white text-6xl">
-  	<img class="h-96 w-96" src="https://www.ethercorps.io/logo_transparent.png"/>
+  	<img class="h-96 w-96" src="${logo}"/>
   	<div class="font-bold" style="margin-top: 20px; color: #203649;">Hello, OGs 😳</div>
   	<div class="font-normal" style="margin-top: 20px; color: #203649;">Welcome to unknown</div>
   	</div>

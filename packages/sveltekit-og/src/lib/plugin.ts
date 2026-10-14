@@ -53,17 +53,15 @@ export function sveltekitOG(options?: UnwasmPluginOptions): VitePlugin {
 		load?: ObjectHook;
 		transform?: ObjectHook;
 	};
-	// `applyToEnvironment` only exists in Vite 6+ types; this package compiles against Vite 5.
-	const plugin: VitePlugin & {
-		applyToEnvironment?: (env: { config: { consumer: string } }) => boolean;
-	} = {
+	// `applyToEnvironment` is typed by Vite 6+ (this package compiles against Vite 8);
+	// Vite 5 ignores the unknown key and relies on the serverOnly gates instead.
+	return {
 		...wasm,
 		name: "vite-plugin-sveltekit-og",
 		apply: "build",
-		applyToEnvironment: (env: { config: { consumer: string } }) => env.config.consumer === "server",
+		applyToEnvironment: (env) => env.config.consumer === "server",
 		resolveId: serverOnly(wasm.resolveId),
 		load: serverOnly(wasm.load),
 		transform: serverOnly(wasm.transform),
-	} as VitePlugin;
-	return plugin;
+	};
 }
