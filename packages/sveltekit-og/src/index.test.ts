@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { ImageResponse } from "$lib/index.js";
-import { createSvg } from "$lib/helpers/create.js";
+import { renderImage } from "$lib/server/render.js";
 import InjectedStyles from "./routes/(components)/InjectedStyles.svelte";
 
 // local font so the satori path runs offline (no default_fonts fetch)
@@ -11,6 +11,10 @@ const fontData = readFileSync(
 const fonts = [
 	{ name: "Space Mono", data: fontData, weight: 400 as const, style: "normal" as const },
 ];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createSvg = (element: any, options: { width: number; height: number; fonts: typeof fonts }) =>
+	renderImage(element, { ...options, engine: "satori", format: "svg" }) as Promise<string>;
+
 const html = `<div style="display:flex;width:100%;height:100%">hi</div>`;
 
 describe("satori ImageResponse", () => {
