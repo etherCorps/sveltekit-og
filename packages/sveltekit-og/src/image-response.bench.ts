@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { readFileSync } from "node:fs";
 import { bench, describe } from "vitest";
 
-import { ImageResponse } from "$lib/index.js";
-import { createPng, createSvg } from "$lib/helpers/create.js";
-import type { ImageResponseOptions } from "$lib/types.js";
+// Public API only: CI overlays this file onto the v4.4.0 sources to build the
+// baseline on the same runner, so it must not import anything that moves in v5.
+import { ImageResponse as RootImageResponse } from "$lib/index.js";
+import { ImageResponse as TakumiImageResponse } from "$lib/takumi/index.js";
+import OG from "./routes/(components)/OG.svelte";
 
 // Local font so we measure pure generation cost, not a network font fetch.
 const fontData = readFileSync(
@@ -24,44 +27,56 @@ const template = `
 	.replaceAll("\n", "")
 	.trim();
 
-const options: ImageResponseOptions = { width: 1200, height: 630, fonts };
+const props = { text: "Ready to try sveltekit-og?", spanText: "Start building for free." };
+const size = { width: 1200, height: 630, fonts };
+
+// 4.4.0's root entry is Satori and ignores `engine`; v5 defaults to Takumi and needs it.
+// Passing it on both keeps the case name honest across versions.
+const satori = { ...size, engine: "satori" } as any;
+
+const engines = {
+	satori: (element: any, format: "png" | "svg", p?: any) =>
+		new RootImageResponse(element, { ...satori, format }, p),
+	takumi: (element: any, format: "png" | "svg", p?: any) =>
+		new TakumiImageResponse(element, { ...size, format }, p),
+};
 
 // Bump time so we collect plenty of samples for a stable p99; warmup iterations
-// absorb the one-time WASM (yoga/resvg) init so it never lands in the measured set.
-const cfg = { time: 5000, warmupIterations: 3 };
+// absorb the one-time WASM init so it never lands in the measured set. Cold
+// (fresh process) numbers come from benchmarks/cold.mjs.
+const cfg = { time: Number(process.env.BENCH_TIME ?? 5000), warmupIterations: 3 };
 
-// Each bench lives in its own group: ImageResponse uses createPng/createSvg
-// internally, so comparing them to each other is meaningless. Separate groups
-// keep every number in the log but drop Vitest's "Nx faster than" summary.
-// Cross-version comparison is what matters — use `pnpm bench:compare`.
-
-describe("ImageResponse: html → png (full, incl. stream drain)", () => {
-	bench(
-		"ImageResponse",
-		async () => {
-			const res = new ImageResponse(template, options);
-			await res.arrayBuffer();
-		},
-		cfg
-	);
-});
-
-describe("createPng: html → png (satori + resvg)", () => {
-	bench(
-		"createPng",
-		async () => {
-			await createPng(template, options);
-		},
-		cfg
-	);
-});
-
-describe("createSvg: html → svg (satori only)", () => {
-	bench(
-		"createSvg",
-		async () => {
-			await createSvg(template, options);
-		},
-		cfg
-	);
-});
+// One group per case: Vitest's "Nx faster than" summary across engines isn't the
+// point. Cross-version comparison is — use `pnpm bench:compare`.
+for (const [engine, render] of Object.entries(engines)) {
+	describe(`warm ${engine}: html → png`, () => {
+		bench(
+			"html → png",
+			() =>
+				render(template, "png")
+					.arrayBuffer()
+					.then(() => {}),
+			cfg
+		);
+	});
+	describe(`warm ${engine}: svelte → png`, () => {
+		bench(
+			"svelte → png",
+			() =>
+				render(OG, "png", props)
+					.arrayBuffer()
+					.then(() => {}),
+			cfg
+		);
+	});
+	describe(`warm ${engine}: html → svg`, () => {
+		bench(
+			"html → svg",
+			() =>
+				render(template, "svg")
+					.arrayBuffer()
+					.then(() => {}),
+			cfg
+		);
+	});
+}
