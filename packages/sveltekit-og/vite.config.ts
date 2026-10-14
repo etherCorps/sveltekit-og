@@ -18,6 +18,9 @@ export default defineConfig({
 			external: [/.+\.wasm$/i, /.+\.ttf$/i, /.+\.woff$/i],
 		},
 	},
+	// the client entry code-splits (lazy engines); Vite's default iife workers can't,
+	// so any worker importing /client needs es format — consumers must set this too
+	worker: { format: "es" },
 	test: {
 		include: ["src/**/*.{test,spec}.{js,ts}"],
 	},

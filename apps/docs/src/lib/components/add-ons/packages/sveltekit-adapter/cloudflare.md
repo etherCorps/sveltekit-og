@@ -26,6 +26,14 @@ yarn add -D @sveltejs/adapter-cloudflare
 
 {/if}
 
+{#if packageManager === 'bun'}
+
+```shell
+bun add -D @sveltejs/adapter-cloudflare
+```
+
+{/if}
+
 {#if packageManager === 'deno'}
 
 ```shell

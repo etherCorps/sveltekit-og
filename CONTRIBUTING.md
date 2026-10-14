@@ -64,8 +64,7 @@ npm run format
 | Branch | Version           | Published to     |
 | ------ | ----------------- | ---------------- |
 | `main` | clean (`4.4.0`)   | `latest` (prod)  |
-| `dev`  | `-beta.x`         | `beta`           |
-| any    | `-next.x`         | `next`           |
+| `dev`  | `-next.x`         | `next`           |
 
 Any other branch/version combination does **not** publish. A push/merge only publishes when the version is not already on npm — merges that don't bump the version are no-ops.
 
@@ -75,22 +74,14 @@ Bump the version with the interactive helper (it commits and pushes to the curre
 pnpm release
 ```
 
-### Beta
+### Next (prerelease)
 
 ```bash
 git checkout dev
-pnpm release          # pick a -beta version, e.g. 4.4.0-beta.0
-```
-
-Pushing to `dev` publishes `@beta`. Install with `npm i @ethercorps/sveltekit-og@beta`.
-
-### Next (experimental preview)
-
-```bash
 pnpm release          # pick a -next version, e.g. 4.4.0-next.0
 ```
 
-Publishes `@next` from any branch. Use for throwaway previews you don't want on `@beta`.
+Pushing to `dev` publishes `@next`. Install with `npm i @ethercorps/sveltekit-og@next`.
 
 ### Production
 

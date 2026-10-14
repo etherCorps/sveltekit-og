@@ -1,0 +1,13 @@
+# Render Blueprint — deploys the Bun adapter example as a Docker web service.
+# Render injects PORT (10000) and the adapter listens on it; HOST is set in the image.
+services:
+  - type: web
+    name: sveltekit-og-bun
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: dev
+    dockerfilePath: ./examples/bun-build/Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    autoDeploy: true

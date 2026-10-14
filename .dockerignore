@@ -1,0 +1,12 @@
+.git
+**/node_modules
+**/build
+**/.svelte-kit
+**/.vercel
+**/.netlify
+**/.wrangler
+**/dist
+.superpowers
+.remember
+docs
+apps/docs/.svelte-kit

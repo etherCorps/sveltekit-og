@@ -1,3 +1,9 @@
 @import '@svecodocs/kit/theme-rose.css';
 @import '@svecodocs/kit/globals.css';
 @source "../node_modules/@svecodocs/kit";
+
+/* Hallmark responsive gate 34: no horizontal scroll from clipped-edge content; clip (not hidden) keeps sticky working */
+html,
+body {
+	overflow-x: clip;
+}

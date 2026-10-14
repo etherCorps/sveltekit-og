@@ -1,9 +1,8 @@
 name: Release
 
 # Release channel is driven by the branch you merge into:
-#   main -> production  (dist-tag: latest)
-#   dev  -> beta        (dist-tag: beta)   version must be a -beta.x prerelease
-#   any  -> next        (dist-tag: next)   whenever the version contains -next.x
+#   main -> production  (dist-tag: latest)  version must be a clean x.y.z
+#   dev  -> next        (dist-tag: next)    version must be a -next.x prerelease
 # A merge only publishes when the version in package.json is NOT already on npm,
 # so ordinary merges that don't bump the version are no-ops.
 on:
@@ -44,8 +43,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       # Decide the dist-tag from branch + version, or skip if this channel/version
-      # combination is not allowed. Enforces: production only from main, beta only
-      # from dev, next from anywhere.
+      # combination is not allowed. Enforces: production only from main, next only
+      # from dev.
       - name: Resolve release channel
         id: channel
         working-directory: packages/sveltekit-og
@@ -55,10 +54,8 @@ jobs:
           BRANCH="${GITHUB_REF_NAME}"
           echo "name=$NAME"; echo "version=$VERSION"; echo "branch=$BRANCH"
 
-          if [[ "$VERSION" == *-next.* ]]; then
+          if [[ "$BRANCH" == "dev" && "$VERSION" == *-next.* ]]; then
             TAG=next
-          elif [[ "$BRANCH" == "dev" && "$VERSION" == *-beta.* ]]; then
-            TAG=beta
           elif [[ "$BRANCH" == "main" && "$VERSION" != *-* ]]; then
             TAG=latest
           else

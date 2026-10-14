@@ -1,8 +1,14 @@
 <script lang="ts">
 	import { version } from '@ethercorps/sveltekit-og/package.json';
+	import ClientImage from '@examples/shared/client-image';
 
-	type Route = { kind: string; label: string; href: string };
-	type Section = { title: string; tagline: string; accent: 'indigo' | 'emerald' | 'violet'; routes: Route[] };
+	type Route = { kind: string; label: string; href: string; client?: 'takumi' | 'satori' };
+	type Section = {
+		title: string;
+		tagline: string;
+		accent: 'indigo' | 'emerald' | 'violet' | 'amber';
+		routes: Route[];
+	};
 
 	const sections: Section[] = [
 		{
@@ -14,6 +20,14 @@
 				{ kind: 'Component', label: 'Svelte component', href: '/takumi/cog' },
 				{ kind: 'Pre-rendered', label: 'Built at compile time', href: '/takumi/prerendered' }
 			]
+		},
+		{
+			title: 'Client-side',
+			tagline: 'Rendered in the browser with the /client entry — no server request.',
+			accent: 'amber',
+			routes: [
+				{ kind: 'Browser', label: 'Takumi (default engine)', href: '/client', client: 'takumi' }
+			]
 		}
 	];
 </script>
@@ -23,13 +37,20 @@
 		<div class="eyebrow">SvelteKit OG · examples · adapter-cloudflare · Takumi only</div>
 		<h1>@ethercorps/sveltekit-og</h1>
 		<p class="lede">
-			The Takumi engine on its own — a built-in font and multiple output formats, as an HTML
-			string, a Svelte component, and a pre-rendered build-time image.
+			The Takumi engine on its own — a built-in font and multiple output formats, as an HTML string,
+			a Svelte component, and a pre-rendered build-time image.
 		</p>
 		<div class="meta">
 			<span class="chip">v{version}</span>
-			<a class="chip link" href="https://sveltekit-og.dev" target="_blank" rel="noreferrer">Docs ↗</a>
-			<a class="chip link" href="https://github.com/ethercorps/sveltekit-og" target="_blank" rel="noreferrer">
+			<a class="chip link" href="https://sveltekit-og.dev" target="_blank" rel="noreferrer"
+				>Docs ↗</a
+			>
+			<a
+				class="chip link"
+				href="https://github.com/ethercorps/sveltekit-og"
+				target="_blank"
+				rel="noreferrer"
+			>
 				GitHub ↗
 			</a>
 		</div>
@@ -46,7 +67,11 @@
 				{#each section.routes as route (route.href)}
 					<a class="card" href={route.href}>
 						<div class="thumb">
-							<img src={route.href} alt={`${section.title} — ${route.label}`} loading="lazy" />
+							{#if route.client}
+								<ClientImage engine={route.client} alt={`${section.title} — ${route.label}`} />
+							{:else}
+								<img src={route.href} alt={`${section.title} — ${route.label}`} loading="lazy" />
+							{/if}
 						</div>
 						<div class="body">
 							<span class="kind">{route.kind}</span>
@@ -78,12 +103,15 @@
 		--text: #ececf1;
 		--muted: #8b8b9a;
 		min-height: 100vh;
-		background:
-			radial-gradient(1200px 600px at 50% -10%, #1a1a2e 0%, transparent 60%),
-			var(--bg);
+		background: radial-gradient(1200px 600px at 50% -10%, #1a1a2e 0%, transparent 60%), var(--bg);
 		color: var(--text);
 		font-family:
-			ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+			ui-sans-serif,
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			Roboto,
+			sans-serif;
 		padding: 0 1.5rem 5rem;
 	}
 
@@ -176,6 +204,9 @@
 	}
 	[data-accent='emerald'] {
 		--accent: #10b981;
+	}
+	[data-accent='amber'] {
+		--accent: #f59e0b;
 	}
 	[data-accent='violet'] {
 		--accent: #a855f7;

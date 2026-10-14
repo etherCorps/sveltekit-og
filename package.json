@@ -30,7 +30,8 @@
       "workerd"
     ],
     "patchedDependencies": {
-      "@deno/svelte-adapter@0.2.1": "patches/@deno__svelte-adapter@0.2.1.patch"
+      "@deno/svelte-adapter@0.2.1": "patches/@deno__svelte-adapter@0.2.1.patch",
+      "ultrahtml@1.7.0": "patches/ultrahtml@1.7.0.patch"
     }
   }
 }
