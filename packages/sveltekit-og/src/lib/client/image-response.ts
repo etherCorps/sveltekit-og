@@ -1,5 +1,5 @@
-import type { Component, ComponentProps } from "svelte";
 import type { ClientImageResponseOptions } from "./types.js";
+import type { Element, PropsArg } from "../core/types.js";
 import { clientPlatform } from "./render.js";
 import { imageResponseInit } from "../core/render.js";
 import { ImageResponseError, ErrorCodes } from "../helpers/error-handler.js";
@@ -9,12 +9,8 @@ import { ImageResponseError, ErrorCodes } from "../helpers/error-handler.js";
  * you pick via `options.engine` ("takumi" | "satori", defaults to "takumi").
  * Extends `Response`, so consume it with `URL.createObjectURL(await res.blob())`.
  */
-export class ImageResponse<T extends string | Component<any>> extends Response {
-	constructor(
-		element: T,
-		options?: ClientImageResponseOptions,
-		props?: T extends Component<any> ? ComponentProps<T> : never
-	) {
+export class ImageResponse<T extends Element> extends Response {
+	constructor(element: T, options?: ClientImageResponseOptions, ...[props]: PropsArg<T>) {
 		const { body, init } = imageResponseInit(element, options, props, clientPlatform);
 		super(body, init);
 	}

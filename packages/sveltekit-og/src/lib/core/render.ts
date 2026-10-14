@@ -1,5 +1,11 @@
-import type { Component } from "svelte";
-import type { Engine, Format, ImageOptions, ResponseOptions } from "./types.js";
+import type {
+	AnyComponent,
+	Element,
+	Engine,
+	Format,
+	ImageOptions,
+	ResponseOptions,
+} from "./types.js";
 import type { SatoriAssets } from "./engines/satori.js";
 import { resolveFontInputs } from "./fonts.js";
 import { createVNode } from "../helpers/toJSX.js";
@@ -13,7 +19,7 @@ import { DEFAULT_WIDTH, DEFAULT_HEIGHT } from "../helpers/defaults.js";
  */
 export interface Platform {
 	componentToHtml(
-		component: Component<any>,
+		component: AnyComponent,
 		props: Record<string, unknown>
 	): string | Promise<string>;
 	satori: SatoriAssets;
@@ -59,7 +65,7 @@ const loadTakumi = () =>
 
 /** Element → HTML → VNode → engine → bytes (svg → string). Defaults to Takumi. */
 export async function renderImage(
-	element: string | Component<any>,
+	element: Element,
 	options: ImageOptions & ResponseOptions,
 	props: Record<string, unknown> | undefined,
 	platform: Platform
@@ -93,7 +99,7 @@ export async function renderImage(
 
 /** Body + init for an `ImageResponse`; render errors surface through the body stream. */
 export function imageResponseInit(
-	element: string | Component<any>,
+	element: Element,
 	options: (ImageOptions & ResponseOptions) | undefined,
 	props: Record<string, unknown> | undefined,
 	platform: Platform

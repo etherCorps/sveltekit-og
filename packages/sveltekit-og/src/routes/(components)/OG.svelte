@@ -33,7 +33,7 @@
 			</div>
 			<div class="ml-3 flex rounded-md shadow">
 				<a
-					href="#"
+					href="https://sveltekit-og.dev"
 					class="flex items-center justify-center rounded-md border border-transparent bg-white px-5 py-3 text-base font-medium text-indigo-600"
 					>Learn more</a
 				>
@@ -41,9 +41,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-	.cool-bg {
-		background: linear-gradient(135deg, red 0%, #e5e7eb 100%);
-	}
-</style>

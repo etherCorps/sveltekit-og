@@ -1,6 +1,6 @@
 import type { Component } from "svelte";
 import { render } from "svelte/server";
-import type { ImageOptions, ResponseOptions } from "../core/types.js";
+import type { Element, ImageOptions, ResponseOptions } from "../core/types.js";
 import { renderImage as coreRender, type Platform } from "../core/render.js";
 import { default_fonts } from "../helpers/defaults.js";
 import { handleSync, ErrorCodes } from "../helpers/error-handler.js";
@@ -12,7 +12,8 @@ import { handleSync, ErrorCodes } from "../helpers/error-handler.js";
 export const serverPlatform: Platform = {
 	componentToHtml(component, props) {
 		const { body, head } = handleSync(
-			() => render(component, { props }),
+			// props were typed against this component at the public API (PropsOf<T>)
+			() => render(component as Component<Record<string, unknown>>, { props }),
 			ErrorCodes.VNODE_CREATION_FAILED,
 			"Failed to render Svelte component to HTML"
 		);
@@ -31,7 +32,7 @@ export const serverPlatform: Platform = {
 
 /** Server-side render to bytes (svg → string). */
 export function renderImage(
-	element: string | Component<any>,
+	element: Element,
 	options: ImageOptions & ResponseOptions = {},
 	props?: Record<string, unknown>
 ): Promise<Uint8Array | string> {

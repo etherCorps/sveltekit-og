@@ -1,4 +1,5 @@
 import { mount, unmount, flushSync, type Component } from "svelte";
+import type { AnyComponent } from "../core/types.js";
 
 /**
  * Render a Svelte component to an HTML string in the browser. The server path uses
@@ -17,12 +18,13 @@ import { mount, unmount, flushSync, type Component } from "svelte";
  * `css="injected"` styles won't (they're separate nodes an engine ignores). Use
  * inline styles (or the `stylesheets`/tailwind options) for client component rendering.
  */
-export function componentToHtml(component: Component<any>, props: Record<string, unknown>): string {
+export function componentToHtml(component: AnyComponent, props: Record<string, unknown>): string {
 	const host = document.createElement("div");
 	const shadow = host.attachShadow({ mode: "open" });
 	const target = document.createElement("div");
 	shadow.appendChild(target);
-	const instance = mount(component, { target, props });
+	// props were typed against this component at the public API (PropsOf<T>)
+	const instance = mount(component as Component<Record<string, unknown>>, { target, props });
 	try {
 		flushSync();
 		return target.innerHTML;
