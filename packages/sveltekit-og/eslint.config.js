@@ -11,9 +11,9 @@ export default ts.config(
 	includeIgnoreFile(gitignorePath),
 	js.configs.recommended,
 	...ts.configs.recommended,
-	...svelte.configs["flat/recommended"],
+	...svelte.configs.recommended,
 	prettier,
-	...svelte.configs["flat/prettier"],
+	...svelte.configs.prettier,
 	{
 		languageOptions: {
 			globals: { ...globals.browser, ...globals.node },
