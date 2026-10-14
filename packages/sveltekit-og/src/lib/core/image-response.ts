@@ -1,6 +1,5 @@
 import type { Element, ImageResponseOptions } from "./types.js";
 import { imageResponseInit, type Platform } from "./render.js";
-import { ImageResponseError, ErrorCodes } from "../helpers/error-handler.js";
 
 /**
  * A `Response` whose body is the rendered image. The server and client entries
@@ -21,20 +20,14 @@ export class ImageResponse<T extends Element> extends Response {
 	 * Browsers turn an errored body stream into a bare `TypeError: Failed to fetch`
 	 * when read through Response's own arrayBuffer()/blob()/text(), which drops the
 	 * ImageResponseError (and its .code). Reading the stream directly keeps the
-	 * original error, so override the three readers users actually call. The same
-	 * path on the server means every runtime surfaces the same error codes.
+	 * original error, so override the three readers users actually call.
 	 */
 	override async arrayBuffer(): Promise<ArrayBuffer> {
 		const reader = this.body!.getReader();
 		const chunks: Uint8Array[] = [];
 		let size = 0;
 		for (;;) {
-			let step: ReadableStreamReadResult<Uint8Array>;
-			try {
-				step = await reader.read();
-			} catch (error) {
-				throw unwrapRenderError(error);
-			}
+			const step = await reader.read();
 			if (step.done) break;
 			chunks.push(step.value);
 			size += step.value.byteLength;
@@ -57,17 +50,4 @@ export class ImageResponse<T extends Element> extends Response {
 	override async text(): Promise<string> {
 		return new TextDecoder().decode(await this.arrayBuffer());
 	}
-}
-
-/**
- * The shared body builder wraps every failure as UNKNOWN_ERROR "Failed to generate X"
- * with the real error in `originalError`. Surface the inner one so callers can check
- * `error.code` (e.g. UNSUPPORTED_FORMAT, FONT_LOAD_FAILED).
- */
-function unwrapRenderError(error: unknown): unknown {
-	return error instanceof ImageResponseError &&
-		error.code === ErrorCodes.UNKNOWN_ERROR &&
-		error.originalError instanceof ImageResponseError
-		? error.originalError
-		: error;
 }

@@ -8,6 +8,7 @@ import type {
 } from "./types.js";
 import type { SatoriAssets } from "./engines/satori.js";
 import { resolveFontInputs } from "./fonts.js";
+import { installMessage, isModuleNotFound } from "./packages.js";
 import { createVNode } from "../helpers/toJSX.js";
 import { ImageResponseError, ErrorCodes } from "../helpers/error-handler.js";
 import { buildImageResponse, CONTENT_TYPES } from "../helpers/response.js";
@@ -48,19 +49,31 @@ function assertFormat(engine: Engine, format: string): asserts format is Format 
 }
 
 // one lazy chunk per engine: the other engine's JS + wasm is never fetched. Memoized so
-// warm renders skip the module loader; a failed load (e.g. chunk fetch) clears it to retry.
+// warm renders skip the module loader; a failed load clears it to retry. A missing
+// engine package (unbundled node/bun, or the plugin's stub chunk) becomes
+// ENGINE_NOT_INSTALLED with the install command; anything else is rethrown as-is.
 let satoriEngine: Promise<typeof import("./engines/satori.js")> | undefined;
 let takumiEngine: Promise<typeof import("./engines/takumi.js")> | undefined;
 
+function notInstalled(engine: Engine, error: unknown): never {
+	if (isModuleNotFound(error)) {
+		throw new ImageResponseError(
+			installMessage(engine),
+			ErrorCodes.ENGINE_NOT_INSTALLED,
+			error as Error
+		);
+	}
+	throw error;
+}
 const loadSatori = () =>
 	(satoriEngine ??= import("./engines/satori.js").catch((error) => {
 		satoriEngine = undefined;
-		throw error;
+		notInstalled("satori", error);
 	}));
 const loadTakumi = () =>
 	(takumiEngine ??= import("./engines/takumi.js").catch((error) => {
 		takumiEngine = undefined;
-		throw error;
+		notInstalled("takumi", error);
 	}));
 
 /** Element → HTML → VNode → engine → bytes (svg → string). Defaults to Takumi. */

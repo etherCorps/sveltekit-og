@@ -34,10 +34,18 @@
 	},
 	"peerDependencies": {
 		"svelte": "^5",
-		"takumi-js": "^2.0.1"
+		"takumi-js": "^2.0.1",
+		"satori": "^0.25.0",
+		"@resvg/resvg-wasm": "^2.6.2"
 	},
 	"peerDependenciesMeta": {
 		"takumi-js": {
+			"optional": true
+		},
+		"satori": {
+			"optional": true
+		},
+		"@resvg/resvg-wasm": {
 			"optional": true
 		}
 	},

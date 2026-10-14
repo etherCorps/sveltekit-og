@@ -137,6 +137,12 @@ importers:
       '@examples/shared':
         specifier: workspace:*
         version: link:../shared
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
+      satori:
+        specifier: ^0.25.0
+        version: 0.25.0
       takumi-js:
         specifier: 2.0.1
         version: 2.0.1(csstype@3.2.3)
@@ -180,6 +186,12 @@ importers:
       '@examples/shared':
         specifier: workspace:*
         version: link:../shared
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
+      satori:
+        specifier: ^0.25.0
+        version: 0.25.0
       takumi-js:
         specifier: 2.0.1
         version: 2.0.1(csstype@3.2.3)
@@ -223,6 +235,12 @@ importers:
       '@examples/shared':
         specifier: workspace:*
         version: link:../shared
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
+      satori:
+        specifier: ^0.25.0
+        version: 0.25.0
       takumi-js:
         specifier: 2.0.1
         version: 2.0.1(csstype@3.2.3)
@@ -272,6 +290,12 @@ importers:
       '@examples/shared':
         specifier: workspace:*
         version: link:../shared
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
+      satori:
+        specifier: ^0.25.0
+        version: 0.25.0
       takumi-js:
         specifier: 2.0.1
         version: 2.0.1(csstype@3.2.3)
@@ -315,6 +339,12 @@ importers:
       '@examples/shared':
         specifier: workspace:*
         version: link:../shared
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
+      satori:
+        specifier: ^0.25.0
+        version: 0.25.0
       takumi-js:
         specifier: 2.0.1
         version: 2.0.1(csstype@3.2.3)
@@ -358,6 +388,12 @@ importers:
       '@examples/shared':
         specifier: workspace:*
         version: link:../shared
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
+      satori:
+        specifier: ^0.25.0
+        version: 0.25.0
       takumi-js:
         specifier: 2.0.1
         version: 2.0.1(csstype@3.2.3)
@@ -401,9 +437,12 @@ importers:
       '@examples/shared':
         specifier: workspace:*
         version: link:../shared
-      takumi-js:
-        specifier: 2.0.1
-        version: 2.0.1(csstype@3.2.3)
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
+      satori:
+        specifier: ^0.25.0
+        version: 0.25.0
     devDependencies:
       '@playwright/test':
         specifier: ^1.55.0
@@ -441,6 +480,12 @@ importers:
       '@ethercorps/sveltekit-og':
         specifier: workspace:*
         version: link:../../packages/sveltekit-og
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
+      satori:
+        specifier: ^0.25.0
+        version: 0.25.0
     devDependencies:
       '@sveltejs/kit':
         specifier: ^2.53.4
@@ -515,6 +560,12 @@ importers:
       '@examples/shared':
         specifier: workspace:*
         version: link:../shared
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
+      satori:
+        specifier: ^0.25.0
+        version: 0.25.0
       takumi-js:
         specifier: 2.0.1
         version: 2.0.1(csstype@3.2.3)
@@ -552,12 +603,6 @@ importers:
 
   packages/sveltekit-og:
     dependencies:
-      '@resvg/resvg-wasm':
-        specifier: ^2.6.2
-        version: 2.6.2
-      satori:
-        specifier: ^0.25.0
-        version: 0.25.0
       satori-html:
         specifier: 0.3.2
         version: 0.3.2
@@ -574,6 +619,9 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.12.0(jiti@2.6.1))
+      '@resvg/resvg-wasm':
+        specifier: ^2.6.2
+        version: 2.6.2
       '@sveltejs/adapter-auto':
         specifier: ^8.0.0
         version: 8.0.0(@sveltejs/kit@3.0.1(@sveltejs/vite-plugin-svelte@7.3.1(svelte@5.57.1(@typescript-eslint/types@8.71.2))(vite@8.3.4(@types/node@24.11.0)(esbuild@0.28.2)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)))(svelte@5.57.1(@typescript-eslint/types@8.71.2))(typescript@6.0.3)(vite@8.3.4(@types/node@24.11.0)(esbuild@0.28.2)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)))
@@ -625,6 +673,9 @@ importers:
       rollup-plugin-visualizer:
         specifier: ^7.1.1
         version: 7.1.1(rolldown@1.2.13)(rollup@4.59.0)
+      satori:
+        specifier: ^0.25.0
+        version: 0.25.0
       svelte:
         specifier: ^5.57.1
         version: 5.57.1(@typescript-eslint/types@8.71.2)
