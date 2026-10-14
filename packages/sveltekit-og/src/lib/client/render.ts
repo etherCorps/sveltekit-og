@@ -1,7 +1,7 @@
-import type { Component } from "svelte";
 import { ImageResponseError, ErrorCodes } from "../helpers/error-handler.js";
 import { renderImage as coreRender, type Platform } from "../core/render.js";
 import type { ClientImageResponseOptions } from "./types.js";
+import type { Element } from "../core/types.js";
 
 /**
  * Client platform: components are mounted in a detached shadow root (needs a
@@ -29,7 +29,7 @@ export const clientPlatform: Platform = {
 
 /** Client-side render to bytes (svg → string). Defaults to Takumi. */
 export function renderImage(
-	element: string | Component<any>,
+	element: Element,
 	options: ClientImageResponseOptions = {},
 	props?: Record<string, unknown>
 ): Promise<Uint8Array | string> {

@@ -1,3 +1,4 @@
+import type { Component } from "svelte";
 import type { SatoriOptions as SatoriLibOptions } from "satori";
 import type { EmojiType as TakumiEmoji } from "takumi-js/helpers/emoji";
 import type { OutputFormat } from "takumi-js/node";
@@ -6,6 +7,25 @@ import type { BaseFont } from "../fonts.js";
 import type { MayBePromise } from "../types.js";
 
 export type Engine = "takumi" | "satori";
+
+/**
+ * Any Svelte component, whatever its props. Props are checked contravariantly, so
+ * every `Component<P>` is assignable to `Component<never>`, with no `any` needed.
+ */
+export type AnyComponent = Component<never>;
+
+/** What `ImageResponse` renders: an HTML string or a Svelte component. */
+export type Element = string | AnyComponent;
+
+/** The props a given element takes; HTML strings take none. */
+export type PropsOf<T> = T extends Component<infer P> ? P : never;
+
+/**
+ * The trailing props argument: required when the component has required props,
+ * optional when all are optional, and not allowed at all for HTML strings.
+ */
+export type PropsArg<T> =
+	T extends Component<infer P> ? (Partial<P> extends P ? [props?: P] : [props: P]) : [];
 
 type Bytes = Uint8Array | ArrayBuffer;
 

@@ -188,3 +188,22 @@ describe("core: real render on the server platform", () => {
 		expect(svg).toContain("<svg");
 	});
 });
+
+describe("core: component typing (checked by svelte-check, not at runtime)", () => {
+	it("requires a component's props and rejects props on HTML strings", async () => {
+		const { ImageResponse } = await import("$lib/takumi/index.js");
+		const { default: OG } = await import("./routes/(components)/OG.svelte");
+		const typeChecks = () => {
+			new ImageResponse(OG, {}, { text: "a", spanText: "b" });
+			// @ts-expect-error OG has required props
+			new ImageResponse(OG, {});
+			// @ts-expect-error spanText is missing
+			new ImageResponse(OG, {}, { text: "a" });
+			// @ts-expect-error text must be a string
+			new ImageResponse(OG, {}, { text: 1, spanText: "b" });
+			// @ts-expect-error HTML strings take no props
+			new ImageResponse("<div>hi</div>", {}, { text: "a" });
+		};
+		expect(typeChecks).toBeTypeOf("function");
+	});
+});

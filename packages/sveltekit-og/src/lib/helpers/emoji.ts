@@ -10,11 +10,10 @@ function getIconCode(char: string) {
 
 function toCodePoint(unicodeSurrogates: string) {
 	const r = [];
-	let c = 0,
-		p = 0,
+	let p = 0,
 		i = 0;
 	while (i < unicodeSurrogates.length) {
-		c = unicodeSurrogates.charCodeAt(i++);
+		const c = unicodeSurrogates.charCodeAt(i++);
 		if (p) {
 			r.push((65536 + ((p - 55296) << 10) + (c - 56320)).toString(16));
 			p = 0;

@@ -48,8 +48,7 @@
 	$effect(() => {
 		// read every reactive dep synchronously so the effect re-runs on any change
 		const isComponent = inputType === "component";
-		const element = isComponent ? Card : html;
-		const props = isComponent ? { title, subtitle, num1, num2 } : undefined;
+		const props = { title, subtitle, num1, num2 };
 		const opts = {
 			engine,
 			format,
@@ -65,7 +64,8 @@
 		const timer = setTimeout(async () => {
 			const t0 = performance.now();
 			try {
-				const blob = await createImage(element as never, opts, props as never).blob();
+				const res = isComponent ? createImage(Card, opts, props) : createImage(html, opts);
+				const blob = await res.blob();
 				const next = URL.createObjectURL(blob);
 				if (objectUrl) URL.revokeObjectURL(objectUrl);
 				objectUrl = next;
