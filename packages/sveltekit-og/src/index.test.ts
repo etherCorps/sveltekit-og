@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
-import { ImageResponse } from "$lib/index.js";
-import { renderImage } from "$lib/server/render.js";
-import type { Element } from "$lib/core/types.js";
+import { ImageResponse } from "#lib/index.js";
+import { renderImage } from "#lib/ssr/render.js";
+import type { Element } from "#lib/core/types.js";
 import InjectedStyles from "./routes/(components)/InjectedStyles.svelte";
 
 // local font so the satori path runs offline (no default_fonts fetch)

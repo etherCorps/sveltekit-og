@@ -11,3 +11,6 @@ node_modules
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
+
+# render fixtures: whitespace and class order are part of what the tests/benches check
+/src/routes/(components)

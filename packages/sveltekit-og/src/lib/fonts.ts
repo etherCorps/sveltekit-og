@@ -1,5 +1,5 @@
-import { FONT_CACHE_MAP } from "$lib/helpers/cache.js";
-import type { FinalFontOptions, FontStyle, FontWeight, MayBePromise } from "$lib/types.js";
+import { FONT_CACHE_MAP } from "./helpers/cache.js";
+import type { FinalFontOptions, FontStyle, FontWeight, MayBePromise } from "./types.js";
 
 // Code stolen from https://github.com/fineshopdesign/cf-wasm
 interface BaseFontOptions {

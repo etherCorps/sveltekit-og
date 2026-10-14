@@ -87,10 +87,10 @@
 	"devDependencies": {
 		"@eslint/compat": "^2.1.1",
 		"@eslint/js": "^10.0.1",
-		"@sveltejs/adapter-auto": "^3.3.1",
-		"@sveltejs/kit": "^2.53.4",
-		"@sveltejs/package": "^2.5.7",
-		"@sveltejs/vite-plugin-svelte": "^4.0.4",
+		"@sveltejs/adapter-auto": "^8.0.0",
+		"@sveltejs/kit": "^3.0.1",
+		"@sveltejs/package": "^3.0.0",
+		"@sveltejs/vite-plugin-svelte": "^7.3.1",
 		"@types/node": "^24.11.0",
 		"css-tree": "^2.3.1",
 		"eslint": "^10.12.0",
@@ -100,18 +100,18 @@
 		"globals": "^17.13.0",
 		"oxlint": "^1.55.0",
 		"prettier": "^3.8.1",
-		"prettier-plugin-svelte": "^3.5.1",
-		"prettier-plugin-tailwindcss": "^0.6.14",
-		"publint": "^0.1.16",
-		"rollup-plugin-visualizer": "^5.14.0",
-		"svelte": "^5.53.10",
-		"svelte-check": "^4.4.5",
+		"prettier-plugin-svelte": "^4.1.1",
+		"prettier-plugin-tailwindcss": "^0.8.1",
+		"publint": "^0.3.25",
+		"rollup-plugin-visualizer": "^7.1.1",
+		"svelte": "^5.57.1",
+		"svelte-check": "^4.7.6",
 		"takumi-js": "2.0.1",
 		"tslib": "^2.8.1",
-		"typescript": "^5.9.3",
+		"typescript": "~6.0.0",
 		"typescript-eslint": "^8.71.2",
-		"vite": "^5.4.21",
-		"vitest": "^1.6.1"
+		"vite": "^8.3.3",
+		"vitest": "^4.1.11"
 	},
 	"main": "./dist/index.js",
 	"svelte": "./dist/index.js",
@@ -125,12 +125,17 @@
 		"unwasm": "^0.5.3"
 	},
 	"peerDependencies": {
-		"@sveltejs/kit": ">=2.0.0",
+		"@sveltejs/kit": "^2.0.0 || ^3.0.0",
+		"svelte": "^5.0.0",
 		"takumi-js": "^2.0.1"
 	},
 	"peerDependenciesMeta": {
 		"takumi-js": {
 			"optional": true
 		}
+	},
+	"imports": {
+		"#lib": "./src/lib/index.ts",
+		"#lib/*": "./src/lib/*"
 	}
 }

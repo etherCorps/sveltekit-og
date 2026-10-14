@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createImage, type ClientImageResponseOptions } from "$lib/client/index.js";
+	import { createImage, type ClientImageResponseOptions } from "#lib/client/index.js";
 	import Card from "./Card.svelte";
 
 	type Engine = "takumi" | "satori";
