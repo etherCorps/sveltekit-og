@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { ImageResponse } from "$lib/takumi/index.js";
-import { createTakumiImage } from "$lib/takumi/render.js";
+import { renderImage as createTakumiImage } from "$lib/server/render.js";
 import { CustomFont } from "$lib/fonts.js";
 import OG from "./routes/(components)/OG.svelte";
 

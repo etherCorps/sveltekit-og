@@ -1,5 +1,4 @@
-import type { ImageResponseOptions } from "../types.js";
-import type { TakumiImageResponseOptions } from "../takumi/types.js";
+import type { ImageOptions, ResponseOptions } from "../core/types.js";
 
 /**
  * Options for the client `ImageResponse` / `createImage`. The `engine` field
@@ -8,6 +7,4 @@ import type { TakumiImageResponseOptions } from "../takumi/types.js";
  *
  * @default engine "takumi"
  */
-export type ClientImageResponseOptions =
-	| ({ engine?: "takumi" } & TakumiImageResponseOptions)
-	| ({ engine: "satori" } & ImageResponseOptions);
+export type ClientImageResponseOptions = ImageOptions & ResponseOptions;

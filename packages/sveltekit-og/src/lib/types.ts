@@ -1,5 +1,5 @@
 import type { SatoriOptions } from "satori";
-import type { EmojiType } from "./helpers/emoji.js";
+import type { SatoriOptions as CoreSatoriOptions, ResponseOptions } from "./core/types.js";
 
 export type Font = SatoriOptions["fonts"][number];
 export type Fonts = Font[];
@@ -8,76 +8,15 @@ export type FontWeight = Font["weight"];
 
 export type FinalFontOptions = NonNullable<Fonts>;
 
-export type ImageOptions = {
-	/**
-	 * Width of the image
-	 * @default 1200
-	 * */
-	width?: number;
-	/**
-	 * Height of the image
-	 * @default 630
-	 * */
-	height?: number;
-	/**
-	 * Emoji provider
-	 * @default twemoji
-	 * */
-	emoji?: EmojiType;
-	/**
-	 * Fonts used for your text
-	 * @default `helpers/defaults.js`
-	 * */
-	fonts?: Fonts;
-	/**
-	 * Tailwind config
-	 * @default provided by satori
-	 * */
-	tailwindConfig?: SatoriOptions["tailwindConfig"];
-	/**
-	 * Debug operations
-	 * @default false
-	 * */
-	debug?: boolean;
-	/**
-	 * Image format
-	 * @default png
-	 * */
-	format?: "svg" | "png"; // Defaults to 'png'
-};
+/** Satori image options for the root `ImageResponse` (engine is fixed to satori there). */
+export type ImageOptions = Omit<CoreSatoriOptions, "engine">;
 
-export type ResponseImageOptions = {
-	/**
-	 * Status code for response
-	 * @default 200
-	 * */
-	status?: number;
-	/**
-	 * Status text for response
-	 * @default Success
-	 * */
-	statusText?: string;
-	/**
-	 * Response Headers
-	 * @default {
-	 *   'Content-Type': 'image/png',
-	 *   'Cache-Control': options.debug ? 'no-cache, no-store' : 'public, immutable, no-transform, max-age=31536000'
-	 * }
-	 * */
-	headers?: Record<string, string>;
-};
+export type ResponseImageOptions = ResponseOptions;
 
 /**
  * Image response options type exposed to devs for ImageResponse Instance
  * */
 export type ImageResponseOptions = ImageOptions & ResponseImageOptions;
-
-/**
- * Svelte Component props to render the component which dynamic content
- * */
-export type ComponentOptions = {
-	props?: Record<string, unknown>;
-};
 
 /**
  * React virtual node, supported by satori as input (alternative to JSX input).
