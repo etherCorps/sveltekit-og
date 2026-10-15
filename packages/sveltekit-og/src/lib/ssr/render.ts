@@ -1,7 +1,8 @@
 import type { Component } from "svelte";
 import { render } from "svelte/server";
-import type { Element, ImageOptions, ResponseOptions } from "../core/types.js";
+import type { Element, ImageResponseOptions, PropsArg } from "../core/types.js";
 import { renderImage as coreRender, type Platform } from "../core/render.js";
+import { ImageResponse as CoreImageResponse } from "../core/image-response.js";
 import { default_fonts } from "../helpers/defaults.js";
 import { handleSync, ErrorCodes } from "../helpers/error-handler.js";
 
@@ -30,11 +31,30 @@ export const serverPlatform: Platform = {
 	},
 };
 
-/** Server-side render to bytes (svg → string). */
-export function renderImage(
-	element: Element,
-	options: ImageOptions & ResponseOptions = {},
-	props?: Record<string, unknown>
+/**
+ * OG image as a `Response`, rendered on the server. Takes an HTML string or a Svelte
+ * component; `options.engine` picks Takumi (default) or Satori.
+ */
+export class ImageResponse<T extends Element> extends CoreImageResponse<T> {
+	constructor(element: T, options?: ImageResponseOptions, ...[props]: PropsArg<T>) {
+		super(serverPlatform, element, options, props);
+	}
+}
+
+/** Same as `new ImageResponse(...)`, as a function. */
+export function createImage<T extends Element>(
+	element: T,
+	options?: ImageResponseOptions,
+	...props: PropsArg<T>
+): ImageResponse<T> {
+	return new ImageResponse(element, options, ...props);
+}
+
+/** Render to bytes (`svg` → string) instead of a `Response`. */
+export function renderImage<T extends Element>(
+	element: T,
+	options?: ImageResponseOptions,
+	...[props]: PropsArg<T>
 ): Promise<Uint8Array | string> {
-	return coreRender(element, options, props, serverPlatform);
+	return coreRender(element, options ?? {}, props, serverPlatform);
 }

@@ -1,5 +1,9 @@
 import type { SatoriOptions } from "satori";
-import type { SatoriOptions as CoreSatoriOptions, ResponseOptions } from "./core/types.js";
+import type {
+	ImageOptions as CoreImageOptions,
+	ImageResponseOptions as CoreImageResponseOptions,
+	ResponseOptions,
+} from "./core/types.js";
 
 export type Font = SatoriOptions["fonts"][number];
 export type Fonts = Font[];
@@ -8,15 +12,15 @@ export type FontWeight = Font["weight"];
 
 export type FinalFontOptions = NonNullable<Fonts>;
 
-/** Satori image options for the root `ImageResponse` (engine is fixed to satori there). */
-export type ImageOptions = Omit<CoreSatoriOptions, "engine">;
+/** v4 name; the engine options union (`engine` picks the shape, Takumi when omitted). */
+export type ImageOptions = CoreImageOptions;
 
 export type ResponseImageOptions = ResponseOptions;
 
 /**
  * Image response options type exposed to devs for ImageResponse Instance
  * */
-export type ImageResponseOptions = ImageOptions & ResponseImageOptions;
+export type ImageResponseOptions = CoreImageResponseOptions;
 
 /**
  * React virtual node, supported by satori as input (alternative to JSX input).
