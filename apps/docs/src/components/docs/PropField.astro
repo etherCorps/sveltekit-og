@@ -1,0 +1,22 @@
+---
+/** PropField — one documented option: name, type, required flag, default, then its description as children. Nests. */
+interface Props {
+  name: string;
+  type?: string;
+  required?: boolean;
+  defaultValue?: string;
+}
+const { name, type, required = false, defaultValue } = Astro.props;
+---
+
+<div class="nb-propfield my-3 border-l-2 border-border pl-4">
+  <div class="flex flex-wrap items-baseline gap-x-2 text-sm">
+    <code class="font-semibold text-foreground">{name}</code>
+    {type && <code class="text-muted-foreground">{type}</code>}
+    {required && <span class="text-[0.6875rem] font-medium uppercase tracking-wide text-danger">required</span>}
+    {defaultValue !== undefined && (
+      <span class="text-xs text-muted-foreground">default: <code>{defaultValue}</code></span>
+    )}
+  </div>
+  <div class="mt-1 text-sm text-muted-foreground [&>p]:my-1"><slot /></div>
+</div>

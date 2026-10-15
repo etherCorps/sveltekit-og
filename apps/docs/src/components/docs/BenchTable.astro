@@ -1,0 +1,39 @@
+---
+/** BenchTable — renders packages/sveltekit-og/benchmarks/report.json (written by `pnpm bench:report` on release). */
+import { existsSync, readFileSync } from "node:fs";
+const file = new URL("../../../../../packages/sveltekit-og/benchmarks/report.json", import.meta.url);
+const report = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : null;
+const ms = (n: number) => (n < 1 ? `${n.toFixed(2)} ms` : `${n.toFixed(1)} ms`);
+const warm = Object.entries((report?.warm ?? {}) as Record<string, { mean: number; p99: number }>);
+const cold = Object.entries((report?.cold ?? {}) as Record<string, Record<string, number>>);
+const coldCases = [...new Set(cold.flatMap(([, c]) => Object.keys(c)))];
+const date = report ? new Date(report.generatedAt).toISOString().slice(0, 10) : "";
+---
+{report ? (
+<div>
+
+<p class="text-sm text-muted-foreground">
+	Measured on {date} for <code>{report.version}</code> — {report.machine.cpu || report.machine.platform}, Node {report.machine.node}.
+</p>
+
+<h3>Warm render</h3>
+<p>Same process, engine already initialised; mean per render, 1200×630.</p>
+<table>
+	<thead><tr><th>case</th><th>mean</th><th>p99</th></tr></thead>
+	<tbody>{warm.map(([name, v]) => <tr><td>{name}</td><td>{ms(v.mean)}</td><td>{ms(v.p99)}</td></tr>)}</tbody>
+</table>
+
+<h3>Cold render</h3>
+<p>Fresh process or isolate: package import, engine load, wasm instantiate and the first render; median.</p>
+<table>
+	<thead><tr><th>case</th>{cold.map(([rt]) => <th>{rt}</th>)}</tr></thead>
+	<tbody>
+		{coldCases.map((c) => (
+			<tr><td>{c}</td>{cold.map(([, cases]) => <td>{cases[c] != null ? ms(cases[c]) : "—"}</td>)}</tr>
+		))}
+	</tbody>
+</table>
+</div>
+) : (
+<p>No benchmark report yet — run <code>pnpm bench:report</code> in <code>packages/sveltekit-og</code> on release.</p>
+)}

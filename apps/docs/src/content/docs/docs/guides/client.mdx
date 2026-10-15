@@ -1,0 +1,123 @@
+---
+title: Client-side rendering
+description: Generate images in the browser or a web worker with the same API, no server request.
+sidebar:
+  order: 3
+---
+
+## Overview
+
+`@ethercorps/sveltekit-og/client` renders images **in the browser** — on the main thread or inside a web worker — with the same engines and the same three functions as the server entry: `ImageResponse`, `createImage` and `renderImage`. Takumi is the default; `engine: "satori"` selects Satori + ReSVG.
+
+Use it for live previews in an editor or CMS, or for static sites (`adapter-static`) that still want images generated at runtime.
+
+<Aside type="note" title="Try it">
+
+The [Playground](/docs/playground/) renders in your browser with this API and shows the matching `createImage(...)` call.
+
+</Aside>
+
+## Requirements
+
+- **Vite** (every SvelteKit app). The entry loads its WebAssembly and fonts through Vite `?url` asset imports; other bundlers are not supported.
+- Install the engine you use (`takumi-js`, or `satori` + `@resvg/resvg-wasm`), as on the server. Only the engine you call is downloaded; the other one never ships.
+- Pages that render client-side must run in the browser: `export const ssr = false;` in the route's `+page.ts`, or call the API inside `onMount`/event handlers.
+
+## Usage
+
+```ts title="src/routes/preview/+page.svelte (script)"
+import { createImage } from '@ethercorps/sveltekit-og/client';
+
+const html = `<div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;font-size:64px">Hello</div>`;
+
+// Takumi is the default engine
+const res = createImage(html, { width: 1200, height: 630, format: 'png' });
+const url = URL.createObjectURL(await res.blob());
+```
+
+`createImage` returns a `Response` (the `ImageResponse` class is the same thing as a constructor); read it with `.blob()`, `.arrayBuffer()` or `.text()`. `renderImage(...)` resolves to the bytes directly:
+
+```ts
+import { renderImage } from '@ethercorps/sveltekit-og/client';
+
+const png = await renderImage(html, { width: 1200, height: 630 }); // Uint8Array
+```
+
+### Choosing an engine
+
+```ts
+// Satori + ReSVG: png or svg
+createImage(html, { engine: 'satori', format: 'svg', width: 1200, height: 630 });
+
+// Takumi: png, jpeg, webp, ico, raw, svg
+createImage(html, { engine: 'takumi', format: 'webp', quality: 80, width: 1200, height: 630 });
+```
+
+The options are a union discriminated on `engine`, so TypeScript narrows the remaining fields to the engine you picked; a format the engine can't emit is a type error and rejects with `UNSUPPORTED_FORMAT` at runtime.
+
+**Only the engine you use is downloaded.** Each engine is a separate chunk. Rough first-render downloads: Takumi ≈ 3.7 MB of wasm; Satori ≈ 2 MB (yoga + ReSVG) plus the bundled fonts.
+
+### Svelte components
+
+```ts
+import Card from './Card.svelte';
+
+createImage(Card, { width: 1200, height: 630 }, { title: 'Hello', subtitle: 'from the browser' });
+```
+
+Components are mounted in a detached shadow root and their HTML captured, so page CSS can't leak into the image. **Only inline styles are captured** — scoped `<style>` blocks and `css="injected"` aren't; use inline styles, `tw`/`class` utilities, or the `stylesheets` option.
+
+## Web workers
+
+Rendering works inside a module worker: `new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' })`.
+
+The client entry code-splits (one chunk per engine), and Vite's default worker format (`iife`) can't code-split, so set the ES format:
+
+```js title="vite.config.js"
+export default defineConfig({
+	plugins: [sveltekit()],
+	worker: { format: 'es' }
+});
+```
+
+Without it, `vite dev` works but `vite build` fails with `Invalid value "iife" for option "output.format"`.
+
+Workers have no DOM, so **only HTML strings can be rendered there**. Passing a Svelte component rejects with `COMPONENT_IN_WORKER`:
+
+```ts
+try {
+	await createImage(Card, { width: 1200, height: 630 }, props).arrayBuffer();
+} catch (err) {
+	if ((err as { code?: string }).code === 'COMPONENT_IN_WORKER') {
+		// render the component to HTML on the main thread first, then post the string
+	}
+}
+```
+
+## Errors
+
+Failures reject from `.blob()` / `.arrayBuffer()` / `.text()` (and from `renderImage`) with an `ImageResponseError` carrying a `code` — see the [error reference](/docs/reference/errors/). Browsers normally collapse a failed response body into a bare `TypeError: Failed to fetch`; the client `ImageResponse` reads the stream itself so the real error reaches you.
+
+## Fonts
+
+- **Takumi** has a built-in sans-serif: text renders with no setup.
+- **Satori** needs font data. With no `fonts`, the package uses a bundled **Noto Sans** (regular + bold) served from your own site — no cross-origin requests, works offline.
+
+Your own fonts go straight into `fonts` for either engine, as `CustomFont` instances or raw `{ name, data, weight, style }` descriptors (put the file in `static/` or import it with `?url`). Each font object is resolved once and reused across renders.
+
+```ts
+import { createImage, CustomFont } from '@ethercorps/sveltekit-og/client';
+
+const inter = new CustomFont('Inter', () => fetch('/fonts/Inter-Bold.ttf').then((r) => r.arrayBuffer()), { weight: 700 });
+
+createImage(html, { engine: 'satori', width: 1200, height: 630, fonts: [inter] });
+createImage(html, { width: 1200, height: 630, fonts: [inter] }); // Takumi
+```
+
+`GoogleFont` is **not** exported by the client entry: browsers can't change their User-Agent, so Google Fonts serves `woff2`, which neither engine's loader accepts. Download the TTF and use `CustomFont`.
+
+## Limitations
+
+- Vite-only (`?url` asset imports).
+- Components: inline styles only; HTML strings only inside workers.
+- The Satori path parses HTML with `satori-html` in your bundle. Vite's default minifier is fine; if you minify with terser `ascii_only`, selectors like `:not()` break in the parser — a known upstream issue.

@@ -1,0 +1,129 @@
+---
+title: Local assets
+description: Images, SVGs and remote assets inside an OG image rendered on the server.
+sidebar:
+  order: 5
+---
+
+When generating OG images, the code runs on the server (Node, Edge, or Worker), not in the browser. This means you **cannot** use relative paths (e.g., `<img src="./logo.png" />`) because the image generation engine (Satori) has no access to your client-side assets or file system by default.
+
+To use local assets, provide the image data as a **Base64 data URL**, or give the engine a **public absolute URL** it can fetch. Both engines handle both.
+
+## Vite Inline Import
+
+This is the **recommended method** for small, self-contained images (logos, avatars) because it requires no runtime file system access or network requests.
+
+### How it Works
+
+The `?inline` query suffix is a Vite feature that processes the asset at **build time** and exports it as a string containing the Base64 Data URL (`data:image/png;base64,...`). Since this string is available directly in your server-side code, the image generation is highly reliable and fast.
+
+### Example
+
+<Tabs>
+
+<TabItem label="Svelte Component">
+
+```svelte title="inline-import.svelte"
+<script lang="ts">
+	// 1. Import the asset using the ?inline suffix (exports a base64 data URL string)
+	import myLogoData from '$lib/assets/logo.png?inline';
+</script>
+
+<div tw="flex items-center">
+	<img src={myLogoData} width="128" height="128" alt="Base64 Logo" />
+	<h1>My Base64 Title</h1>
+</div>
+```
+
+</TabItem>
+
+<TabItem label="Raw HTML">
+
+```typescript title="+server.ts"
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+// Import the image directly as a Base64 data URL string
+import logoDataUrl from '$lib/assets/logo.png?inline';
+
+export const GET = async () => {
+	const htmlToRender = `
+    <div tw="flex flex-col">
+      <img src="${logoDataUrl}" width="128" height="128" />
+    </div>
+  `;
+
+	return new ImageResponse(htmlToRender, { width: 1200, height: 630 });
+};
+```
+
+</TabItem>
+
+</Tabs>
+
+## Reading Local Assets
+
+This method is ideal for large assets (e.g., high-resolution background images) or files you need as an `ArrayBuffer` (like custom fonts), where embedding the file with `?inline` is too large.
+
+### How it Works
+
+- The `?url` suffix tells Vite to export the asset's path as a string (e.g., `$lib/assets/logo.png`).
+- The SvelteKit utility `$app/server/read` uses this path to access the asset within the server's build directory and returns the content as a `Response`.
+-
+
+### Example
+
+#### Reading into an ArrayBuffer
+
+```typescript
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+// 1. Import the asset path string using ?url
+import imagePath from '$lib/assets/large_image.jpg?url';
+import { read } from '$app/server'; // 2. Import the server read utility
+
+export const GET = async ({ fetch }) => {
+	// 3. Read the content of the asset path using the utility
+	const assetResponse = await read(imagePath);
+	const imageBuffer = await assetResponse.arrayBuffer();
+
+	// 4. Convert the ArrayBuffer to a base64 data URL for the engine
+	const base64Image = Buffer.from(imageBuffer).toString('base64');
+	const mimeType = assetResponse.headers.get('content-type') || 'image/jpeg';
+	const dataUrl = `data:${mimeType};base64,${base64Image}`;
+
+	const htmlToRender = `
+    <div tw="flex">
+      <img src="${dataUrl}" width="500" height="500" />
+    </div>
+  `;
+
+	return new ImageResponse(htmlToRender, { width: 1200, height: 630 });
+};
+```
+
+## Using Public Absolute Path
+
+This method is the simplest for referencing assets placed in the static folder, but it relies on making an HTTP network request during image generation.
+
+### How it Works
+
+Both engines fetch `<img src>` over HTTP, so the URL must be absolute (e.g. `https://example.com/logo.png`). You must construct this URL using the request URL's origin.
+
+### Example
+
+```typescript title="+server.ts"
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+import type { RequestHandler } from './$types';
+
+export const GET: RequestHandler = async ({ url }) => {
+	// Construct the absolute URL using the request URL's origin
+	// Assumes logo.png is in the static folder
+	const absoluteUrl = `${url.origin}/logo.png`;
+
+	const htmlToRender = `
+    <div tw="flex">
+      <img src="${absoluteUrl}" width="100" height="100" />
+    </div>
+  `;
+
+	return new ImageResponse(htmlToRender, { width: 1200, height: 630 });
+};
+```

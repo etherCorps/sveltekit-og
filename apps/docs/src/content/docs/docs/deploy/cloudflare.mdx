@@ -1,0 +1,88 @@
+---
+title: Cloudflare
+description: How to use Sveltekit OG with cloudflare adapter (@sveltejs/adapter-cloudflare)
+sidebar:
+  order: 3
+---
+
+This section details the necessary configuration to ensure the SvelteKit OG's image generation engine, which relies on **WebAssembly (Wasm)**, is correctly bundled and executed within the **Cloudflare Workers** or **Pages** runtime environment.
+
+## Installation
+
+To deploy with Cloudflare, you must first install the necessary SvelteKit adapter:
+
+<PackageManagers pkg="@sveltejs/adapter-cloudflare" dev />
+
+Configure the adapter:
+
+<Tabs syncKey="kit">
+<TabItem label="SvelteKit 3">
+
+SvelteKit 3 has no `svelte.config.js`; pass the adapter to `sveltekit()`:
+
+```ts title="vite.config.ts"
+import adapter from '@sveltejs/adapter-cloudflare';
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+
+export default { plugins: [sveltekit({ adapter: adapter() }), sveltekitOG()] };
+```
+
+</TabItem>
+<TabItem label="SvelteKit 2">
+
+```js title="svelte.config.js"
+import adapter from '@sveltejs/adapter-cloudflare';
+
+/** @type {import('@sveltejs/kit').Config} */
+export default { kit: { adapter: adapter() } };
+```
+
+</TabItem>
+</Tabs>
+
+## Plugin configuration
+
+Add `sveltekitOG()` to `vite.config`. It wires the engines' WebAssembly into the server build and keeps engines you haven't installed out of the bundle — see the [Vite plugin reference](/docs/reference/vite-plugin/).
+
+```ts title="vite.config.ts"
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [sveltekit(), sveltekitOG()]
+});
+```
+
+On Cloudflare the plugin emits the engines' WebAssembly as `.wasm` modules, which Workers instantiate directly.
+
+## Usage
+
+Once configured, usage is the same as on any other SvelteKit target. Install the engine you render with (`takumi-js`, or `satori` + `@resvg/resvg-wasm`) as a regular dependency so the adapter bundles it.
+
+- Svelte components: see the [Svelte component](/docs/guides/svelte-component/) guide.
+
+- HTML strings: see the [HTML string](/docs/guides/html/) guide.
+
+## Preview
+
+### Cloudflare Workers
+
+<img src="/images/adapters/satori.png" class="mt-4 rounded-lg" alt="The example's /png/cog.png route: the shared OG component rendered with Satori" />
+
+The example's `/png/cog.png` route — the shared `OG.svelte` rendered with Satori — as this site renders it at build. The live copy is linked below.
+
+Source: <RepoLink path="examples/cf-workers-build" /> <br/>
+Live: https://workers.sveltekit-og.dev/
+
+### Cloudflare Pages
+
+<img src="/images/adapters/satori.png" class="mt-4 rounded-lg" alt="The example's /png/cog.png route: the shared OG component rendered with Satori" />
+
+The example's `/png/cog.png` route — the shared `OG.svelte` rendered with Satori — as this site renders it at build. The live copy is linked below.
+
+Source: <RepoLink path="examples/cf-pages-build" /> <br/>
+Live: https://pages.sveltekit-og.dev/
+
+<Aside type="caution" title="Add Async Localstorage flag"> Cloudflare Pages requires you to manually add ALS support via config or dashboard. Add `node_als` compatability flag.</Aside>

@@ -27,6 +27,15 @@
 			"types": "./dist/ClientImage.svelte.d.ts",
 			"svelte": "./dist/ClientImage.svelte",
 			"default": "./dist/ClientImage.svelte"
+		},
+		"./og": {
+			"types": "./dist/OG.svelte.d.ts",
+			"svelte": "./dist/OG.svelte",
+			"default": "./dist/OG.svelte"
+		},
+		"./templates": {
+			"types": "./dist/templates.d.ts",
+			"default": "./dist/templates.js"
 		}
 	},
 	"dependencies": {

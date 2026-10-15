@@ -1,0 +1,121 @@
+---
+title: Takumi
+description: The default engine — a Rust renderer compiled to WebAssembly, with more formats, more CSS and a built-in font.
+sidebar:
+  order: 1
+---
+
+[Takumi](https://takumi.kane.tw) renders HTML and CSS straight to an image. It is the **default engine**: every example in these docs uses it unless `engine: "satori"` is set.
+
+Pick it for:
+
+- **Formats** — `png`, `jpeg`, `webp`, `ico`, `raw` and vector `svg`, with `quality` for the lossy ones.
+- **CSS** — flex, grid, gradients, box shadows and more, beyond Satori's flex-only subset.
+- **A built-in font** — text renders with no font setup.
+- **Speed** — roughly 2–3× faster than Satori per render in the [benchmarks](/docs/benchmarks/).
+
+## Install
+
+<PackageManagers pkg="@ethercorps/sveltekit-og takumi-js" />
+
+`takumi-js` is an optional peer dependency; without it, calls reject with `ENGINE_NOT_INSTALLED`. On Node it uses the native build, on Workers, Deno and in the browser the WebAssembly one. The [Vite plugin](/docs/reference/vite-plugin/) handles the loading.
+
+## Usage
+
+Nothing to select: it is the default.
+
+```ts title="src/routes/images/takumi.png/+server.ts"
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+
+const template = `
+<div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:#101011">
+	<h1 style="color:gray;font-size:80px">Hello Takumi</h1>
+</div>`;
+
+export const GET = () => new ImageResponse(template, { width: 1200, height: 630 });
+```
+
+Svelte components work the same way — pass the props as the third argument:
+
+```ts
+import OG from '$lib/components/og/simple.svelte';
+
+export const GET = () => new ImageResponse(OG, { width: 1200, height: 630 }, { title: 'Hello Takumi' });
+```
+
+<Aside type="note" title="Coming from 4.x">
+
+`import { ImageResponse } from '@ethercorps/sveltekit-og/takumi'` still works — it is an alias of the root entry, removed in v6. Prefer the root import.
+
+</Aside>
+
+### Styling
+
+Templates are normalised with [satori-html](https://github.com/natemoo-re/satori-html) before rendering, so three styles work:
+
+- **Inline `style`** — applied as-is. Write real CSS: `letter-spacing: -0.04em`, not camelCase or quoted values.
+- **Tailwind** — via the `tw` attribute **or** a `class` attribute; utility classes are detected and mapped for you.
+- **`<style>` blocks** — inlined onto matching elements (use `<svelte:options css="injected" />` in components).
+
+Plain class names only take effect when a `<style>` block defines them. For whole external stylesheets, use the `stylesheets` option.
+
+## Output formats
+
+```ts
+new ImageResponse(template, { format: 'webp', quality: 80 });
+new ImageResponse(template, { format: 'jpeg', quality: 90 });
+new ImageResponse(template, { format: 'svg' }); // vector; renderImage() returns a string
+```
+
+| Format          | Content-Type               |
+| --------------- | -------------------------- |
+| `png` (default) | `image/png`                |
+| `jpeg`          | `image/jpeg`               |
+| `webp`          | `image/webp`               |
+| `ico`           | `image/x-icon`             |
+| `svg`           | `image/svg+xml`            |
+| `raw`           | `application/octet-stream` |
+
+## Fonts
+
+The built-in sans-serif covers the examples above. For your own, pass `GoogleFont` / `CustomFont` instances or raw descriptors to `fonts` — see the [Fonts](/docs/guides/fonts/) guide. Fonts are registered on the renderer once per process.
+
+```ts
+import { ImageResponse, GoogleFont, CustomFont } from '@ethercorps/sveltekit-og';
+import { read } from '$app/server';
+import RegularFont from '$lib/assets/MyFont-Regular.ttf?url';
+
+export const GET = () =>
+	new ImageResponse(`<div style="display:flex;font-family:Inter">Hello World</div>`, {
+		fonts: [
+			new GoogleFont('Inter', { weight: 400 }),
+			new CustomFont('My Font', () => read(RegularFont).arrayBuffer(), { weight: 700 })
+		]
+	});
+```
+
+## Emoji
+
+Emoji come from a provider, set with `emoji` (default `twemoji`). `"from-font"` uses glyphs from your loaded fonts instead.
+
+```ts
+new ImageResponse(`<div style="display:flex">Ship it 🚀</div>`, { emoji: 'noto' });
+```
+
+## Options
+
+Everything specific to Takumi; shared options (`width`, `height`, `fonts`, `debug`, `status`, `statusText`, `headers`) are in the [ImageResponse reference](/docs/reference/image-response/).
+
+| Option        | Type                                      | Default     | Description                                                  |
+| ------------- | ----------------------------------------- | ----------- | ------------------------------------------------------------ |
+| `engine`      | `"takumi"`                                | `"takumi"`  | Optional; this is the default.                               |
+| `format`      | `png \| jpeg \| webp \| ico \| raw \| svg` | `"png"`     | Output format.                                               |
+| `quality`     | `number`                                  | —           | `0`–`100`, for `jpeg` and `webp`.                            |
+| `stylesheets` | `string[]`                                | —           | Extra CSS applied before rendering.                          |
+| `emoji`       | `EmojiType \| "from-font"`                | `"twemoji"` | Emoji provider.                                              |
+| `takumi`      | `Partial<RenderOptions>`                  | —           | Passed straight to takumi-js `render`, last, so it wins.     |
+
+```ts
+// anything takumi-js accepts, e.g. an abort signal
+new ImageResponse(template, { takumi: { signal: AbortSignal.timeout(5000) } });
+```

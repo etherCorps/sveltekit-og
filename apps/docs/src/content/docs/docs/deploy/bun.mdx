@@ -1,0 +1,113 @@
+---
+title: Bun
+description: How to use SvelteKit OG with the official Bun adapter (@sveltejs/adapter-bun)
+sidebar:
+  order: 2
+---
+
+This section details the configuration needed to run SvelteKit OG on the [Bun](https://bun.sh) runtime with the official Bun adapter (`@sveltejs/adapter-bun`). Both engines work: Satori + ReSVG take the Node code path (the wasm is read from `node_modules`), and Takumi resolves its native backend through its `bun` export condition.
+
+<Aside type="note" title="Requirements">
+
+`@sveltejs/adapter-bun` needs **SvelteKit 3** and **Bun 1.4 or newer**. The adapter also requires the build itself to run under Bun — `vite build` started by Node fails with "adapter-bun requires running the SvelteKit build with Bun".
+
+</Aside>
+
+## Installation
+
+Install the Bun adapter:
+
+<PackageManagers pkg="@sveltejs/adapter-bun" dev />
+
+SvelteKit 3 has no `svelte.config.js`; pass the adapter to `sveltekit()` in `vite.config.js`:
+
+```javascript title="vite.config.js"
+import adapter from '@sveltejs/adapter-bun';
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+
+const config = {
+	plugins: [sveltekit({ adapter: adapter() }), sveltekitOG({ esmImport: false })]
+};
+
+export default config;
+```
+
+## Plugin configuration
+
+Add `sveltekitOG()` to `vite.config`. It wires the engines' WebAssembly into the server build and keeps engines you haven't installed out of the bundle — see the [Vite plugin reference](/docs/reference/vite-plugin/).
+
+```ts title="vite.config.ts"
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [sveltekit(), sveltekitOG({ esmImport: false })]
+});
+```
+
+`esmImport: false` inlines the WebAssembly as base64, exactly as on Node; Bun then loads it through its Node-compatible file APIs.
+
+## Build and run
+
+Build with Bun (not Node) and start the generated server:
+
+```json title="package.json"
+{
+	"scripts": {
+		"build": "bun run --bun vite build",
+		"start": "bun ./build"
+	}
+}
+```
+
+```shell title="Bash"
+bun run build
+bun run start
+```
+
+The server listens on `PORT` (default `3000`). See the adapter docs for `HOST`, `SOCKET_PATH`, proxy headers and the other environment variables.
+
+## Usage
+
+Once configured, usage is the same as on any other SvelteKit target. Install the engine you render with (`takumi-js`, or `satori` + `@resvg/resvg-wasm`) as a regular dependency so the adapter bundles it.
+
+- Svelte components: see the [Svelte component](/docs/guides/svelte-component/) guide.
+- HTML strings: see the [HTML string](/docs/guides/html/) guide.
+- Engines: [Takumi](/docs/engines/takumi/) (default) and [Satori](/docs/engines/satori/).
+
+## Preview (Self Test)
+
+Source: <RepoLink path="examples/bun-build" />
+
+### Step-by-Step Guide
+
+- Clone the repository and navigate:
+
+```shell title="Bash"
+git clone https://github.com/etherCorps/sveltekit-og.git
+cd sveltekit-og/examples/bun-build
+```
+
+- Install dependencies:
+
+```shell title="Bash"
+pnpm install
+```
+
+- Build with Bun:
+
+```shell title="Bash"
+bun run build
+```
+
+- Start the server:
+
+```shell title="Bash"
+bun run start
+```
+
+Then open [http://localhost:3000](http://localhost:3000) to browse the example gallery — the **PNG**, **SVG** and **Takumi** routes, each as an HTML string, a Svelte component, and a pre-rendered image, plus the client-side renders.
+
+More on how to use [adapter-bun in SvelteKit](https://svelte.dev/docs/kit/adapter-bun)

@@ -1,0 +1,36 @@
+---
+/** ReleaseInfo — latest version, release date and monthly downloads from the npm
+ * registry, fetched at build. Degrades to a short note if the registry is unreachable. */
+const pkg = "@ethercorps/sveltekit-og";
+type Info = { latest: string; next?: string; date: string; downloads: number; versions: number };
+let info: Info | undefined;
+try {
+  const [meta, dl] = await Promise.all([
+    fetch(`https://registry.npmjs.org/${pkg}`).then((r) => r.json()),
+    fetch(`https://api.npmjs.org/downloads/point/last-month/${pkg}`).then((r) => (r.ok ? r.json() : { downloads: 0 })),
+  ]);
+  const latest = meta["dist-tags"].latest as string;
+  info = {
+    latest,
+    next: meta["dist-tags"].next,
+    date: meta.time[latest],
+    downloads: dl.downloads ?? 0,
+    versions: Object.keys(meta.versions).length,
+  };
+} catch {
+  info = undefined;
+}
+const fmt = (d: string) => new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(new Date(d));
+---
+
+{info ? (
+  <dl class="not-prose my-4 grid grid-cols-2 gap-4 rounded-lg border border-border p-4 text-sm sm:grid-cols-4">
+    <div><dt class="text-muted-foreground">Latest</dt><dd class="font-semibold"><code>{info.latest}</code></dd></div>
+    {info.next && <div><dt class="text-muted-foreground">Next</dt><dd class="font-semibold"><code>{info.next}</code></dd></div>}
+    <div><dt class="text-muted-foreground">Released</dt><dd class="font-semibold">{fmt(info.date)}</dd></div>
+    <div><dt class="text-muted-foreground">Downloads / month</dt><dd class="font-semibold">{info.downloads.toLocaleString("en-US")}</dd></div>
+    <div><dt class="text-muted-foreground">Versions</dt><dd class="font-semibold">{info.versions}</dd></div>
+  </dl>
+) : (
+  <p>Release data could not be fetched at build time. See <a href="https://www.npmjs.com/package/@ethercorps/sveltekit-og">npm</a>.</p>
+)}

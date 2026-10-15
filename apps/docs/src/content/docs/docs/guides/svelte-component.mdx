@@ -1,0 +1,114 @@
+---
+title: Svelte component
+description: Render a Svelte component to an image from a SvelteKit server route.
+sidebar:
+  order: 1
+---
+
+## Prerequisites
+
+Install the package with an engine and add the Vite plugin as described in [Getting Started](/docs/getting-started/). Everything below renders with **Takumi**, the default engine; add `engine: "satori"` to the options to render with Satori instead.
+
+## Guide
+
+We will create the simplest possible Open Graph image. This example uses a **Svelte component** without any dynamic data fetching or complex logic.
+
+### Create your Component
+
+Component should use standard HTML and CSS (or utility classes from Tailwind CSS). Ensure the component's root element has a style of **`width: 100%`** and **`height: 100%`** to correctly fill the rendering area defined in the options.
+
+<Aside type="caution" title="Important">
+
+If using `style` blocks, you must enable CSS injection in svelte options.
+
+```svelte
+<svelte:options css="injected" />
+```
+
+</Aside>
+
+```svelte title="lib/components/og/simple.svelte"
+<div
+	style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; background-color: #101011;"
+>
+	<h1 style="color: gray; font-size: 80px; margin: 0;">@ethercorps/sveltekit-og</h1>
+	<p style="color: gray; font-size: 36px; margin-top: 20px;">
+		Your Svelte Component Open Graph Image!
+	</p>
+</div>
+```
+
+### Create API route
+
+Create a SvelteKit server route (a `+server.ts` file) and return an `ImageResponse` for your component. `createImage(...)` is the same call as a function. For this basic setup, we include only the mandatory configuration: the component, dimensions, and necessary fonts.
+
+```typescript title="routes/images/simple.png/+server.ts"
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+import SimpleCard from '$lib/components/og/simple.svelte';
+import type { RequestHandler } from '@sveltejs/kit';
+
+// This is optional, use it if you want to generate OG image at build time.
+export const prerender = true;
+
+export const GET: RequestHandler = async () => {
+	return new ImageResponse(
+		SimpleCard, // ⬅️ Pass the Svelte component here
+		{
+			width: 1200,
+			height: 630
+		}
+	);
+};
+```
+
+### Preview
+
+Visit the URL corresponding to route in browser (e.g. `http://localhost:5173/images/simple.png`).
+
+<img src="/images/simple.png" class="mt-4 rounded-lg" alt="Simple OG Image" />
+
+## Using Vanilla CSS
+
+The examples above use `Style` attribute. However, you can also use standard CSS within Svelte Component `<style>` block or use Tailwind CSS.
+
+<Aside type="caution" title="Important">
+
+If using `style` blocks, you must enable CSS injection in svelte options.
+
+```svelte
+<svelte:options css="injected" />
+```
+
+</Aside>
+
+```svelte title="vanills-css.svelte"
+<svelte:options css="injected" />
+
+<script>
+	// component props
+</script>
+
+<div class="card">
+	<h1>Hello World</h1>
+</div>
+
+<style>
+	.card {
+		display: flex;
+		background-color: white;
+		height: 100%;
+		align-items: center;
+		justify-content: center;
+	}
+	h1 {
+		font-size: 60px;
+		color: black;
+	}
+</style>
+```
+
+## Next Steps
+
+- **API reference**: every option, per engine, in the [ImageResponse reference](/docs/reference/image-response/).
+- **Local Assets**: To include local images or other assets in OG images, see [Local Assets](/docs/guides/local-assets/) guide.
+- **Custom Fonts**: To use fonts other than the default, see [Fonts](/docs/guides/fonts/) guide for detailed instructions.

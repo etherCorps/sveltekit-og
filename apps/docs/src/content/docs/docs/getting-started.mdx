@@ -1,0 +1,87 @@
+---
+title: Getting started
+description: Install the package and an engine, add the Vite plugin, render your first image.
+---
+
+<Aside type="note" title="Requirements">
+
+Svelte 5 and SvelteKit 2 or 3. Upgrading from 4.x? Read [Migrating to v5](/docs/migration/v5/) first.
+
+</Aside>
+
+<Steps>
+
+<Step>Install the package and an engine</Step>
+
+Engines are optional peer dependencies: install the one you render with. Takumi is the default engine; Satori is the engine 4.x used.
+
+<Tabs syncKey="engine">
+<TabItem label="Takumi (default)">
+
+<PackageManagers pkg="@ethercorps/sveltekit-og takumi-js" />
+
+</TabItem>
+<TabItem label="Satori">
+
+<PackageManagers pkg="@ethercorps/sveltekit-og satori @resvg/resvg-wasm" />
+
+</TabItem>
+<TabItem label="Both">
+
+<PackageManagers pkg="@ethercorps/sveltekit-og takumi-js satori @resvg/resvg-wasm" />
+
+</TabItem>
+</Tabs>
+
+Calling an engine you haven't installed rejects with `ENGINE_NOT_INSTALLED` and the command to run.
+
+<Step>Add the Vite plugin</Step>
+
+`sveltekitOG()` wires the engines' WebAssembly into the server build and keeps uninstalled engines out of your bundle. Add it after `sveltekit()`:
+
+```js title="vite.config.js"
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+
+export default {
+	plugins: [sveltekit(), sveltekitOG()]
+};
+```
+
+Some adapters need an option (`{ esmImport: false }` on Node, Bun and Netlify); the [Deploy](/docs/deploy/node/) pages and the [plugin reference](/docs/reference/vite-plugin/) have the details. If you add the plugin while `vite dev` is running, restart it.
+
+<Step>Render an image</Step>
+
+Return an `ImageResponse` from a server route:
+
+```ts title="src/routes/og.png/+server.ts"
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+
+const html = `
+<div style="display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;height:100%;background:#101011;color:#fff">
+	<h1 style="font-size:80px;margin:0">Hello, OG</h1>
+	<p style="font-size:36px;margin-top:20px;color:#9ca3af">rendered with sveltekit-og</p>
+</div>`;
+
+export const GET = () => new ImageResponse(html, { width: 1200, height: 630 });
+```
+
+Open `/og.png` in the browser. `createImage(html, options)` is the same call as a function; `renderImage(html, options)` returns the bytes (a `Uint8Array`, or a string for `format: "svg"`) when you don't want a `Response`.
+
+<Step>Point your pages at it</Step>
+
+```svelte title="src/routes/+layout.svelte"
+<svelte:head>
+	<meta property="og:image" content="https://example.com/og.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+</svelte:head>
+```
+
+</Steps>
+
+## Next
+
+- Templates: [Svelte component](/docs/guides/svelte-component/) or [HTML string](/docs/guides/html/).
+- [Fonts](/docs/guides/fonts/), [local assets](/docs/guides/local-assets/), [pre-rendering](/docs/guides/pre-rendering/).
+- Every option: [ImageResponse reference](/docs/reference/image-response/).
+- Render in the browser: [client-side rendering](/docs/guides/client/).

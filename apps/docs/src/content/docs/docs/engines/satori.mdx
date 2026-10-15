@@ -1,0 +1,75 @@
+---
+title: Satori
+description: HTML → SVG with Vercel's Satori, SVG → PNG with ReSVG. The engine 4.x used.
+sidebar:
+  order: 2
+---
+
+[Satori](https://github.com/vercel/satori) converts HTML and CSS to SVG; [ReSVG](https://github.com/thx/resvg-js) rasterises that SVG to PNG. This was the only engine in sveltekit-og 4.x and is still fully supported; select it with `engine: "satori"`.
+
+Pick it for:
+
+- **Byte-identical output with 4.x** — same renderer, same layout.
+- **Satori-specific features** — `tailwindConfig`, the `satori` and `resvg` pass-through options, Satori's `debug` layout boxes.
+- **SVG as the primary output** — Satori's SVG is the source of truth; `format: "svg"` skips ReSVG entirely.
+
+Its CSS support is Satori's subset: flexbox only (every element with children needs `display: flex`), no grid, a limited set of properties. Takumi handles more; see [Takumi](/docs/engines/takumi/).
+
+## Install
+
+<PackageManagers pkg="@ethercorps/sveltekit-og satori @resvg/resvg-wasm" />
+
+Both packages are optional peers; without them, `engine: "satori"` rejects with `ENGINE_NOT_INSTALLED`. The [Vite plugin](/docs/reference/vite-plugin/) loads their WebAssembly per runtime (precompiled modules on Workers, bytes on Node, streamed in the browser).
+
+## Usage
+
+```ts title="src/routes/images/satori.png/+server.ts"
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+
+const template = `
+<div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:#101011">
+	<h1 style="color:gray;font-size:80px">Hello Satori</h1>
+</div>`;
+
+export const GET = () => new ImageResponse(template, { engine: 'satori', width: 1200, height: 630 });
+```
+
+With `engine: "satori"` the options narrow to Satori's: `format` is `"png"` or `"svg"`, and `quality`, `stylesheets` or `takumi` are type errors.
+
+## Fonts
+
+Satori has no built-in font. With no `fonts`, the package fetches **Noto Sans** (regular + bold) from a CDN on the server, or serves a bundled copy on the [client](/docs/guides/client/). For your own fonts pass `GoogleFont` / `CustomFont` instances or raw descriptors — the same list as for Takumi; see [Fonts](/docs/guides/fonts/). Every font needs a `name` that matches your CSS `font-family`.
+
+## Formats
+
+| Format          | Content-Type    | Pipeline          |
+| --------------- | --------------- | ----------------- |
+| `png` (default) | `image/png`     | Satori → ReSVG    |
+| `svg`           | `image/svg+xml` | Satori only       |
+
+Any other format rejects with `UNSUPPORTED_FORMAT` (4.x silently rendered a PNG).
+
+## Emoji
+
+`emoji` picks the provider: `twemoji` (default), `openmoji`, `blobmoji`, `noto`, `fluent`, `fluentFlat`.
+
+## Options
+
+| Option           | Type                              | Default     | Description                                                       |
+| ---------------- | --------------------------------- | ----------- | ----------------------------------------------------------------- |
+| `engine`         | `"satori"`                        | —           | Required to select Satori.                                        |
+| `format`         | `"png" \| "svg"`                  | `"png"`     | Output format.                                                    |
+| `emoji`          | `EmojiType`                       | `"twemoji"` | Emoji provider.                                                   |
+| `tailwindConfig` | Satori's `tailwindConfig`         | —           | Theme for `tw` classes.                                           |
+| `satori`         | `Partial<SatoriOptions>`          | —           | Passed straight to `satori()`, last — e.g. `embedFont`, `graphemeImages`. |
+| `resvg`          | `ResvgRenderOptions`              | —           | Passed straight to the ReSVG constructor (png only) — e.g. `background`, `fitTo`. |
+
+```ts
+new ImageResponse(template, {
+	engine: 'satori',
+	satori: { embedFont: false },
+	resvg: { background: '#ffffff' }
+});
+```
+
+Shared options (`width`, `height`, `fonts`, `debug`, `status`, `statusText`, `headers`) are in the [ImageResponse reference](/docs/reference/image-response/).

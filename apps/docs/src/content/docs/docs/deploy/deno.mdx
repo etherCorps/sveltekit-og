@@ -1,0 +1,129 @@
+---
+title: Deno Deploy
+description: How to use Sveltekit OG with the Deno adapter (svelte-adapter-deno)
+sidebar:
+  order: 6
+---
+
+This section details the configuration needed to deploy SvelteKit OG using the Deno adapter (svelte-adapter-deno), targeting the Deno Runtime (Deno Deploy).
+
+## Installation
+
+To deploy with deno, you must first install the necessary SvelteKit adapter:
+
+<PackageManagers pkg="@deno/svelte-adapter" dev />
+
+Configure the adapter:
+
+<Tabs syncKey="kit">
+<TabItem label="SvelteKit 3">
+
+SvelteKit 3 has no `svelte.config.js`; pass the adapter to `sveltekit()`:
+
+```ts title="vite.config.ts"
+import adapter from '@deno/svelte-adapter';
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+
+export default { plugins: [sveltekit({ adapter: adapter() }), sveltekitOG()] };
+```
+
+</TabItem>
+<TabItem label="SvelteKit 2">
+
+```js title="svelte.config.js"
+import adapter from '@deno/svelte-adapter';
+
+/** @type {import('@sveltejs/kit').Config} */
+export default { kit: { adapter: adapter() } };
+```
+
+</TabItem>
+</Tabs>
+
+## Plugin configuration
+
+Add `sveltekitOG()` to `vite.config`. It wires the engines' WebAssembly into the server build and keeps engines you haven't installed out of the bundle — see the [Vite plugin reference](/docs/reference/vite-plugin/).
+
+```ts title="vite.config.ts"
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [sveltekit(), sveltekitOG()]
+});
+```
+
+## Usage
+
+Once configured, usage is the same as on any other SvelteKit target. Install the engine you render with (`takumi-js`, or `satori` + `@resvg/resvg-wasm`) as a regular dependency so the adapter bundles it.
+
+- Svelte components: see the [Svelte component](/docs/guides/svelte-component/) guide.
+
+- HTML strings: see the [HTML string](/docs/guides/html/) guide.
+
+## Preview
+
+<img src="/images/adapters/satori.png" class="mt-4 rounded-lg" alt="The example's /png/cog.png route: the shared OG component rendered with Satori" />
+
+The example's `/png/cog.png` route — the shared `OG.svelte` rendered with Satori — as this site renders it at build. The live copy is linked below.
+
+Source: <RepoLink path="examples/deno-build" /> <br/>
+Live: https://deno.sveltekit-og.dev/
+
+## Known Issues
+
+<Collapsible>
+<CollapsibleTrigger>Vite asset import error</CollapsibleTrigger>
+<CollapsibleContent>
+
+Deno throws error when we use [vite url imports](/docs/guides/local-assets/)
+
+```typescript
+import imagePath from '$lib/assets/JetBrainsMono-Regular.ttf?url';
+
+or;
+
+import imagePath from '$lib/assets/JetBrainsMono-Regular.ttf';
+```
+
+Error:
+
+```shell
+NotFound: No such file or directory (os error 2): open '_app/immutable/assets/JetBrainsMono-Regular.Dh36KTnx.ttf'
+    at Object.openSync (ext:deno_fs/30_fs.js:543:15)
+    at read (file:///app/src/.deno-deploy/handler.ts:55:25)
+    at wrapped_read (file:///app/src/.deno-deploy/server/index.js:4390:24)
+    at read (file:///app/src/.deno-deploy/server/entries/endpoints/_server.ts.js:142:25)
+    at CustomFont.weight [as input] (file:///app/src/.deno-deploy/server/entries/endpoints/_server.ts.js:154:42)
+    at fallback (file:///app/src/.deno-deploy/server/entries/endpoints/_server.ts.js:40:74)
+    at eventLoopTick (ext:core/01_core.js:179:7)
+    at async file:///app/src/.deno-deploy/server/entries/endpoints/_server.ts.js:97:24
+    at async Promise.all (index 0)
+    at async resolveFonts (file:///app/src/.deno-deploy/server/entries/endpoints/_server.ts.js:96:25)
+```
+
+</CollapsibleContent>
+</Collapsible>
+
+<Collapsible>
+<CollapsibleTrigger>Prerendered image routes return 404</CollapsibleTrigger>
+<CollapsibleContent>
+
+A prerendered image endpoint — a `+server.ts` with `export const prerender = true` that returns an image — is generated at build time and written into the deploy output as a static file (e.g. `static/png/prerendered.png`). On most hosts this just works, because they serve the static directory straight from the filesystem.
+
+Deno Deploy is different: it serves static assets from an explicit route manifest, not by scanning the filesystem. The current Deno adapter only registers prerendered **pages** in that manifest — prerendered **endpoints** (image/asset routes) are written to disk but never added — so the file is orphaned and requesting the route (e.g. `/png/prerendered.png`) returns a **404**.
+
+Until this is fixed upstream, either patch the adapter to also register `builder.prerendered.assets` in `staticFiles` (see <RepoLink path="patches/%40deno__svelte-adapter%400.2.1.patch">the patch used by this repo</RepoLink> via [`pnpm patch`](https://pnpm.io/cli/patch)), or **don't prerender image endpoints on Deno** — serve them dynamically by dropping `export const prerender = true`:
+
+```typescript title="routes/png/og.png/+server.ts"
+// export const prerender = true; // ← remove on Deno Deploy
+
+export const GET = async () => new ImageResponse(template, { width: 1200, height: 630 });
+```
+
+Satori and Takumi both generate images fast enough at request time. To avoid regenerating on every hit, cache with a `Cache-Control` header on the response or Deno Deploy's ISR.
+
+</CollapsibleContent>
+</Collapsible>

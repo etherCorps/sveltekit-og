@@ -1,0 +1,123 @@
+---
+title: ImageResponse
+description: The three functions, every option per engine, and what comes back.
+sidebar:
+  order: 1
+---
+
+The root entry (`@ethercorps/sveltekit-og`) and the client entry (`@ethercorps/sveltekit-og/client`) export the same three functions with the same signatures:
+
+```ts
+class ImageResponse<T> extends Response            // new ImageResponse(element, options?, props?)
+function createImage(element, options?, props?)   // → ImageResponse
+function renderImage(element, options?, props?)   // → Promise<Uint8Array | string>  (string for svg)
+```
+
+- `element` — a Svelte component or an HTML string.
+- `options` — `ImageResponseOptions`: engine options plus the response options below. Omit `engine` for Takumi; `engine: "satori"` narrows the rest to Satori's options.
+- `props` — the component's props, type-checked: required when the component has required props, not allowed for HTML strings.
+
+```ts title="src/routes/og/+server.ts"
+import { ImageResponse, GoogleFont } from '@ethercorps/sveltekit-og';
+import Card from '$lib/og/Card.svelte';
+
+export const GET = () =>
+	new ImageResponse(
+		Card,
+		{ width: 1200, height: 630, fonts: [new GoogleFont('Inter', { weight: 400 })] },
+		{ title: 'Dynamic Title', subtitle: 'Generated with sveltekit-og' }
+	);
+```
+
+`ImageResponse` is a `Response` whose body is the image; return it from a `+server.ts` as-is. `renderImage` gives you the bytes when you want to write a file, cache, or post-process.
+
+## Shared options
+
+<PropField name="width" type="number" defaultValue="1200">Image width in pixels.</PropField>
+<PropField name="height" type="number" defaultValue="630">Image height in pixels.</PropField>
+<PropField name="fonts" type="FontInput[]">
+	`GoogleFont` / `CustomFont` instances or raw `{ name, data, weight?, style? }` descriptors, resolved once per font object. Without it Takumi uses its built-in font and Satori a Noto Sans fallback. See [Fonts](/docs/guides/fonts/).
+</PropField>
+<PropField name="debug" type="boolean" defaultValue="false">
+	Log render steps; with Satori also draw layout boxes. Sets `Cache-Control: no-cache, no-store`.
+</PropField>
+
+## Takumi options (`engine` omitted or `"takumi"`)
+
+<PropField name="format" type="'png' | 'jpeg' | 'webp' | 'ico' | 'raw' | 'svg'" defaultValue="png">Output format; sets the `Content-Type`.</PropField>
+<PropField name="quality" type="number">`0`–`100` for `jpeg` and `webp`.</PropField>
+<PropField name="stylesheets" type="string[]">Extra CSS applied before rendering.</PropField>
+<PropField name="emoji" type="EmojiType | 'from-font'" defaultValue="twemoji">Emoji provider, or glyphs from your fonts.</PropField>
+<PropField name="takumi" type="Partial<RenderOptions>">Passed straight to takumi-js, last.</PropField>
+
+Details and examples: [Takumi](/docs/engines/takumi/).
+
+## Satori options (`engine: "satori"`)
+
+<PropField name="format" type="'png' | 'svg'" defaultValue="png">Anything else rejects with `UNSUPPORTED_FORMAT`.</PropField>
+<PropField name="emoji" type="'twemoji' | 'openmoji' | 'blobmoji' | 'noto' | 'fluent' | 'fluentFlat'" defaultValue="twemoji">Emoji provider.</PropField>
+<PropField name="tailwindConfig" type="TwConfig">Theme for `tw` classes.</PropField>
+<PropField name="satori" type="Partial<SatoriOptions>">Passed straight to `satori()`, last.</PropField>
+<PropField name="resvg" type="ResvgRenderOptions">Passed straight to the ReSVG constructor (png only), last.</PropField>
+
+Details and examples: [Satori](/docs/engines/satori/).
+
+## Response options
+
+Only `ImageResponse` / `createImage` use these; `renderImage` ignores them.
+
+<PropField name="status" type="number" defaultValue="200">HTTP status.</PropField>
+<PropField name="statusText" type="string" defaultValue="Success">HTTP status text.</PropField>
+<PropField name="headers" type="Record<string, string>">
+	Merged over the defaults: `Content-Type` from the format, and `Cache-Control: public, immutable, no-transform, max-age=31536000` (`no-cache, no-store` when `debug` is on).
+</PropField>
+
+## Errors
+
+A failed render throws (from `renderImage`) or errors the body stream (from `ImageResponse`, reaching you through `.arrayBuffer()` / `.blob()` / `.text()`, `fetch` or SvelteKit's prerenderer) as an `ImageResponseError` with a `code`. See [Errors](/docs/reference/errors/).
+
+## Everything at once
+
+```ts title="src/routes/advanced-og/+server.ts"
+import { ImageResponse, GoogleFont } from '@ethercorps/sveltekit-og';
+import Card from '$lib/og/Card.svelte';
+
+const fonts = [new GoogleFont('Inter', { weight: 400 }), new GoogleFont('Inter', { weight: 700 })];
+
+export const GET = async ({ url }) => {
+	const isError = url.searchParams.has('error');
+	return new ImageResponse(
+		Card,
+		{
+			width: 1200,
+			height: 630,
+			format: 'webp',
+			quality: 85,
+			fonts,
+			emoji: 'noto',
+			debug: url.searchParams.has('debug'),
+			status: isError ? 404 : 200,
+			statusText: isError ? 'Not Found' : 'OK',
+			headers: { 'X-OG-Generator': '@ethercorps/sveltekit-og' }
+		},
+		{ title: isError ? 'Page not found' : 'Standard post title' }
+	);
+};
+```
+
+## Types
+
+```ts
+import type {
+	Engine,              // "takumi" | "satori"
+	Format,              // every format Takumi can emit
+	ImageOptions,        // TakumiOptions | SatoriOptions
+	ImageResponseOptions, // ImageOptions & ResponseOptions
+	TakumiOptions,
+	SatoriOptions,
+	ResponseOptions,
+	FontInput,
+	FontDescriptor,
+	Element              // string | Svelte component
+} from '@ethercorps/sveltekit-og';
+```

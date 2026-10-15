@@ -1,0 +1,123 @@
+---
+title: Vercel
+description: How to use Sveltekit OG with the vercel adapter (@sveltejs/adapter-vercel)
+sidebar:
+  order: 4
+---
+
+This section details the configuration needed to use SvelteKit OG with the Vercel Adapter (@sveltejs/adapter-vercel), targeting the Vercel Edge Runtime or Serverless Functions (Node).
+
+## Installation
+
+First, ensure you have the Vercel adapter installed:
+
+<PackageManagers pkg="@sveltejs/adapter-vercel" dev />
+
+Configure the adapter:
+
+<Tabs syncKey="kit">
+<TabItem label="SvelteKit 3">
+
+SvelteKit 3 has no `svelte.config.js`; pass the adapter to `sveltekit()`:
+
+```ts title="vite.config.ts"
+import adapter from '@sveltejs/adapter-vercel';
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+
+export default { plugins: [sveltekit({ adapter: adapter() }), sveltekitOG()] };
+```
+
+</TabItem>
+<TabItem label="SvelteKit 2">
+
+```js title="svelte.config.js"
+import adapter from '@sveltejs/adapter-vercel';
+
+/** @type {import('@sveltejs/kit').Config} */
+export default { kit: { adapter: adapter() } };
+```
+
+</TabItem>
+</Tabs>
+
+## Plugin configuration
+
+Add `sveltekitOG()` to `vite.config`. It wires the engines' WebAssembly into the server build and keeps engines you haven't installed out of the bundle — see the [Vite plugin reference](/docs/reference/vite-plugin/).
+
+```ts title="vite.config.ts"
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [sveltekit(), sveltekitOG()]
+});
+```
+
+## Edge and Serverless Split
+
+<Aside type="note" title="SvelteKit 3">
+
+`@sveltejs/adapter-vercel@7` (SvelteKit 3) removed the Edge runtime; routes run as Node serverless functions, and the per-route `runtime: 'edge'` config below only applies to adapter 5 on SvelteKit 2.
+
+</Aside>
+
+The SvelteKit Vercel adapter supports specifying the runtime on a per-route basis. This is highly recommended to isolate your computationally intensive OG image route into the smaller, faster Edge or Fluid Runtime, while keeping other APIs on the larger, more flexible Serverless (Node) runtime.
+
+You can achieve this by adding a `+server.ts` configuration file alongside your OG image route.
+
+### Edge
+
+This route runs on the Edge Runtime:
+
+```typescript title="src/routes/og/+server.ts" showLineNumbers
+// 1. Specify the runtime for this route
+export const config = {
+	runtime: 'edge', // Use the Vercel Edge Runtime
+	split: true // Recommended to ensure isolation
+};
+
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+import type { RequestHandler } from './$types';
+
+export const GET: RequestHandler = async () => {
+	// Your standard ImageResponse logic here
+	return new ImageResponse(/* ... */);
+};
+```
+
+<Aside type="caution" title="Edge Function Size Limit">
+
+When targeting the Edge Runtime (via export const config = `{ runtime: 'edge' }`), your entire function size, including all dependencies (like the Satori Wasm module and fonts), must be under the 1MB limit. Using many custom fonts or large components can easily exceed this size, resulting in deployment failure.
+
+</Aside>
+
+### Serverless (Node) Runtime
+
+```typescript
+// No 'config' export means it defaults to the Node Serverless Function. You can use split config here too.
+import type { RequestHandler } from './$types';
+import { ImageResponse } from '@ethercorps/sveltekit-og';
+
+export const GET: RequestHandler = async () => {
+	return new ImageResponse(/* ... */);
+};
+```
+
+## Usage
+
+Once configured, usage is the same as on any other SvelteKit target. Install the engine you render with (`takumi-js`, or `satori` + `@resvg/resvg-wasm`) as a regular dependency so the adapter bundles it.
+
+- Svelte components: see the [Svelte component](/docs/guides/svelte-component/) guide.
+
+- HTML strings: see the [HTML string](/docs/guides/html/) guide.
+
+## Preview
+
+<img src="/images/adapters/satori.png" class="mt-4 rounded-lg" alt="The example's /png/cog.png route: the shared OG component rendered with Satori" />
+
+The example's `/png/cog.png` route — the shared `OG.svelte` rendered with Satori — as this site renders it at build. The live copy is linked below.
+
+Source: <RepoLink path="examples/vercel-build" /> <br/>
+Live: https://vercel.sveltekit-og.dev/

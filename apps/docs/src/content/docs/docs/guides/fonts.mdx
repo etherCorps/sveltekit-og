@@ -1,0 +1,125 @@
+---
+title: Fonts
+description: Google Fonts, local files and remote fonts, for either engine.
+sidebar:
+  order: 4
+---
+
+Both engines need font **bytes**, not CSS `@font-face`. The package gives you three ways to describe a font, and resolves and caches them for you:
+
+- `new GoogleFont(family, { weight, style, text })` — fetched from Google Fonts (server only).
+- `new CustomFont(name, bytes | () => Promise<bytes>, { weight, style })` — a file, a `fetch`, anything that yields an `ArrayBuffer`.
+- A raw descriptor: `{ name, data, weight?, style? }`, where `data` is bytes or a loader function.
+
+Pass them straight to `fonts`; the same list works for Takumi and Satori. Every font object is resolved **once per process** — keep them at module level and later renders never fetch or read again.
+
+<Aside type="note" title="No fonts?">
+
+**Takumi** renders with a built-in sans-serif. **Satori** falls back to Noto Sans (regular + bold), fetched from the CDN on the server and bundled with your app on the client. Pass `fonts` for anything else.
+
+</Aside>
+
+<Aside type="note" title="Coming from 4.x">
+
+`resolveFonts([...])` is no longer required — `fonts` takes the instances. It is still exported if you want to resolve ahead of time, e.g. to share bytes across processes.
+
+</Aside>
+
+## Google Fonts
+
+`GoogleFont` fetches the family's CSS, picks the TrueType source for the weight and style you asked for, downloads it and caches it. Pass `text` to subset it to the characters you render.
+
+```ts title="+server.ts"
+import { ImageResponse, GoogleFont } from '@ethercorps/sveltekit-og';
+
+const fonts = [
+	new GoogleFont('Inter', { weight: 400 }),
+	new GoogleFont('Inter', { weight: 700 })
+];
+
+export const GET = () =>
+	new ImageResponse(`<div style="display:flex;font-family:Inter;font-weight:700">Hello World</div>`, {
+		width: 1200,
+		height: 630,
+		fonts
+	});
+```
+
+The CSS `font-family` must match the font's `name` (defaults to the family).
+
+## Local fonts
+
+Put the file in `src/lib` and import it with Vite's `?url` suffix, then read it with SvelteKit's `read` — or read it with `node:fs` on Node-only deployments.
+
+```ts title="+server.ts"
+import { ImageResponse, CustomFont } from '@ethercorps/sveltekit-og';
+import { read } from '$app/server';
+import RegularPath from '$lib/assets/MyFont-Regular.ttf?url';
+import BoldPath from '$lib/assets/MyFont-Bold.ttf?url';
+
+const fonts = [
+	// the loader runs on the first render only
+	new CustomFont('My Font', () => read(RegularPath).arrayBuffer(), { weight: 400 }),
+	new CustomFont('My Font', () => read(BoldPath).arrayBuffer(), { weight: 700 })
+];
+
+export const GET = () =>
+	new ImageResponse(`<div style="display:flex;font-family:'My Font'">Hello World</div>`, { fonts });
+```
+
+<Aside type="caution" title="Netlify and Deno">
+
+`?url` imports read through `read()` can fail on some adapters; see the [Netlify](/docs/deploy/netlify/) and [Deno](/docs/deploy/deno/) pages for the workarounds.
+
+</Aside>
+
+## Remote fonts
+
+```ts title="+server.ts"
+import { ImageResponse, CustomFont } from '@ethercorps/sveltekit-og';
+
+const icons = new CustomFont(
+	'Font Awesome',
+	() => fetch('https://my-cdn.com/assets/FontAwesome-Regular.otf').then((r) => r.arrayBuffer()),
+	{ weight: 400 }
+);
+
+export const GET = () =>
+	new ImageResponse(`<div style="display:flex;font-family:'Font Awesome'">Icon</div>`, { fonts: [icons] });
+```
+
+## Raw descriptors
+
+When you already have the bytes:
+
+```ts
+const fonts = [{ name: 'Inter', data: interBytes, weight: 400, style: 'normal' }];
+```
+
+## Mixing sources
+
+```ts
+import { ImageResponse, CustomFont, GoogleFont } from '@ethercorps/sveltekit-og';
+import { read } from '$app/server';
+import LocalPath from '$lib/assets/LocalFont-R.ttf?url';
+
+const fonts = [
+	new CustomFont('Local App Font', () => read(LocalPath).arrayBuffer(), { weight: 400 }),
+	new GoogleFont('Roboto Mono', { weight: 500 }),
+	new CustomFont('Custom Icons', () => fetch('https://cdn.example.com/icons.ttf').then((r) => r.arrayBuffer()))
+];
+
+export const GET = () =>
+	new ImageResponse(
+		`<div tw="flex flex-col p-10 bg-gray-50">
+			<h1 style="font-family:'Local App Font'">Title</h1>
+			<p style="font-family:'Roboto Mono'">Code</p>
+			<span style="font-family:'Custom Icons'">Icon</span>
+		</div>`,
+		{ width: 1200, height: 630, fonts }
+	);
+```
+
+## Errors
+
+A font that can't be fetched or read rejects the render with `FONT_LOAD_FAILED`; the next render retries the load.
