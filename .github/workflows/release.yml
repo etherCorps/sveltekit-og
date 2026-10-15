@@ -3,11 +3,12 @@ name: Release
 # Release channel is driven by the branch you merge into:
 #   main -> production  (dist-tag: latest)  version must be a clean x.y.z
 #   dev  -> next        (dist-tag: next)    version must be a -next.x prerelease
+#   v4   -> v4          (dist-tag: v4)      version must be a clean 4.x.y — never reclaims `latest`
 # A merge only publishes when the version in package.json is NOT already on npm,
 # so ordinary merges that don't bump the version are no-ops.
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, v4]
 
 concurrency:
   group: release-${{ github.ref }}
@@ -58,6 +59,8 @@ jobs:
             TAG=next
           elif [[ "$BRANCH" == "main" && "$VERSION" != *-* ]]; then
             TAG=latest
+          elif [[ "$BRANCH" == "v4" && "$VERSION" == 4.* && "$VERSION" != *-* ]]; then
+            TAG=v4
           else
             echo "No release: version '$VERSION' is not valid for branch '$BRANCH'." >> "$GITHUB_STEP_SUMMARY"
             echo "publish=false" >> "$GITHUB_OUTPUT"

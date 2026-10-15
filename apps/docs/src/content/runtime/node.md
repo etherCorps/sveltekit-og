@@ -105,7 +105,7 @@ Once configured, the usage remains the same as any other SvelteKit environment.
 
 ## Preview (Self Test)
 
-Source: https://github.com/etherCorps/sveltekit-og/tree/main/examples/node-build
+Source: https://github.com/etherCorps/sveltekit-og/tree/v4.4.0/examples/node-build
 
 To verify the Node setup works correctly, you can clone and run the dedicated example repository.
 

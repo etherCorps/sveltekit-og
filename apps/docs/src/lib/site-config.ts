@@ -19,7 +19,7 @@ export const siteConfig = defineSiteConfig({
 	],
 	license: {
 		name: 'MIT',
-		url: 'https://github.com/etherCorps/sveltekit-og/blob/main/LICENSE'
+		url: 'https://github.com/etherCorps/sveltekit-og/blob/v4.4.0/LICENSE'
 	},
 	links: {
 		x: 'https://x.com/theether0',

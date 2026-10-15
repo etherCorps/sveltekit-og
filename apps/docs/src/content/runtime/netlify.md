@@ -132,7 +132,7 @@ Once configured, the usage remains the same as any other SvelteKit environment.
 
 <img src="https://netlify.sveltekit-og.dev/png/cog.png" class="mt-4 rounded-lg">
 
-Source: https://github.com/etherCorps/sveltekit-og/tree/main/examples/netlify-build <br/>
+Source: https://github.com/etherCorps/sveltekit-og/tree/v4.4.0/examples/netlify-build <br/>
 Live: https://netlify.sveltekit-og.dev/
 
 ## Known Issues

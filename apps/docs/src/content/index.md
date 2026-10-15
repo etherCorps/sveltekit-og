@@ -8,6 +8,12 @@ section: Overview
 	import { Callout } from '@svecodocs/kit'
 </script>
 
+<Callout type="warning" title="v4 support window">
+
+These are the docs for **sveltekit-og v4**. The current major is v5 — see [sveltekit-og.dev](https://sveltekit-og.dev/docs/) and the [migration guide](https://sveltekit-og.dev/docs/migration/v5/). v4 receives **security and critical fixes only**, published under the npm tag `v4`, until **six months after the 5.0.0 release**; the exact date is announced on the release page when 5.0.0 ships.
+
+</Callout>
+
 **SvelteKit OG** is a high-performance utility library designed for **server-side image generation** within SvelteKit applications.
 
 While its primary use is creating **dynamic Open Graph (OG) images** for rich social media preview cards, the library is a generic tool capable of converting Svelte components or HTML/CSS into high-quality PNGs, suitable for a wide range of use cases .
