@@ -1,67 +1,61 @@
 <script lang="ts">
-	// Per-page OG card for the docs. Inline styles and real CSS only: Takumi parses the
-	// style attribute strictly, and Satori needs display:flex on every box with children.
+	// Per-page OG card for the docs, styled with Tailwind utilities. Both engines map
+	// classes (Takumi natively, Satori through its tw subset), so: flex everywhere a box
+	// has children, arbitrary values for the exact sizes, 8-digit hex for alpha. The
+	// gradient backgrounds and the mono font family stay inline — Satori's subset has no
+	// gradient utilities, drops `gap-*` (margins instead) and doesn't map font-['Geist_Mono'].
 	import LogoIcon from "./logo-icon.svelte";
 
 	type Props = { title: string; description: string; section: string };
 	const { title, description, section }: Props = $props();
 
-	const titleSize = title.length > 36 ? 56 : title.length > 22 ? 68 : 80;
-	const descSize = description.length > 110 ? 26 : 30;
+	const titleSize = title.length > 36 ? "text-[56px]" : title.length > 22 ? "text-[68px]" : "text-[80px]";
+	const descSize = description.length > 110 ? "text-[26px]" : "text-[30px]";
 </script>
 
 <div
-	style="display:flex;flex-direction:column;width:100%;height:100%;padding:64px 72px 0 72px;background:linear-gradient(135deg,#15151d 0%,#0b0b10 60%,#0b0b10 100%);color:#f5f5f7;font-family:Geist"
+	class="flex h-full w-full flex-col px-[72px] pt-[64px] font-[Geist] text-[#f5f5f7]"
+	style="background:linear-gradient(135deg,#15151d 0%,#0b0b10 60%,#0b0b10 100%)"
 >
 	<!-- rose glow, top right -->
 	<div
-		style="display:flex;position:absolute;top:-220px;right:-160px;width:620px;height:620px;border-radius:9999px;background:radial-gradient(circle,rgba(225,29,72,0.42) 0%,rgba(225,29,72,0.12) 45%,rgba(225,29,72,0) 70%)"
+		class="absolute -right-[160px] -top-[220px] flex h-[620px] w-[620px] rounded-full"
+		style="background:radial-gradient(circle,#e11d486b 0%,#e11d481f 45%,#e11d4800 70%)"
 	></div>
 
 	<!-- header: logo + wordmark -->
-	<div style="display:flex;align-items:center;gap:16px">
+	<div class="flex items-center">
 		<LogoIcon size={44} width={44} startColor="#FC7421" endColor="#FEBC5A" />
-		<div style="display:flex;align-items:baseline;gap:10px">
-			<span style="font-size:30px;font-weight:600;letter-spacing:-0.01em">SvelteKit OG</span>
-			<span style="font-size:24px;color:#8b8b95">docs</span>
+		<div class="ml-4 flex items-baseline">
+			<span class="text-[30px] font-semibold tracking-[-0.01em]">SvelteKit OG</span>
+			<span class="ml-[10px] text-[24px] text-[#8b8b95]">docs</span>
 		</div>
 	</div>
 
 	<!-- body -->
-	<div style="display:flex;flex-direction:column;justify-content:center;flex-grow:1;padding-bottom:40px">
-		<span
-			style="font-family:'Geist Mono';font-size:22px;font-weight:400;letter-spacing:0.12em;color:#fb7185;text-transform:uppercase;margin-bottom:22px"
-		>
+	<div class="flex flex-grow flex-col justify-center pb-10">
+		<span class="mb-[22px] text-[22px] uppercase tracking-[0.12em] text-[#fb7185]" style="font-family:'Geist Mono'">
 			{section}
 		</span>
-		<div
-			style="display:flex;font-size:{titleSize}px;font-weight:600;line-height:1.08;letter-spacing:-0.03em;max-width:980px;text-wrap:balance"
-		>
+		<div class="flex max-w-[980px] {titleSize} font-semibold leading-[1.08] tracking-[-0.03em]" style="text-wrap:balance">
 			{title}
 		</div>
 		{#if description}
-			<div
-				style="display:flex;margin-top:26px;font-size:{descSize}px;line-height:1.4;color:#a1a1aa;max-width:900px;text-wrap:balance"
-			>
+			<div class="mt-[26px] flex max-w-[900px] {descSize} leading-[1.4] text-[#a1a1aa]" style="text-wrap:balance">
 				{description}
 			</div>
 		{/if}
 	</div>
 
 	<!-- footer -->
-	<div
-		style="display:flex;align-items:center;justify-content:space-between;padding:0 0 34px 0;font-family:'Geist Mono';font-size:22px;color:#8b8b95"
-	>
+	<div class="flex items-center justify-between pb-[34px] text-[22px] text-[#8b8b95]" style="font-family:'Geist Mono'">
 		<span>sveltekit-og.dev</span>
-		<span
-			style="display:flex;align-items:center;padding:8px 18px;border-radius:9999px;border:1px solid rgba(251,113,133,0.45);background:rgba(225,29,72,0.14);color:#fecdd3"
-		>
-			v5
-		</span>
+		<span class="flex items-center rounded-full border border-[#fb718573] bg-[#e11d4824] px-[18px] py-2 text-[#fecdd3]">v5</span>
 	</div>
 
 	<!-- brand bar -->
 	<div
-		style="display:flex;position:absolute;left:0;right:0;bottom:0;height:10px;background:linear-gradient(90deg,#e11d48 0%,#fc7421 60%,#febc5a 100%)"
+		class="absolute bottom-0 left-0 right-0 flex h-[10px]"
+		style="background:linear-gradient(90deg,#e11d48 0%,#fc7421 60%,#febc5a 100%)"
 	></div>
 </div>
