@@ -51,7 +51,9 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"publishBeta": "npm publish --tag beta",
 		"bench:cold": "node benchmarks/cold.mjs",
-		"bench:cold:save": "node benchmarks/cold.mjs --save"
+		"bench:cold:save": "node benchmarks/cold.mjs --save",
+		"bench:cold:bun": "COLD_RUNTIME=bun node benchmarks/cold.mjs",
+		"bench:workers": "node benchmarks/workers.mjs"
 	},
 	"exports": {
 		".": {

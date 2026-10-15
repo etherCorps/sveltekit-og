@@ -20,8 +20,10 @@ let resvgPromise: Promise<typeof _Resvg> | undefined;
 
 export function useSatori(): Promise<typeof _satori> {
 	satoriPromise ??= (async () => {
-		const bytes = await fetch(new URL(yogaUrl, import.meta.url)).then((r) => r.arrayBuffer());
-		await initSatoriWasm(await WebAssembly.compile(bytes));
+		// hand satori the Response itself: its loader compiles it with instantiateStreaming
+		// (falling back to a buffer if the server doesn't send application/wasm), instead
+		// of us buffering the whole file and compiling it synchronously afterwards
+		await initSatoriWasm(fetch(new URL(yogaUrl, import.meta.url)));
 		return _satori;
 	})().catch((error) => {
 		satoriPromise = undefined;

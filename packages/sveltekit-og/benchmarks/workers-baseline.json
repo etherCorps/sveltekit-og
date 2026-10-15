@@ -1,0 +1,18 @@
+{
+	"runtime": "workers (miniflare)",
+	"samples": 5,
+	"results": {
+		"cold takumi (workers): html → png": {
+			"median": 66.28829200000018,
+			"p75": 68.14845800000148,
+			"min": 63.30825000000186,
+			"max": 74.3060000000005
+		},
+		"cold satori (workers): html → png, incl. font fetch": {
+			"median": 693.385792000001,
+			"p75": 851.2570410000044,
+			"min": 580.3193749999919,
+			"max": 873.1488750000062
+		}
+	}
+}
