@@ -1,20 +1,31 @@
 import type { Component } from "svelte";
-import { render } from "svelte/server";
 import type { Element, ImageResponseOptions, PropsArg } from "../core/types.js";
 import { renderImage as coreRender, type Platform } from "../core/render.js";
 import { ImageResponse as CoreImageResponse } from "../core/image-response.js";
 import { default_fonts } from "../helpers/defaults.js";
-import { handleSync, ErrorCodes } from "../helpers/error-handler.js";
+import { handleAsync, ErrorCodes } from "../helpers/error-handler.js";
+
+// svelte/server is ~15ms of module evaluation on Node and only components need it, so
+// it loads on the first component render and never for HTML strings.
+let svelteServer: Promise<typeof import("svelte/server")> | undefined;
+const loadSvelteServer = () =>
+	(svelteServer ??= import("svelte/server").catch((error) => {
+		svelteServer = undefined;
+		throw error;
+	}));
 
 /**
- * Server platform: components go through `svelte/server`, Satori's wasm through the
- * node/edge providers, and Satori's fallback fonts come from the CDN.
+ * Server platform: components go through `svelte/server` (loaded lazily), Satori's
+ * wasm through the node/edge providers, and Satori's fallback fonts come from the CDN.
  */
 export const serverPlatform: Platform = {
-	componentToHtml(component, props) {
-		const { body, head } = handleSync(
-			// props were typed against this component at the public API (PropsOf<T>)
-			() => render(component as Component<Record<string, unknown>>, { props }),
+	async componentToHtml(component, props) {
+		const { body, head } = await handleAsync(
+			async () => {
+				const { render } = await loadSvelteServer();
+				// props were typed against this component at the public API (PropsOf<T>)
+				return render(component as Component<Record<string, unknown>>, { props });
+			},
 			ErrorCodes.VNODE_CREATION_FAILED,
 			"Failed to render Svelte component to HTML"
 		);

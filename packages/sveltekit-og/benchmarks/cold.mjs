@@ -5,8 +5,10 @@
 // Times from just before importing the package to the drained PNG; node boot is
 // excluded. Needs a built package: run `pnpm package` first.
 //
-//   node benchmarks/cold.mjs           run, diff against cold-baseline.json if present
-//   node benchmarks/cold.mjs --save    run and write cold-baseline.json
+//   node benchmarks/cold.mjs                     run, diff against cold-baseline.json if present
+//   node benchmarks/cold.mjs --save              run and write cold-baseline.json
+//   COLD_RUNTIME=bun node benchmarks/cold.mjs    same, but each sample runs under `bun`
+//                                                (baseline file: cold-baseline.bun.json)
 
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -14,7 +16,10 @@ import { fileURLToPath } from "node:url";
 
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
 const SAMPLES = Number(process.env.COLD_SAMPLES ?? 10);
-const baselineFile = here("./cold-baseline.json");
+const RUNTIME = process.env.COLD_RUNTIME ?? "node";
+const baselineFile = here(
+	RUNTIME === "node" ? "./cold-baseline.json" : `./cold-baseline.${RUNTIME}.json`
+);
 const componentFile = here("./.cold/OG.js");
 
 if (process.argv[2] === "--child") {
@@ -65,7 +70,7 @@ for (const engine of ["satori", "takumi"]) {
 		const samples = [];
 		for (let i = 0; i < SAMPLES; i++) {
 			const run = spawnSync(
-				process.execPath,
+				RUNTIME === "node" ? process.execPath : RUNTIME,
 				[here("./cold.mjs"), "--child", engine, input],
 				{
 					encoding: "utf8",
@@ -88,10 +93,14 @@ for (const engine of ["satori", "takumi"]) {
 }
 
 if (process.argv.includes("--save")) {
-	const meta = { node: process.version, platform: `${process.platform}-${process.arch}` };
+	const meta = {
+		runtime: RUNTIME,
+		node: process.version,
+		platform: `${process.platform}-${process.arch}`,
+	};
 	writeFileSync(
 		baselineFile,
 		JSON.stringify({ ...meta, samples: SAMPLES, results }, null, "\t") + "\n"
 	);
-	console.log(`saved → benchmarks/cold-baseline.json`);
+	console.log(`saved → benchmarks/${baselineFile.split("/").pop()}`);
 }

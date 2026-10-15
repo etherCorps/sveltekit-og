@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `svelte/server` loads on the first component render instead of at import, so HTML-string renders never pay for it: cold `html → png` on Node is ~20% faster than 4.4.0 on both engines (Bun: Takumi ~8%; Cloudflare Workers: unchanged, SvelteKit's page SSR evaluates it anyway).
+- Fonts resolve once per font object within an isolate: a module-level `fonts: [...]` never re-runs its loaders (Google Fonts fetch, file read) on the next render. A failed load is retried.
+- `/client` with Satori hands the yoga wasm `Response` to Satori's loader, which compiles it with `WebAssembly.instantiateStreaming` instead of buffering and compiling synchronously. ReSVG already streamed; Takumi can't until takumi-js exposes its wasm URL.
+- Second render in an isolate performs no wasm instantiate/compile and no font fetch on either engine (asserted with spies in `src/perf.test.ts`).
+
+### Added
+
+- Cold benches per runtime: `pnpm bench:cold:bun` and `pnpm bench:workers` (miniflare via the cf-workers example), with their baselines.
+
 ## [5.0.0-next.0] - 2026-10-15
 
 See the [v5 migration guide](../../docs/migration/v5.md).

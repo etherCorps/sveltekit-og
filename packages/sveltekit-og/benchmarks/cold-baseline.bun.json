@@ -1,0 +1,32 @@
+{
+	"runtime": "bun",
+	"node": "v24.15.0",
+	"platform": "darwin-arm64",
+	"samples": 15,
+	"results": {
+		"cold satori: html → png": {
+			"median": 68.839833,
+			"p75": 69.8525,
+			"min": 67.504625,
+			"max": 75.767375
+		},
+		"cold satori: svelte → png": {
+			"median": 91.119792,
+			"p75": 95.182209,
+			"min": 89.083833,
+			"max": 96.89687500000001
+		},
+		"cold takumi: html → png": {
+			"median": 42.035791,
+			"p75": 42.362667,
+			"min": 41.648792,
+			"max": 42.863958
+		},
+		"cold takumi: svelte → png": {
+			"median": 50.344333,
+			"p75": 50.589375,
+			"min": 49.930583999999996,
+			"max": 50.975958
+		}
+	}
+}
