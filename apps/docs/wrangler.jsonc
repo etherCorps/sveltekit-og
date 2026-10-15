@@ -1,6 +1,9 @@
 {
-	"name": "sveltekit-og-docs",
-	"pages_build_output_dir": ".svelte-kit/cloudflare",
-	"compatibility_date": "2025-11-22",
-	"compatibility_flags": ["nodejs_compat"],
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sveltekit-og-docs",
+  "compatibility_date": "2026-10-15",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
 }

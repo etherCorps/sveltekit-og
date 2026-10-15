@@ -1,0 +1,17 @@
+---
+/**
+ * RepoLink — a link into the repository pinned to the release tag this site documents.
+ * Authors write paths, never URLs: <RepoLink path="examples/bun-build">the Bun example</RepoLink>.
+ * Directories get `tree/`, files (anything with an extension) get `blob/`; `file` forces it.
+ */
+import { repoRef, repoUrl } from "@/site";
+interface Props {
+  path?: string;
+  file?: boolean;
+}
+const { path = "", file } = Astro.props;
+const isFile = file ?? /\.[a-z0-9]+$/i.test(path);
+const href = path ? `${repoUrl}/${isFile ? "blob" : "tree"}/${repoRef}/${path}` : `${repoUrl}/tree/${repoRef}`;
+---
+
+<a href={href} target="_blank" rel="noreferrer"><slot>{path || repoRef}</slot></a>

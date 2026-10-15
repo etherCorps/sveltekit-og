@@ -1,0 +1,26 @@
+---
+/**
+ * VersionSwitcher — header dropdown listing this site's version (from the Nimbus
+ * `versions` manifest) plus versions hosted on other sites (`externalVersions`).
+ * Nimbus's own registry picker only enumerates in-site collections, and its
+ * registry install is currently broken upstream; this is the minimal equivalent.
+ */
+import { Icon } from "astro-icon/components";
+import { getVersions } from "nimbus-docs";
+import { externalVersions } from "@/site";
+const versions = await getVersions();
+const current = versions?.current ?? "v5";
+---
+
+<details class="nb-version-switcher relative">
+  <summary class="flex cursor-pointer list-none items-center gap-1 rounded-md border border-border px-2 py-1 text-xs font-medium text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden">
+    {current}
+    <Icon name="ph:caret-down" class="h-3 w-3" />
+  </summary>
+  <ul class="absolute right-0 z-40 mt-1 min-w-32 rounded-md border border-border bg-card p-1 text-sm shadow-lg">
+    <li><span aria-current="true" class="block rounded px-2 py-1 font-medium text-foreground">{current} <span class="text-xs text-muted-foreground">(this site)</span></span></li>
+    {externalVersions.map((v) => (
+      <li><a href={v.href} class="block rounded px-2 py-1 text-muted-foreground no-underline hover:bg-accent hover:text-foreground">{v.label}</a></li>
+    ))}
+  </ul>
+</details>

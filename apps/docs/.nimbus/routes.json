@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "base": "/",
+  "knownRoutes": [
+    "/",
+    "/docs",
+    "/docs/advanced-usage/local-assets",
+    "/docs/advanced-usage/pre-rendering",
+    "/docs/examples/auto-generate-routes",
+    "/docs/examples/github-repo-og",
+    "/docs/examples/pre-render",
+    "/docs/getting-started",
+    "/docs/migration/v5",
+    "/docs/playground",
+    "/docs/release",
+    "/docs/runtime/bun",
+    "/docs/runtime/cloudflare",
+    "/docs/runtime/deno",
+    "/docs/runtime/netlify",
+    "/docs/runtime/node",
+    "/docs/runtime/vercel",
+    "/docs/usage/client",
+    "/docs/usage/html",
+    "/docs/usage/svelte",
+    "/docs/usage/takumi",
+    "/docs/utilities/fonts",
+    "/docs/utilities/types"
+  ],
+  "opaqueNamespaces": []
+}
