@@ -503,3 +503,9 @@ body:not(:has([data-mobile-sidebar])) [data-menu-btn] {
   --color-destructive: var(--color-danger);
   --color-background-secondary: var(--color-card);
 }
+
+/* The playground needs the whole content column: lift DocsLayout's prose-width cap on
+   any page that renders it (the TOC column is already off via frontmatter). */
+main#main-content:has(.pg-full) > div {
+  max-width: none;
+}

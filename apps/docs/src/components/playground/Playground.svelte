@@ -460,7 +460,7 @@
 
 <!-- full-bleed inside DocsLayout's padded content area; exactly one screen minus the sticky
      header and the footer, so the page itself never scrolls and the panes do -->
-<div class="not-prose flex h-[calc(100dvh-10rem)] min-h-[32rem] min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-border">
+<div class="pg-full not-prose flex h-[calc(100dvh-10rem)] min-h-[32rem] min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-border">
 	<!-- toolbar: everything inline on lg; below, the secondary controls live in an Options
 	     popover and the actions move into the pane heads, so it stays one row -->
 	<div class="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-border bg-background-secondary px-4 py-2.5">
