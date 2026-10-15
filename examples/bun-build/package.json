@@ -27,7 +27,9 @@
 	"dependencies": {
 		"@ethercorps/sveltekit-og": "workspace:*",
 		"@examples/shared": "workspace:*",
-		"takumi-js": "2.0.1"
+		"takumi-js": "2.0.1",
+		"satori": "^0.25.0",
+		"@resvg/resvg-wasm": "^2.6.2"
 	},
 	"imports": {
 		"#lib": "./src/lib/index.js",

@@ -116,8 +116,9 @@ describe("core: format validation", () => {
 			fakePlatform()
 		);
 		expect((init.headers as Record<string, string>)["Content-Type"]).toBe("image/webp");
+		// read through a plain Response (as SvelteKit's prerenderer does): the code survives
 		await expect(new Response(body).arrayBuffer()).rejects.toMatchObject({
-			originalError: { code: ErrorCodes.UNSUPPORTED_FORMAT },
+			code: ErrorCodes.UNSUPPORTED_FORMAT,
 		});
 	});
 });

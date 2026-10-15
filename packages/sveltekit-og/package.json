@@ -87,6 +87,7 @@
 	"devDependencies": {
 		"@eslint/compat": "^2.1.1",
 		"@eslint/js": "^10.0.1",
+		"@resvg/resvg-wasm": "^2.6.2",
 		"@sveltejs/adapter-auto": "^8.0.0",
 		"@sveltejs/kit": "^3.0.1",
 		"@sveltejs/package": "^3.0.0",
@@ -104,6 +105,7 @@
 		"prettier-plugin-tailwindcss": "^0.8.1",
 		"publint": "^0.3.25",
 		"rollup-plugin-visualizer": "^7.1.1",
+		"satori": "^0.25.0",
 		"svelte": "^5.57.1",
 		"svelte-check": "^4.7.6",
 		"takumi-js": "2.0.1",
@@ -118,8 +120,6 @@
 	"types": "./dist/index.d.ts",
 	"type": "module",
 	"dependencies": {
-		"@resvg/resvg-wasm": "^2.6.2",
-		"satori": "^0.25.0",
 		"satori-html": "0.3.2",
 		"std-env": "^4.1.0",
 		"unwasm": "^0.5.3"
@@ -127,10 +127,18 @@
 	"peerDependencies": {
 		"@sveltejs/kit": "^2.0.0 || ^3.0.0",
 		"svelte": "^5.0.0",
-		"takumi-js": "^2.0.1"
+		"takumi-js": "^2.0.1",
+		"satori": "^0.25.0",
+		"@resvg/resvg-wasm": "^2.6.2"
 	},
 	"peerDependenciesMeta": {
 		"takumi-js": {
+			"optional": true
+		},
+		"satori": {
+			"optional": true
+		},
+		"@resvg/resvg-wasm": {
 			"optional": true
 		}
 	},
