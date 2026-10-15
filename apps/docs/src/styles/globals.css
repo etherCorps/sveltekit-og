@@ -489,3 +489,17 @@ pre.astro-code .highlighted-word {
 body:not(:has([data-mobile-sidebar])) [data-menu-btn] {
 	display: none;
 }
+
+/* Tokens the playground (ported from the previous site) uses, mapped onto Nimbus's.
+   `inline` makes the utilities (bg-brand, text-destructive, …); the :root copies make
+   the same names usable as var(--color-*) in component CSS. */
+@theme inline {
+  --color-brand: var(--color-primary);
+  --color-destructive: var(--color-danger);
+  --color-background-secondary: var(--color-card);
+}
+:root {
+  --color-brand: var(--color-primary);
+  --color-destructive: var(--color-danger);
+  --color-background-secondary: var(--color-card);
+}

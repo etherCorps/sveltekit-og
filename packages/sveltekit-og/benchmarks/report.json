@@ -1,0 +1,53 @@
+{
+	"generatedAt": "2026-10-15T05:12:32.294Z",
+	"version": "5.0.0-next.0",
+	"machine": {
+		"platform": "darwin 27.0.0 arm64",
+		"cpu": "Apple M4 Pro",
+		"node": "v24.15.0"
+	},
+	"warm": {
+		"warm satori: html → png": {
+			"mean": 10.835187612554096,
+			"p99": 12.830915999999888
+		},
+		"warm satori: svelte → png": {
+			"mean": 21.256844072033893,
+			"p99": 22.399833999999828
+		},
+		"warm satori: html → svg": {
+			"mean": 0.5692270906193071,
+			"p99": 0.7577079999991838
+		},
+		"warm takumi: html → png": {
+			"mean": 4.686341570759177,
+			"p99": 5.126666000000114
+		},
+		"warm takumi: svelte → png": {
+			"mean": 6.609252087186236,
+			"p99": 7.9977079999989655
+		},
+		"warm takumi: html → svg": {
+			"mean": 0.33050882199748516,
+			"p99": 0.49262499999895226
+		}
+	},
+	"cold": {
+		"node": {
+			"cold satori: html → png": 94.8,
+			"cold satori: svelte → png": 120.5,
+			"cold takumi: html → png": 64.2,
+			"cold takumi: svelte → png": 74.7
+		},
+		"bun": {
+			"cold satori: html → png": 71,
+			"cold satori: svelte → png": 97.5,
+			"cold takumi: html → png": 41.2,
+			"cold takumi: svelte → png": 54.5
+		},
+		"workers": {
+			"cold takumi (workers): html → png": 67.2,
+			"cold satori (workers): html → png, incl. font fetch": 659.7
+		}
+	}
+}

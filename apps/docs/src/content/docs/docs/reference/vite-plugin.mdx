@@ -1,0 +1,52 @@
+---
+title: Vite plugin
+description: What sveltekitOG() does, its options, and how to use it outside SvelteKit.
+sidebar:
+  order: 2
+---
+
+```js title="vite.config.js"
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+
+export default {
+	plugins: [sveltekit(), sveltekitOG()]
+};
+```
+
+`sveltekitOG(options?)` returns two Vite plugins:
+
+1. **The WebAssembly loader** (server build only). Satori, ReSVG and Takumi ship `.wasm`; this plugin (built on [unwasm](https://github.com/unjs/unwasm)) bundles it for the server so it loads on Node, Workers, Deno and the rest. It never touches the client build, which loads wasm through Vite's own asset handling. Works on SvelteKit 2 (Vite 5/6) and SvelteKit 3 (Vite 8).
+2. **Optional-engine stubs** (every environment, dev included). Your code lazy-imports both engines, so the bundler resolves both; the plugin aliases any engine whose packages aren't installed to a stub, so the build succeeds and a call to that engine rejects with `ENGINE_NOT_INSTALLED`.
+
+## Options
+
+| Option      | Type                   | Default                 | Description                                                                                                                      |
+| ----------- | ---------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `esmImport` | `boolean`              | `true`                  | Emit `.wasm` as separate ESM-imported chunks. Set `false` to inline them as base64 — needed on **Node**, **Bun** and **Netlify** (esbuild). |
+| `lazy`      | `boolean`              | `true`                  | Instantiate the wasm on first use rather than at import.                                                                        |
+| `engines`   | `("takumi" \| "satori")[]` | detected                | Pin which engines to bundle instead of detecting installed packages — e.g. `["takumi"]` to keep Satori out even if another dependency pulls it in. |
+
+Any other key is forwarded to unwasm.
+
+### Detection
+
+Installed engines are detected the way the bundler resolves them: from the package's own location, walking `node_modules` upward (so pnpm's layout, where optional peers sit beside the package, works). In a monorepo where the package's dev dependencies always resolve, or under Yarn PnP, pass `engines` explicitly.
+
+## Outside SvelteKit
+
+It is a plain Vite plugin. In Astro, for example:
+
+```ts title="astro.config.ts"
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+
+export default defineConfig({
+	vite: { plugins: [sveltekitOG()] }
+});
+```
+
+The docs you are reading render their own OG cards this way at build time.
+
+## `rollupWasm`
+
+`rollupWasm(options)` is the bare unwasm plugin for `build.rollupOptions.plugins`. It is kept for 4.x configs; new setups should use `sveltekitOG()`, which adds the environment gating and the engine stubs.

@@ -27,22 +27,38 @@ const nimbusConfig = defineNimbusConfig({
   // from frontmatter `sidebar.order` (the old `priority`).
   sidebar: {
     items: [
-      "docs",
-      "docs/getting-started",
-      "docs/playground",
-      "docs/release",
-      "docs/migration/v5",
-      { label: "Basic Usage", items: [{ autogenerate: { directory: "docs/usage" } }] },
-      { label: "Advanced Usage", items: [{ autogenerate: { directory: "docs/advanced-usage" } }] },
-      { label: "Utilities", items: [{ autogenerate: { directory: "docs/utilities" } }] },
-      { label: "Runtime", items: [{ autogenerate: { directory: "docs/runtime" } }] },
+      { label: "Start", items: ["docs", "docs/getting-started", "docs/migration/v5"] },
+      { label: "Guides", items: [{ autogenerate: { directory: "docs/guides" } }] },
+      { label: "Engines", items: [{ autogenerate: { directory: "docs/engines" } }] },
+      { label: "Reference", items: [{ autogenerate: { directory: "docs/reference" } }] },
+      { label: "Deploy", items: [{ autogenerate: { directory: "docs/deploy" } }] },
       { label: "Examples", items: [{ autogenerate: { directory: "docs/examples" } }] },
+      "docs/playground",
+      "docs/benchmarks",
+      "docs/release",
     ],
   },
 });
 
 export default defineConfig({
   output: "static",
+  // v4 URLs that moved in the v5 nav; the old paths keep resolving
+  redirects: {
+    "/docs/usage/svelte": "/docs/guides/svelte-component/",
+    "/docs/usage/html": "/docs/guides/html/",
+    "/docs/usage/client": "/docs/guides/client/",
+    "/docs/usage/takumi": "/docs/engines/takumi/",
+    "/docs/utilities/fonts": "/docs/guides/fonts/",
+    "/docs/utilities/types": "/docs/reference/image-response/",
+    "/docs/advanced-usage/local-assets": "/docs/guides/local-assets/",
+    "/docs/advanced-usage/pre-rendering": "/docs/guides/pre-rendering/",
+    "/docs/runtime/node": "/docs/deploy/node/",
+    "/docs/runtime/bun": "/docs/deploy/bun/",
+    "/docs/runtime/cloudflare": "/docs/deploy/cloudflare/",
+    "/docs/runtime/vercel": "/docs/deploy/vercel/",
+    "/docs/runtime/netlify": "/docs/deploy/netlify/",
+    "/docs/runtime/deno": "/docs/deploy/deno/",
+  },
   // Tailwind v4 via its Vite plugin (the integration Astro recommends for
   // Tailwind v4 — replaces the PostCSS plugin, which doesn't build under
   // Astro 7's Vite 8 bundler).
@@ -50,6 +66,9 @@ export default defineConfig({
     // sveltekitOG(): the package's wasm loader for the server build (Satori's
     // yoga + ReSVG arrive as `?module` imports) and the optional-engine stubs.
     plugins: [tailwindcss(), sveltekitOG()],
+    // the playground renders in a web worker; the client entry code-splits per
+    // engine, which Vite's default iife workers can't do
+    worker: { format: "es" },
   },
   // Hover-prefetch link targets so full-page navigations feel instant without
   // a client-side router.

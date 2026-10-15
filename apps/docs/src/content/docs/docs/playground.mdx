@@ -1,10 +1,11 @@
 ---
 title: Playground
-description: Render an OG image in your browser with the client API.
-sidebar:
-  order: 3
+description: Render an OG image in your browser with the client API and copy the matching call.
+tableOfContents: false
 ---
 
-The playground is being ported to this site (milestone #8). Until then it runs on the
-v4 docs at [v4.sveltekit-og.dev/docs/playground](https://v4.sveltekit-og.dev/docs/playground),
-and the client API it demonstrates is documented in [Client-side rendering](/docs/usage/client/).
+import Playground from "@/components/playground/Playground.svelte";
+
+Everything here renders **in your browser** with `@ethercorps/sveltekit-og/client` — pick an engine, edit the template, and copy the `createImage(...)` call. The same call works on the server.
+
+<Playground client:only="svelte" />

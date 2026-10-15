@@ -1,13 +1,13 @@
 ---
-title: Svelte Component
-description: The simplest guide to generating your first static OG image using svelte component.
+title: Svelte component
+description: Render a Svelte component to an image from a SvelteKit server route.
 sidebar:
   order: 1
 ---
 
 ## Prerequisites
 
-Ensure, **Vite/Rollup Plugin** configuration as described in the [Getting Started](/docs/getting-started).
+Install the package with an engine and add the Vite plugin as described in [Getting Started](/docs/getting-started/). Everything below renders with **Takumi**, the default engine; add `engine: "satori"` to the options to render with Satori instead.
 
 ## Guide
 
@@ -40,7 +40,7 @@ If using `style` blocks, you must enable CSS injection in svelte options.
 
 ### Create API route
 
-Create a SvelteKit server route (a `+server.ts` file) and use the `ImageResponse` constructor to render your component. For this basic setup, we include only the mandatory configuration: the component, dimensions, and necessary fonts.
+Create a SvelteKit server route (a `+server.ts` file) and return an `ImageResponse` for your component. `createImage(...)` is the same call as a function. For this basic setup, we include only the mandatory configuration: the component, dimensions, and necessary fonts.
 
 ```typescript title="routes/images/simple.png/+server.ts"
 import { ImageResponse } from '@ethercorps/sveltekit-og';
@@ -111,6 +111,6 @@ If using `style` blocks, you must enable CSS injection in svelte options.
 
 ## Next Steps
 
-- **Types Reference**: For a full overview of all options and parameters for `ImageResponse`, see [Types](/docs/utilities/types) reference guide.
-- **Local Assets**: To include local images or other assets in OG images, see [Local Assets](/docs/advanced-usage/local-assets) guide.
-- **Custom Fonts**: To use fonts other than the default, see [Fonts](/docs/utilities/fonts) guide for detailed instructions.
+- **API reference**: every option, per engine, in the [ImageResponse reference](/docs/reference/image-response/).
+- **Local Assets**: To include local images or other assets in OG images, see [Local Assets](/docs/guides/local-assets/) guide.
+- **Custom Fonts**: To use fonts other than the default, see [Fonts](/docs/guides/fonts/) guide for detailed instructions.

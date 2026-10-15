@@ -53,7 +53,9 @@
 		"bench:cold": "node benchmarks/cold.mjs",
 		"bench:cold:save": "node benchmarks/cold.mjs --save",
 		"bench:cold:bun": "COLD_RUNTIME=bun node benchmarks/cold.mjs",
-		"bench:workers": "node benchmarks/workers.mjs"
+		"bench:workers": "node benchmarks/workers.mjs",
+		"bench:gate": "vitest bench --run --outputJson benchmarks/head.json --compare benchmarks/baseline.json && node scripts/bench-gate.mjs benchmarks/baseline.json benchmarks/head.json",
+		"bench:report": "node scripts/bench-report.mjs"
 	},
 	"exports": {
 		".": {

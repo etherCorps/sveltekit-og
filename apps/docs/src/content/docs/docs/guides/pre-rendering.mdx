@@ -1,8 +1,8 @@
 ---
-title: Pre-rendering OG Images
-description: How to use SvelteKit's pre-rendering Open Graph images for static routes.
+title: Pre-rendering
+description: Generate OG images at build time with SvelteKit's prerender.
 sidebar:
-  order: 2
+  order: 6
 ---
 
 Pre-rendering generates your OG images at build time, not at runtime. This eliminates the serverless function execution cost and latency when a bot first crawls the image, resulting in superior performance and reduced infrastructure costs.
@@ -120,8 +120,7 @@ The `GET` request handler function then handles two scenarios:
 ```typescript title="api/og/image/[...slug].png/+server.ts"
 import { getDocData } from '$lib/docs/data'; // Utility to fetch doc data by slug
 import DocCard from '$lib/og/DocCard.svelte'; // The Svelte Component template
-import { resolveFonts } from '$lib/fonts/utils';
-import { ImageResponse } from '@ethercorps/sveltekit-og';
+import { ImageResponse, GoogleFont } from '@ethercorps/sveltekit-og';
 import type { RequestHandler } from './$types';
 
 // 1. Pre-render is enabled
@@ -138,8 +137,6 @@ export const GET: RequestHandler = async ({ params }) => {
 		return new Response(null, { status: 404 });
 	}
 
-	const resolvedFonts = await resolveFonts(); // Pre-loaded font data
-
 	const props = {
 		title: docData.title,
 		description: docData.description
@@ -151,7 +148,7 @@ export const GET: RequestHandler = async ({ params }) => {
 		{
 			width: 1200,
 			height: 630,
-			fonts: resolvedFonts,
+			fonts: [new GoogleFont('Inter', { weight: 600 })], // resolved once per process
 			// Caching for long-term storage since it's pre-rendered
 			headers: {
 				'Cache-Control': 'public, immutable, max-age=31536000'
@@ -171,7 +168,7 @@ When pre-rendering OG images, ensure that:
 - All necessary data is available at build time.
 - You handle missing data gracefully to avoid build failures.
 
-To achieve above mentioned safety considerations, you can add `handleUnseenRoutes`, `handleHttpError`, and `handleMissingId` to `prerender` section in `svelte.config.js`. which will help you to manage unseen routes, HTTP errors, and missing IDs during the pre-rendering process.
+For that, add `handleUnseenRoutes`, `handleHttpError` and `handleMissingId` to the `prerender` section of your SvelteKit config (`svelte.config.js` on SvelteKit 2; the `sveltekit({ ... })` plugin options on SvelteKit 3). which will help you to manage unseen routes, HTTP errors, and missing IDs during the pre-rendering process.
 
 ```javascript title="svelte.config.js"
 import adapter from '@sveltejs/adapter-vercel';

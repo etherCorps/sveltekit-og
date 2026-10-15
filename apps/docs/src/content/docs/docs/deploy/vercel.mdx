@@ -2,7 +2,7 @@
 title: Vercel
 description: How to use Sveltekit OG with the vercel adapter (@sveltejs/adapter-vercel)
 sidebar:
-  order: 2
+  order: 4
 ---
 
 This section details the configuration needed to use SvelteKit OG with the Vercel Adapter (@sveltejs/adapter-vercel), targeting the Vercel Edge Runtime or Serverless Functions (Node).
@@ -13,77 +13,55 @@ First, ensure you have the Vercel adapter installed:
 
 <PackageManagers pkg="@sveltejs/adapter-vercel" dev />
 
-In your `svelte.config.js`, configure the adapter:
+Configure the adapter:
 
-```typescript title="svelte.config.js"
+<Tabs syncKey="kit">
+<TabItem label="SvelteKit 3">
+
+SvelteKit 3 has no `svelte.config.js`; pass the adapter to `sveltekit()`:
+
+```ts title="vite.config.ts"
 import adapter from '@sveltejs/adapter-vercel';
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
 
-const config = {
-	 ...,
-    kit: {
-        adapter: adapter()
-    },
-    ...
-};
-export default config;
+export default { plugins: [sveltekit({ adapter: adapter() }), sveltekitOG()] };
 ```
 
-## Plugin Configuration
+</TabItem>
+<TabItem label="SvelteKit 2">
 
-The image generation uses the @resvg/resvg-wasm, satori, yoga, which relies on a Wasm module. The official SvelteKit OG plugins handle the complex Wasm bundling required for the runtime. You must choose one of the following plugins based on your sveltekit-og version.
+```js title="svelte.config.js"
+import adapter from '@sveltejs/adapter-vercel';
 
-### Vite Plugin (Recommended)
+/** @type {import('@sveltejs/kit').Config} */
+export default { kit: { adapter: adapter() } };
+```
 
-<Aside type="caution" title="Warning">
+</TabItem>
+</Tabs>
 
-Vite plugin is available from `sveltekit-og@v4.1.0`. If you are using `v4.0.0` use [Rollup](#rollup-plugin-legacy) plugin.
+## Plugin configuration
 
-If you add the plugin while the dev server is running, you might see no generated image. Stop the server and re-start it.
-
-</Aside>
-
-Add the sveltekitOG plugin to your `vite.config.ts`.
+Add `sveltekitOG()` to `vite.config`. It wires the engines' WebAssembly into the server build and keeps engines you haven't installed out of the bundle — see the [Vite plugin reference](/docs/reference/vite-plugin/).
 
 ```ts title="vite.config.ts"
 import { sveltekit } from '@sveltejs/kit/vite';
 import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
 import { defineConfig } from 'vite';
 
-const config = defineConfig({
-	plugins: [
-		sveltekit(),
-		sveltekitOG() // Add the Vite plugin
-	]
+export default defineConfig({
+	plugins: [sveltekit(), sveltekitOG()]
 });
-
-export default config;
-```
-
-### Rollup Plugin (Legacy)
-
-<Aside type="danger" title="Deprecation"> The Rollup plugin will be <strong>deprecated</strong> in <strong>v5</strong>. Migrate to the Vite plugin when possible. </Aside>
-
-Add the `rollupWasm` plugin inside the `rollupOptions` block in your `vite.config.ts`.
-
-```typescript title="vite.config.ts"
-import { sveltekit } from '@sveltejs/kit/vite';
-import { rollupWasm } from '@ethercorps/sveltekit-og/plugin';
-import { defineConfig } from 'vite';
-
-const config = defineConfig({
-	plugins: [sveltekit()],
-	build: {
-		rollupOptions: {
-			// Add rollupWasm plugin for Cloudflare compatibility
-			plugins: [rollupWasm()]
-		}
-	}
-});
-
-export default config;
 ```
 
 ## Edge and Serverless Split
+
+<Aside type="note" title="SvelteKit 3">
+
+`@sveltejs/adapter-vercel@7` (SvelteKit 3) removed the Edge runtime; routes run as Node serverless functions, and the per-route `runtime: 'edge'` config below only applies to adapter 5 on SvelteKit 2.
+
+</Aside>
 
 The SvelteKit Vercel adapter supports specifying the runtime on a per-route basis. This is highly recommended to isolate your computationally intensive OG image route into the smaller, faster Edge or Fluid Runtime, while keeping other APIs on the larger, more flexible Serverless (Node) runtime.
 
@@ -93,7 +71,7 @@ You can achieve this by adding a `+server.ts` configuration file alongside your 
 
 This route runs on the Edge Runtime:
 
-```typescript title="src/routes/og/+server.ts"
+```typescript title="src/routes/og/+server.ts" showLineNumbers
 // 1. Specify the runtime for this route
 export const config = {
 	runtime: 'edge', // Use the Vercel Edge Runtime
@@ -129,11 +107,11 @@ export const GET: RequestHandler = async () => {
 
 ## Usage
 
-Once configured, the usage remains the same as any other SvelteKit environment.
+Once configured, usage is the same as on any other SvelteKit target. Install the engine you render with (`takumi-js`, or `satori` + `@resvg/resvg-wasm`) as a regular dependency so the adapter bundles it.
 
-- Svelte Components: Refer to the [Svelte Component](/docs/usage/svelte) usage.
+- Svelte components: see the [Svelte component](/docs/guides/svelte-component/) guide.
 
-- Raw HTML: Refer to the [Raw HTML section](/docs/usage/html) for usage with string templates.
+- HTML strings: see the [HTML string](/docs/guides/html/) guide.
 
 ## Preview
 

@@ -1,6 +1,6 @@
 ---
-title: Raw HTML
-description: How to use raw HTML strings to generate images
+title: HTML string
+description: Render an HTML + CSS string to an image, no component needed.
 sidebar:
   order: 2
 ---
@@ -11,7 +11,7 @@ Sometimes you might prefer using standard HTML files over Svelte components—pe
 
 ## Prerequisites
 
-Ensure, **Vite/Rollup Plugin** configuration as described in the [Getting Started](/docs/getting-started).
+Install the package with an engine and add the Vite plugin as described in [Getting Started](/docs/getting-started/). The example renders with **Takumi**, the default engine.
 
 ## Guide
 
@@ -71,6 +71,6 @@ Visit the URL corresponding to route in browser (e.g. `http://localhost:5173/ima
 ## Next Steps
 
 - **Dynamic Data**: To inject dynamic data (e.g., a post title) into your HTML string, you will need to use `JavaScript` string replacement or a dedicated **templating engine** before passing the string to `ImageResponse`.
-- **Types Reference**: For a full overview of all options and parameters for `ImageResponse`, see [Types](/docs/utilities/types) reference guide.
-- **Local Assets**: To include local images or other assets in OG images, see [Local Assets](/docs/advanced-usage/local-assets) guide.
-- **Custom Fonts**: To use fonts other than the default, see [Fonts](/docs/utilities/fonts) guide for detailed instructions.
+- **API reference**: every option, per engine, in the [ImageResponse reference](/docs/reference/image-response/).
+- **Local Assets**: To include local images or other assets in OG images, see [Local Assets](/docs/guides/local-assets/) guide.
+- **Custom Fonts**: To use fonts other than the default, see [Fonts](/docs/guides/fonts/) guide for detailed instructions.

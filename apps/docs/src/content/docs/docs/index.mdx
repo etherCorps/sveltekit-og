@@ -1,35 +1,45 @@
 ---
 title: Introduction
-description: What exactly is Sveltekit OG?
+description: Generate Open Graph images from HTML or Svelte components — on the server, at the edge, or in the browser.
 ---
 
-**SvelteKit OG** is a high-performance utility library designed for **server-side image generation** within SvelteKit applications.
+**SvelteKit OG** turns an HTML + CSS template or a Svelte component into an image, with no headless browser. Return it from a SvelteKit server route and you have a dynamic Open Graph image; call `renderImage` and you have the bytes for anything else — thumbnails, certificates, social cards for a CMS.
 
-While its primary use is creating **dynamic Open Graph (OG) images** for rich social media preview cards, the library is a generic tool capable of converting Svelte components or HTML/CSS into high-quality PNGs, suitable for a wide range of use cases .
+```ts title="src/routes/og.png/+server.ts"
+import { ImageResponse } from '@ethercorps/sveltekit-og';
 
-It allows you to define a single visual template using modern web technologies and render unique, personalized images on the fly based on dynamic data or URL parameters.
+export const GET = () =>
+	new ImageResponse(`<div style="display:flex;font-size:64px">Hello</div>`, { width: 1200, height: 630 });
+```
 
-## Zero-Browser Rendering
+## Two engines, one API
 
-SvelteKit OG achieves its speed and efficiency by relying on two core technologies, entirely avoiding the performance cost of launching a headless browser like Puppeteer:
+| | **Takumi** (default) | **Satori** |
+| --- | --- | --- |
+| Pipeline | HTML → image, in Rust compiled to WebAssembly (native on Node) | HTML → SVG with [Satori](https://github.com/vercel/satori), SVG → PNG with ReSVG |
+| Formats | `png`, `jpeg`, `webp`, `ico`, `raw`, `svg` | `png`, `svg` |
+| Fonts | built-in sans-serif, plus yours | yours, or a bundled Noto Sans fallback |
+| CSS | flex, grid, gradients, shadows | flex only (Satori's subset) |
+| Install | `takumi-js` | `satori` + `@resvg/resvg-wasm` |
 
-1.  **Satori (Vercel):** This engine takes your standard HTML and CSS (Flexbox, Tailwind) and converts it into an **SVG** representation.
-2.  **Resvg:** This powerful Rust-based library then takes the generated SVG and converts it into the final **PNG** or JPEG image file that is served to the client.
+You pick the engine per call with `engine: "takumi" | "satori"`; the options narrow to what that engine supports, and the same call works on the server and in the browser. See [Takumi](/docs/engines/takumi/) and [Satori](/docs/engines/satori/).
 
-This combination ensures the library runs efficiently in **serverless** and **edge environments** (like Vercel Edge, Cloudflare Workers, or Netlify functions).
+## Where it runs
 
-## Key Features & Benefits
+Node, Bun, Deno, Cloudflare Workers and Pages, Vercel and Netlify functions — every runtime SvelteKit deploys to, on SvelteKit 2 and 3. The [Deploy](/docs/deploy/node/) pages cover each adapter. The [client entry](/docs/guides/client/) renders in the browser or a web worker with the same API.
 
-- 🚀 Fast & Lightweight: Unlike Puppeteer or Playwright, sveltekit-og does not launch a browser instance. It runs efficiently in serverless and edge environments (like Vercel Edge or Cloudflare Workers).
+## Features
 
-- 🎨 Easy Styling: Style your images using standard CSS (Flexbox) or built-in Tailwind CSS support. If you know how to center a div, you know how to design an OG image.
+- **Svelte components or HTML strings** as templates; Tailwind classes, inline styles and `<style>` blocks all work.
+- **Typed props**: a component's props are checked at the call site.
+- **Fonts** from Google Fonts, local files or any URL, resolved and cached for you.
+- **Emoji** from Twemoji, OpenMoji, Noto and others.
+- **Engines are optional**: install the one you use; a call to a missing engine tells you the exact command to run.
+- **Errors carry a code** (`ENGINE_NOT_INSTALLED`, `FONT_LOAD_FAILED`, …) so you can handle them.
+- **Pre-rendering**: generate every image at build time with SvelteKit's `prerender`.
 
-- 🧩 Svelte Component Support: You aren't limited to raw HTML strings. You can import and render actual .svelte components inside your image templates.
+## Start
 
-- Typography:
-  - Support for custom fonts and Google Fonts.
-  - Support for Emojis.
-
-- 🛠️ Developer Experience:
-  - TypeScript Ready: Fully typed for a better development experience.
-  - Debug Mode: Inspect the generated layout bounding boxes to fine-tune your designs.
+- [Getting started](/docs/getting-started/) — install, plugin, first image.
+- [Migrating to v5](/docs/migration/v5/) — coming from 4.x.
+- [Playground](/docs/playground/) — render in your browser and copy the call.

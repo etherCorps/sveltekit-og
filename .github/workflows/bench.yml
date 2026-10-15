@@ -4,7 +4,8 @@ name: Bench
 # runner and the same toolchain: scripts/bench-baseline.sh swaps v4.4.0's src/lib
 # into a copy of the PR checkout, so only library code differs. (The committed
 # baselines were recorded on a laptop and aren't comparable to CI hardware.)
-# Non-blocking until the v5 bench gate (#8).
+# Blocking: a warm-render case more than 10% slower than the baseline fails the PR
+# (scripts/bench-gate.mjs; threshold is its third argument). Cold numbers are informative.
 on:
   pull_request:
     branches: [v5, dev, main]
@@ -15,7 +16,6 @@ permissions:
 jobs:
   bench:
     runs-on: ubuntu-latest
-    continue-on-error: true
     env:
       PKG: packages/sveltekit-og
     steps:
@@ -38,7 +38,7 @@ jobs:
         working-directory: ${{ env.PKG }}
         run: |
           pnpm package
-          pnpm bench:compare
+          pnpm bench:gate
           echo '```' >> "$GITHUB_STEP_SUMMARY"
           node benchmarks/cold.mjs | tee -a "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"

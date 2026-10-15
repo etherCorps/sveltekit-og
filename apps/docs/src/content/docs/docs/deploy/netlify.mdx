@@ -1,0 +1,93 @@
+---
+title: Netlify
+description: How to use Sveltekit OG with netlify adapter (@sveltejs/adapter-netlify)
+sidebar:
+  order: 5
+---
+
+This section details the configuration needed to use SvelteKit OG with the Netlify Adapter (@sveltejs/adapter-netlify), targeting the Netlify Functions environment (which uses Node.js).
+
+Netlify Functions, similar to Vercel Serverless Functions, are a Node.js-based environment that generally supports the Wasm module dependencies required by the image generation engine. However, the SvelteKit OG plugins ensure the Wasm files are correctly bundled and available within the function context.
+
+## Installation
+
+First, ensure you have the Netlify adapter installed:
+<PackageManagers pkg="@sveltejs/adapter-netlify" dev />
+
+Configure the adapter:
+
+<Tabs syncKey="kit">
+<TabItem label="SvelteKit 3">
+
+SvelteKit 3 has no `svelte.config.js`; pass the adapter to `sveltekit()`:
+
+```ts title="vite.config.ts"
+import adapter from '@sveltejs/adapter-netlify';
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+
+export default { plugins: [sveltekit({ adapter: adapter() }), sveltekitOG({ esmImport: false })] };
+```
+
+</TabItem>
+<TabItem label="SvelteKit 2">
+
+```js title="svelte.config.js"
+import adapter from '@sveltejs/adapter-netlify';
+
+/** @type {import('@sveltejs/kit').Config} */
+export default { kit: { adapter: adapter() } };
+```
+
+</TabItem>
+</Tabs>
+
+## Plugin configuration
+
+Add `sveltekitOG()` to `vite.config`. It wires the engines' WebAssembly into the server build and keeps engines you haven't installed out of the bundle — see the [Vite plugin reference](/docs/reference/vite-plugin/).
+
+```ts title="vite.config.ts"
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [sveltekit(), sveltekitOG({ esmImport: false })]
+});
+```
+
+<Aside type="caution" title="Netlify adapter v6 (esbuild)">
+
+`@sveltejs/adapter-netlify@6+` bundles functions with **esbuild**, which has no loader for standalone `.wasm` chunks (`No loader is configured for ".wasm" files`). `esmImport: false` inlines the WebAssembly as base64 so esbuild never sees a `.wasm` import.
+
+</Aside>
+
+## Usage
+
+Once configured, usage is the same as on any other SvelteKit target. Install the engine you render with (`takumi-js`, or `satori` + `@resvg/resvg-wasm`) as a regular dependency so the adapter bundles it.
+
+- Svelte components: see the [Svelte component](/docs/guides/svelte-component/) guide.
+
+- HTML strings: see the [HTML string](/docs/guides/html/) guide.
+
+## Preview
+
+<img src="https://netlify.sveltekit-og.dev/png/cog.png" class="mt-4 rounded-lg" />
+
+Source: <RepoLink path="examples/netlify-build" /> <br/>
+Live: https://netlify.sveltekit-og.dev/
+
+## Known Issues
+
+<Collapsible>
+<CollapsibleTrigger>Vite ?url import error</CollapsibleTrigger>
+<CollapsibleContent>
+
+Netlify throws error when we use [vite url imports](/docs/guides/local-assets/#reading-local-assets)
+
+```typescript
+import imagePath from '$lib/assets/large_image.jpg?url';
+```
+
+</CollapsibleContent>
+</Collapsible>

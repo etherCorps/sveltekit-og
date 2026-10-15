@@ -2,7 +2,7 @@
 title: Bun
 description: How to use SvelteKit OG with the official Bun adapter (@sveltejs/adapter-bun)
 sidebar:
-  order: 6
+  order: 2
 ---
 
 This section details the configuration needed to run SvelteKit OG on the [Bun](https://bun.sh) runtime with the official Bun adapter (`@sveltejs/adapter-bun`). Both engines work: Satori + ReSVG take the Node code path (the wasm is read from `node_modules`), and Takumi resolves its native backend through its `bun` export condition.
@@ -33,9 +33,21 @@ const config = {
 export default config;
 ```
 
-## Plugin Configuration
+## Plugin configuration
 
-Use the `sveltekitOG` Vite plugin with `{ esmImport: false }`, exactly as on Node: the Wasm module is then loaded with Bun's Node-compatible file APIs instead of an ESM `.wasm` import. The plugin only touches the server bundle, so the [client-side entry](/docs/usage/client) keeps working alongside it.
+Add `sveltekitOG()` to `vite.config`. It wires the engines' WebAssembly into the server build and keeps engines you haven't installed out of the bundle — see the [Vite plugin reference](/docs/reference/vite-plugin/).
+
+```ts title="vite.config.ts"
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [sveltekit(), sveltekitOG({ esmImport: false })]
+});
+```
+
+`esmImport: false` inlines the WebAssembly as base64, exactly as on Node; Bun then loads it through its Node-compatible file APIs.
 
 ## Build and run
 
@@ -59,11 +71,11 @@ The server listens on `PORT` (default `3000`). See the adapter docs for `HOST`, 
 
 ## Usage
 
-Once configured, usage is the same as any other SvelteKit environment.
+Once configured, usage is the same as on any other SvelteKit target. Install the engine you render with (`takumi-js`, or `satori` + `@resvg/resvg-wasm`) as a regular dependency so the adapter bundles it.
 
-- Svelte Components: refer to the [Svelte Component](/docs/usage/svelte) usage.
-- Raw HTML: refer to the [Raw HTML section](/docs/usage/html) for string templates.
-- Takumi: refer to the [Takumi engine](/docs/usage/takumi) page.
+- Svelte components: see the [Svelte component](/docs/guides/svelte-component/) guide.
+- HTML strings: see the [HTML string](/docs/guides/html/) guide.
+- Engines: [Takumi](/docs/engines/takumi/) (default) and [Satori](/docs/engines/satori/).
 
 ## Preview (Self Test)
 

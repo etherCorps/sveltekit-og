@@ -1,0 +1,21 @@
+---
+title: Benchmarks
+description: Warm and cold render times per engine and runtime, regenerated on every release.
+sidebar:
+  order: 6
+---
+
+Numbers come from the package's own benchmarks (`packages/sveltekit-og/benchmarks`), run with `pnpm bench:report` on each release. Every pull request also runs the warm cases against the 4.4.0 baseline and fails on a regression above 10%.
+
+<BenchTable />
+
+## What the cases are
+
+- **html → png** — a flex template with two text nodes, a local TTF font.
+- **svelte → png** — the same design as a Svelte component with props.
+- **html → svg** — the vector path, no rasterisation.
+- **Workers** — first request to a fresh `wrangler dev` isolate serving <RepoLink path="examples/cf-workers-build">the Workers example</RepoLink>; the Satori route there also fetches Google Fonts, so that number includes a network round trip.
+
+## Reading them
+
+Takumi and Satori differ by roughly 2–3× per warm render, and Takumi's cold start is shorter because its wasm is smaller and it has no font fallback to fetch. Absolute numbers depend on the machine; compare the rows, not the columns against your laptop.

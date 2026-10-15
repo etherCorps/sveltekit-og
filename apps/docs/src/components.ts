@@ -15,6 +15,7 @@ import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "./component
 import PropField from "./components/docs/PropField.astro";
 import RepoLink from "./components/docs/RepoLink.astro";
 import ReleaseInfo from "./components/docs/ReleaseInfo.astro";
+import BenchTable from "./components/docs/BenchTable.astro";
 
 export const components = {
   Aside,
@@ -24,6 +25,7 @@ export const components = {
   PropField,
   RepoLink,
   ReleaseInfo,
+  BenchTable,
   Card,
   CardGrid,
   PackageManagers,

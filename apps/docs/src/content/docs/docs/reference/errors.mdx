@@ -1,0 +1,49 @@
+---
+title: Errors
+description: ImageResponseError and every code it can carry.
+sidebar:
+  order: 3
+---
+
+Every failure is an `ImageResponseError`:
+
+```ts
+class ImageResponseError extends Error {
+	code: string;          // one of ErrorCodes
+	originalError?: Error; // what the engine, loader or fetch actually threw
+}
+```
+
+It is thrown by `renderImage`, and it errors the body of an `ImageResponse`, so it reaches you from `.arrayBuffer()` / `.blob()` / `.text()`, from a `fetch` of the route, and from SvelteKit's prerenderer at build time. The error you get is the specific one — nothing wraps it.
+
+```ts
+import { renderImage, ErrorCodes, ImageResponseError } from '@ethercorps/sveltekit-og';
+
+try {
+	await renderImage(html, { engine: 'satori' });
+} catch (e) {
+	if (e instanceof ImageResponseError && e.code === ErrorCodes.ENGINE_NOT_INSTALLED) {
+		console.error(e.message); // Engine "satori" is not installed. Run: pnpm add satori @resvg/resvg-wasm
+	}
+}
+```
+
+## Codes
+
+| Code                     | When                                                                                     |
+| ------------------------ | ---------------------------------------------------------------------------------------- |
+| `ENGINE_NOT_INSTALLED`   | The engine's packages aren't installed (or were stubbed out by the plugin). The message names the install command. |
+| `UNSUPPORTED_FORMAT`     | `format` isn't one the engine can emit, e.g. `engine: "satori"` with `format: "webp"`.   |
+| `FONT_LOAD_FAILED`       | A font's bytes couldn't be fetched, read or registered. The next render retries.         |
+| `VNODE_CREATION_FAILED`  | The HTML (or the component's rendered HTML) couldn't be parsed into the engine's tree.   |
+| `COMPONENT_IN_WORKER`    | Client entry: a Svelte component was passed inside a web worker, where there is no DOM.  |
+| `TAKUMI_INIT_FAILED`     | Takumi's WebAssembly couldn't be loaded or initialised.                                  |
+| `TAKUMI_RENDER_FAILED`   | Takumi rejected the template — most often invalid CSS in a `style` attribute.            |
+| `SATORI_INIT_FAILED`     | Satori's yoga WebAssembly couldn't be loaded.                                            |
+| `SATORI_RENDER_FAILED`   | Satori rejected the template — e.g. an element with several children and no `display: flex`. |
+| `RESVG_INIT_FAILED`      | ReSVG's WebAssembly couldn't be loaded.                                                  |
+| `RESVG_RENDER_FAILED`    | ReSVG couldn't rasterise the SVG.                                                        |
+| `EMOJI_LOAD_FAILED`      | An emoji glyph couldn't be fetched from the provider.                                    |
+| `UNKNOWN_ERROR`          | Anything else; `originalError` has the cause.                                            |
+
+`ErrorCodes` is exported from the root and client entries as a constant object, so you can compare against it without string literals.

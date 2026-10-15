@@ -1,0 +1,102 @@
+---
+title: Node JS
+description: How to use Sveltekit OG with the node adapter (@sveltejs/adapter-node)
+sidebar:
+  order: 1
+---
+
+This section details the necessary configuration to use SvelteKit OG with the Node Adapter (@sveltejs/adapter-node), targeting a standard self-hosted Node.js server environment.
+
+## Installation
+
+First, ensure you have the Node adapter installed:
+<PackageManagers pkg="@sveltejs/adapter-node" dev />
+
+Configure the adapter:
+
+<Tabs syncKey="kit">
+<TabItem label="SvelteKit 3">
+
+SvelteKit 3 has no `svelte.config.js`; pass the adapter to `sveltekit()`:
+
+```ts title="vite.config.ts"
+import adapter from '@sveltejs/adapter-node';
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+
+export default { plugins: [sveltekit({ adapter: adapter() }), sveltekitOG({ esmImport: false })] };
+```
+
+</TabItem>
+<TabItem label="SvelteKit 2">
+
+```js title="svelte.config.js"
+import adapter from '@sveltejs/adapter-node';
+
+/** @type {import('@sveltejs/kit').Config} */
+export default { kit: { adapter: adapter() } };
+```
+
+</TabItem>
+</Tabs>
+
+## Plugin configuration
+
+Add `sveltekitOG()` to `vite.config`. It wires the engines' WebAssembly into the server build and keeps engines you haven't installed out of the bundle — see the [Vite plugin reference](/docs/reference/vite-plugin/).
+
+```ts title="vite.config.ts"
+import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekitOG } from '@ethercorps/sveltekit-og/plugin';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+	plugins: [sveltekit(), sveltekitOG({ esmImport: false })]
+});
+```
+
+`esmImport: false` inlines the engines' WebAssembly as base64 instead of emitting `.wasm` chunks, which is the reliable way to load it under Node's loader.
+
+## Usage
+
+Once configured, usage is the same as on any other SvelteKit target. Install the engine you render with (`takumi-js`, or `satori` + `@resvg/resvg-wasm`) as a regular dependency so the adapter bundles it.
+
+- Svelte components: see the [Svelte component](/docs/guides/svelte-component/) guide.
+
+- HTML strings: see the [HTML string](/docs/guides/html/) guide.
+
+## Preview (Self Test)
+
+Source: <RepoLink path="examples/node-build" />
+
+To verify the Node setup works correctly, you can clone and run the dedicated example repository.
+
+### Step-by-Step Guide
+
+- Clone the Repository and Navigate:
+
+```shell title="Bash"
+git clone https://github.com/etherCorps/sveltekit-og.git
+cd sveltekit-og/examples/node-build
+```
+
+- Install Dependencies:
+
+```shell title="Bash"
+pnpm install
+```
+
+- **Build the Project**: This command runs the build process, applying the @sveltejs/adapter-node and the Wasm plugins, resulting in a deployable Node server build in the ./build directory.
+
+```shell title="Bash"
+pnpm run build
+```
+
+- **Start the preview Server**: This command starts the Node server using the generated output.
+
+```shell
+pnpm run preview
+```
+
+Then open [http://localhost:3000](http://localhost:3000) to browse the example gallery — the **PNG**, **SVG** and **Takumi** routes, each as an HTML string, a Svelte component, and a pre-rendered image.
+
+More on how to use [adapter-node in sveltekit](https://svelte.dev/docs/kit/adapter-node)
