@@ -49,13 +49,13 @@
 	<div class="flex flex-col w-full h-[96%] px-16 pt-20 pb-10">
 		<div class="flex flex-row items-center justify-between w-full h-1/2">
 			<div class="flex flex-col w-1/2 items-start">
-				<span class="text-gray-800 text-7xl leading-1.5">{owner}/</span>
-				<span class="text-7xl font-bold">{repo}</span>
+				<span class="text-gray-800 text-7xl" style="line-height:1.15">{owner}/</span>
+				<span class="text-7xl font-bold" style="line-height:1.15">{repo}</span>
 			</div>
 			<img class="h-full" src={logo} />
 		</div>
 		<div class="flex flex-row w-[55%] mt-2">
-			<span class="text-xl text-gray-600 leading-1.5 tracking-wide">{description}</span>
+			<span class="text-xl text-gray-600 tracking-wide" style="line-height:1.5">{description}</span>
 		</div>
 		<div class="flex flex-row items-center justify-between w-full h-1/2">
 			{#each details as detail (detail.title)}
