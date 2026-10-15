@@ -6,10 +6,12 @@
 
 Dynamically generate Open Graph images from an HTML+CSS template or Svelte component. No headless browser required.
 
-Pick the rendering engine that fits your needs:
+Pick the rendering engine that fits your needs; install only the one you use:
 
-- **Satori** (default) — HTML → SVG → PNG, based on [Satori](https://github.com/vercel/satori#documentation).
-- **[Takumi](https://takumi.kane.tw)** — a Rust/WASM engine with more output formats (`webp`, `jpeg`, `ico`, `svg`, …) and a built-in font, available from `@ethercorps/sveltekit-og/takumi` (v4.3.0+).
+- **[Takumi](https://takumi.kane.tw)** (default) — a Rust/WASM engine with a built-in font and more output formats (`png`, `webp`, `jpeg`, `ico`, `svg`, …).
+- **Satori** — HTML → SVG → PNG, based on [Satori](https://github.com/vercel/satori#documentation). Select it with `engine: "satori"`.
+
+Same API on the server and in the browser (`@ethercorps/sveltekit-og/client`). Upgrading from v4? See the [migration guide](https://github.com/etherCorps/sveltekit-og/blob/main/docs/migration/v5.md).
 
 ## Table of Contents
 
@@ -33,14 +35,32 @@ For more detailed information and advanced usage, please refer to the [official 
 ## Installation
 
 ```bash
-pnpm install @ethercorps/sveltekit-og
+# Takumi (default)
+pnpm add @ethercorps/sveltekit-og takumi-js
+
+# Satori
+pnpm add @ethercorps/sveltekit-og satori @resvg/resvg-wasm
 ```
+
+Engines are optional peer dependencies. Calling one that isn't installed fails with `ENGINE_NOT_INSTALLED` and the command to run.
 
 ## Usage
 
-For detailed usage instructions, please see the [Getting Started](https://sveltekit-og.dev/docs/getting-started) section of our documentation.
+```ts
+// src/routes/og.png/+server.ts
+import { ImageResponse } from "@ethercorps/sveltekit-og";
 
-Prefer the Takumi engine — more output formats and a built-in font? See the [Takumi Engine](https://sveltekit-og.dev/docs/usage/takumi) guide.
+export const GET = () =>
+	new ImageResponse(`<div style="display:flex;font-size:64px">Hello</div>`, {
+		width: 1200,
+		height: 630,
+		// engine: "satori", format: "svg", fonts: [new GoogleFont("Inter")], ...
+	});
+```
+
+`createImage(...)` is the same as a function; `renderImage(...)` returns the bytes instead of a `Response`. Svelte components work in place of the HTML string, with their props as the third argument.
+
+For detailed usage instructions, please see the [Getting Started](https://sveltekit-og.dev/docs/getting-started) section of our documentation.
 
 ## Examples
 

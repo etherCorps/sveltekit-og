@@ -13,7 +13,7 @@ type WasmModule = { initWasmPromise: Promise<void> };
  * Lazy singleton around a node/edge wasm module pair. The edge/node choice is
  * made per-runtime via std-env; both sides stay direct import() expressions so
  * the bundler can emit the wasm chunk. Memoizes the init promise (like
- * takumi/renderer.ts) so concurrent first requests share one init, and clears
+ * core/engines/takumi.ts) so concurrent first requests share one init, and clears
  * it on rejection so a failed init can be retried.
  */
 function createProvider<T extends WasmModule>(

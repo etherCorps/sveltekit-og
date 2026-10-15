@@ -16,6 +16,17 @@ export function toImageResponseError(error: unknown): ImageResponseError {
 	return new ImageResponseError(err.message, ErrorCodes.UNKNOWN_ERROR, err);
 }
 
+/**
+ * Give a failure a code and message, unless it already has them: an ImageResponseError
+ * thrown deeper in the pipeline (ENGINE_NOT_INSTALLED, UNSUPPORTED_FORMAT, FONT_LOAD_FAILED…)
+ * must reach the caller as-is, whichever wrapper it passes through on the way out.
+ */
+function wrap(error: unknown, code: string, message: string): ImageResponseError {
+	if (error instanceof ImageResponseError) return error;
+	const err = error instanceof Error ? error : new Error(String(error));
+	return new ImageResponseError(message, code, err);
+}
+
 export const ErrorCodes = {
 	FONT_LOAD_FAILED: "FONT_LOAD_FAILED",
 	VNODE_CREATION_FAILED: "VNODE_CREATION_FAILED",
@@ -27,6 +38,8 @@ export const ErrorCodes = {
 	TAKUMI_INIT_FAILED: "TAKUMI_INIT_FAILED",
 	TAKUMI_RENDER_FAILED: "TAKUMI_RENDER_FAILED",
 	COMPONENT_IN_WORKER: "COMPONENT_IN_WORKER",
+	UNSUPPORTED_FORMAT: "UNSUPPORTED_FORMAT",
+	ENGINE_NOT_INSTALLED: "ENGINE_NOT_INSTALLED",
 	UNKNOWN_ERROR: "UNKNOWN_ERROR",
 } as const;
 
@@ -41,8 +54,7 @@ export async function handleAsync<T = unknown>(
 	try {
 		return await operation();
 	} catch (error) {
-		const err = error instanceof Error ? error : new Error(String(error));
-		throw new ImageResponseError(errorMessage, errorCode, err);
+		throw wrap(error, errorCode, errorMessage);
 	}
 }
 
@@ -53,8 +65,7 @@ export function handleSync<T>(operation: () => T, errorCode: string, errorMessag
 	try {
 		return operation();
 	} catch (error) {
-		const err = error instanceof Error ? error : new Error(String(error));
-		throw new ImageResponseError(errorMessage, errorCode, err);
+		throw wrap(error, errorCode, errorMessage);
 	}
 }
 
@@ -69,8 +80,7 @@ export async function handleAsyncAll<T extends readonly unknown[]>(
 	try {
 		return (await Promise.all(operations.map((op) => op()))) as unknown as T;
 	} catch (error) {
-		const err = error instanceof Error ? error : new Error(String(error));
-		throw new ImageResponseError(errorMessage, errorCode, err);
+		throw wrap(error, errorCode, errorMessage);
 	}
 }
 

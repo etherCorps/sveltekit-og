@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
-import { ImageResponse } from "$lib/takumi/index.js";
-import { createTakumiImage } from "$lib/takumi/render.js";
-import { CustomFont } from "$lib/fonts.js";
+import { ImageResponse } from "#lib/takumi/index.js";
+import { renderImage as createTakumiImage } from "#lib/ssr/render.js";
+import { CustomFont } from "#lib/fonts.js";
 import OG from "./routes/(components)/OG.svelte";
 
 // Local font so these tests are hermetic. Takumi ships a built-in sans-serif, so

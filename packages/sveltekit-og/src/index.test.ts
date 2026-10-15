@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
-import { ImageResponse } from "$lib/index.js";
-import { createSvg } from "$lib/helpers/create.js";
+import { ImageResponse } from "#lib/index.js";
+import { renderImage } from "#lib/ssr/render.js";
+import type { Element } from "#lib/core/types.js";
 import InjectedStyles from "./routes/(components)/InjectedStyles.svelte";
 
 // local font so the satori path runs offline (no default_fonts fetch)
@@ -11,6 +12,11 @@ const fontData = readFileSync(
 const fonts = [
 	{ name: "Space Mono", data: fontData, weight: 400 as const, style: "normal" as const },
 ];
+const createSvg = (
+	element: Element,
+	options: { width: number; height: number; fonts: typeof fonts }
+) => renderImage(element, { ...options, engine: "satori", format: "svg" }) as Promise<string>;
+
 const html = `<div style="display:flex;width:100%;height:100%">hi</div>`;
 
 describe("satori ImageResponse", () => {
@@ -33,7 +39,13 @@ describe("satori ImageResponse", () => {
 
 	// regression: the svg body used to enqueue a raw string and throw on read
 	it("svg body is readable bytes", async () => {
-		const res = new ImageResponse(html, { format: "svg", width: 200, height: 100, fonts });
+		const res = new ImageResponse(html, {
+			engine: "satori",
+			format: "svg",
+			width: 200,
+			height: 100,
+			fonts,
+		});
 		expect(res.headers.get("Content-Type")).toBe("image/svg+xml");
 		const text = await res.text();
 		expect(text).toContain("<svg");

@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.0-next.0] - 2026-10-15
+
+See the [v5 migration guide](../../docs/migration/v5.md).
+
+### Changed
+
+- **Breaking:** Takumi is the default engine on every entry. The root entry rendered with Satori on v4; add `engine: "satori"` (and install its peers) to keep identical output.
+- **Breaking:** no engine is installed for you. `satori` and `@resvg/resvg-wasm` join `takumi-js` as optional peer dependencies. A call to an engine that isn't installed rejects with `ENGINE_NOT_INSTALLED` and the install command; the `sveltekitOG()` Vite plugin keeps uninstalled engines out of the bundle (`engines: [...]` pins the list). `takumi-js` is no longer needed to use Satori on `/client`.
+- **Breaking:** one public API on the root entry and `/client`: `ImageResponse`, `createImage` (returns a `Response`) and `renderImage` (returns bytes, or a string for svg). `engine` narrows the options to the engine's shape.
+- **Breaking:** error codes reach the caller intact. Failures are no longer wrapped as `UNKNOWN_ERROR: Failed to generate PNG` with the real error in `originalError`; the specific `ImageResponseError` is thrown, through `arrayBuffer()`, `fetch` and prerendering alike.
+- **Breaking:** `engine: "satori"` with a format Satori can't emit (`webp`, `jpeg`, …) rejects with `UNSUPPORTED_FORMAT` instead of silently rendering a PNG.
+- Component props are type-checked at the call site: required props are required, HTML strings take none.
+- `sveltekitOG()` returns an array of plugins (the SSR wasm loader plus the engine stubs); `plugins: [sveltekit(), sveltekitOG()]` still works.
+- Peers: `svelte ^5.0.0` (was missing), `@sveltejs/kit ^2.0.0 || ^3.0.0`.
+- Internals: one render pipeline (`core/`) behind the server and client entries; each engine's code exists once and loads lazily.
+
+### Added
+
+- `fonts` takes `GoogleFont`, `CustomFont` or a raw `{ name, data, weight, style }` descriptor on both engines; `resolveFonts` is no longer required (still exported).
+- Pass-through options spread last into the engine call: `takumi` (takumi-js `render`/`renderSvg`), `satori` (`satori()`), `resvg` (ReSVG constructor).
+- `ImageResponseError` and `ErrorCodes` exported from the root entry and `/client`.
+- `renderImage` on `/client`.
+- Warm and cold benchmarks (`pnpm bench:compare`, `pnpm bench:cold`) against a v4.4.0 baseline built on the same toolchain; run on every PR.
+
+### Deprecated
+
+- `@ethercorps/sveltekit-og/takumi`: now an alias of the root entry (plus the `Takumi*` type names). Removed in v6.
+
+### Fixed
+
+- Server-side ReSVG now frees its wasm objects after each render, so long-running Node servers don't grow wasm memory.
+- Takumi-only server apps no longer evaluate the Satori providers.
+
 ## [4.4.0] - 2026-10-13
 
 ### Added

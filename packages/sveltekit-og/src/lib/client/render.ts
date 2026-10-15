@@ -1,53 +1,57 @@
-import type { Component } from "svelte";
+import type { Element, ImageResponseOptions, PropsArg } from "../core/types.js";
 import { ImageResponseError, ErrorCodes } from "../helpers/error-handler.js";
-import type { ImageOptions } from "../types.js";
-import type { TakumiImageOptions } from "../takumi/types.js";
-import type { ClientImageResponseOptions } from "./types.js";
-
-/** Components need the DOM to mount; workers have none. */
-const hasDocument = () => typeof document !== "undefined";
-
-async function toHtml(element: string | Component<any>, props?: Record<string, unknown>): Promise<string> {
-	if (typeof element === "string") return element;
-	if (!hasDocument()) {
-		throw new ImageResponseError(
-			"Svelte components can't be rendered in a worker (no document). Pass an HTML string instead.",
-			ErrorCodes.COMPONENT_IN_WORKER
-		);
-	}
-	// lazy: only main-thread component users download the mounter + Svelte's mount runtime
-	const { componentToHtml } = await import("./component.js");
-	return componentToHtml(element, props ?? {});
-}
+import { renderImage as coreRender, type Platform } from "../core/render.js";
+import { ImageResponse as CoreImageResponse } from "../core/image-response.js";
 
 /**
- * Dispatch to the chosen engine, both running in the browser/worker. Response-only
- * keys are stripped so they don't leak into the engine options.
+ * Client platform: components are mounted in a detached shadow root (needs a
+ * document, so not in workers), Satori's wasm and fallback fonts come from
+ * bundler-emitted same-origin assets. All three are lazy imports.
  */
-export async function createClientImage(
-	element: string | Component<any>,
-	options: ClientImageResponseOptions,
-	props?: Record<string, unknown>
-): Promise<Uint8Array | string> {
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { engine = "takumi", status, statusText, headers, ...imageOptions } = options;
-
-	// components are rendered to HTML here (browser mount), so engines only ever see a string
-	const html = await toHtml(element, props);
-
-	// lazy: one Vite chunk per engine, so the other engine's JS + wasm are never fetched
-	if (engine === "satori") {
-		const satoriOptions = imageOptions as ImageOptions;
-		// satori has no built-in font; use the bundled ones unless the caller passed some.
-		// Lives here (not in the engine) so it's unit-testable in node, where the engine can't run.
-		if (!satoriOptions.fonts?.length) {
-			const { defaultClientFonts } = await import("./fonts.js");
-			satoriOptions.fonts = await defaultClientFonts();
+export const clientPlatform: Platform = {
+	async componentToHtml(component, props) {
+		if (typeof document === "undefined") {
+			throw new ImageResponseError(
+				"Svelte components can't be rendered in a worker (no document). Pass an HTML string instead.",
+				ErrorCodes.COMPONENT_IN_WORKER
+			);
 		}
-		const { render } = await import("./engines/satori.js");
-		return render(html, satoriOptions);
-	}
+		// lazy: only main-thread component users download the mounter + Svelte's mount runtime
+		const { componentToHtml } = await import("./component.js");
+		return componentToHtml(component, props);
+	},
+	satori: {
+		satori: () => import("./satori-wasm.js").then((m) => m.useSatori()),
+		resvg: () => import("./satori-wasm.js").then((m) => m.useResvg()),
+		fonts: () => import("./fonts.js").then((m) => m.defaultClientFonts()),
+	},
+};
 
-	const { render } = await import("./engines/takumi.js");
-	return render(html, imageOptions as TakumiImageOptions);
+/**
+ * OG image as a `Response`, rendered in the browser (or a worker) with the engine
+ * picked by `options.engine` (Takumi by default). Consume it with
+ * `URL.createObjectURL(await res.blob())`.
+ */
+export class ImageResponse<T extends Element> extends CoreImageResponse<T> {
+	constructor(element: T, options?: ImageResponseOptions, ...[props]: PropsArg<T>) {
+		super(clientPlatform, element, options, props);
+	}
+}
+
+/** Same as `new ImageResponse(...)`, as a function. */
+export function createImage<T extends Element>(
+	element: T,
+	options?: ImageResponseOptions,
+	...props: PropsArg<T>
+): ImageResponse<T> {
+	return new ImageResponse(element, options, ...props);
+}
+
+/** Render to bytes (`svg` → string) instead of a `Response`. */
+export function renderImage<T extends Element>(
+	element: T,
+	options?: ImageResponseOptions,
+	...[props]: PropsArg<T>
+): Promise<Uint8Array | string> {
+	return coreRender(element, options ?? {}, props, clientPlatform);
 }

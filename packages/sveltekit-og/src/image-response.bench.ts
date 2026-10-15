@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { readFileSync } from "node:fs";
 import { bench, describe } from "vitest";
 
 // Public API only: CI overlays this file onto the v4.4.0 sources to build the
 // baseline on the same runner, so it must not import anything that moves in v5.
-import { ImageResponse as RootImageResponse } from "$lib/index.js";
-import { ImageResponse as TakumiImageResponse } from "$lib/takumi/index.js";
+import { ImageResponse as RootImageResponse } from "#lib/index.js";
+import { ImageResponse as TakumiImageResponse } from "#lib/takumi/index.js";
 import OG from "./routes/(components)/OG.svelte";
 
 // Local font so we measure pure generation cost, not a network font fetch.
@@ -31,14 +30,20 @@ const props = { text: "Ready to try sveltekit-og?", spanText: "Start building fo
 const size = { width: 1200, height: 630, fonts };
 
 // 4.4.0's root entry is Satori and ignores `engine`; v5 defaults to Takumi and needs it.
-// Passing it on both keeps the case name honest across versions.
-const satori = { ...size, engine: "satori" } as any;
+// Passing it on both keeps the case name honest across versions. (Spread in, so the 4.x
+// option type doesn't reject the key.)
+const satori = { ...size, engine: "satori" as const };
 
+type Format = "png" | "svg";
 const engines = {
-	satori: (element: any, format: "png" | "svg", p?: any) =>
-		new RootImageResponse(element, { ...satori, format }, p),
-	takumi: (element: any, format: "png" | "svg", p?: any) =>
-		new TakumiImageResponse(element, { ...size, format }, p),
+	satori: (format: Format, component?: boolean) =>
+		component
+			? new RootImageResponse(OG, { ...satori, format }, props)
+			: new RootImageResponse(template, { ...satori, format }),
+	takumi: (format: Format, component?: boolean) =>
+		component
+			? new TakumiImageResponse(OG, { ...size, format }, props)
+			: new TakumiImageResponse(template, { ...size, format }),
 };
 
 // Bump time so we collect plenty of samples for a stable p99; warmup iterations
@@ -53,7 +58,7 @@ for (const [engine, render] of Object.entries(engines)) {
 		bench(
 			"html → png",
 			() =>
-				render(template, "png")
+				render("png")
 					.arrayBuffer()
 					.then(() => {}),
 			cfg
@@ -63,7 +68,7 @@ for (const [engine, render] of Object.entries(engines)) {
 		bench(
 			"svelte → png",
 			() =>
-				render(OG, "png", props)
+				render("png", true)
 					.arrayBuffer()
 					.then(() => {}),
 			cfg
@@ -73,7 +78,7 @@ for (const [engine, render] of Object.entries(engines)) {
 		bench(
 			"html → svg",
 			() =>
-				render(template, "svg")
+				render("svg")
 					.arrayBuffer()
 					.then(() => {}),
 			cfg
