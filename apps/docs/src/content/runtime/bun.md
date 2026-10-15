@@ -73,7 +73,7 @@ Once configured, usage is the same as any other SvelteKit environment.
 
 ## Preview (Self Test)
 
-Source: https://github.com/etherCorps/sveltekit-og/tree/main/examples/bun-build
+Source: https://github.com/etherCorps/sveltekit-og/tree/v4.4.0/examples/bun-build
 
 ### Step-by-Step Guide
 
