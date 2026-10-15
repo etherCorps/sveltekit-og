@@ -20,6 +20,14 @@ const nimbusConfig = defineNimbusConfig({
   editPattern: `${repoUrl}/edit/v5/apps/docs/{path}`,
   socialImage: "/api/og/image/docs.png", // entry id of docs/index.mdx is "docs"
   socialImageAlt: "SvelteKit OG documentation",
+  head: [
+    { tag: "link", attrs: { rel: "icon", type: "image/svg+xml", href: "/logo.svg" } },
+    { tag: "link", attrs: { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" } },
+    { tag: "link", attrs: { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" } },
+    { tag: "link", attrs: { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" } },
+    { tag: "link", attrs: { rel: "manifest", href: "/site.webmanifest" } },
+    { tag: "meta", attrs: { name: "theme-color", content: "#e11d48" } },
+  ],
   // v5 is the only version hosted here; v4 lives at v4.sveltekit-og.dev (see
   // src/site.ts `externalVersions` and the VersionSwitcher in the header).
   versions: { current: "v5", others: [] },

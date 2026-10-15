@@ -509,3 +509,31 @@ body:not(:has([data-mobile-sidebar])) [data-menu-btn] {
 main#main-content:has(.pg-full) > div {
   max-width: none;
 }
+
+/* Brand: the rose accent the previous site used (Tailwind rose-600 / 500 / 400),
+   over Nimbus's neutral scale. Everything keyed on primary/ring/selected follows. */
+:root {
+  --nb-primary: oklch(0.586 0.253 17.585);          /* rose-600 */
+  --nb-primary-hover: oklch(0.645 0.246 16.439);    /* rose-500 */
+  --nb-primary-foreground: oklch(0.99 0 0);
+  --nb-ring: oklch(0.586 0.253 17.585 / 0.35);
+  --nb-selected: oklch(0.941 0.03 12.58);           /* rose-100 */
+}
+[data-mode="dark"] {
+  --nb-primary: oklch(0.645 0.246 16.439);          /* rose-500 */
+  --nb-primary-hover: oklch(0.712 0.194 13.428);    /* rose-400 */
+  --nb-primary-foreground: oklch(0.99 0 0);
+  --nb-ring: oklch(0.645 0.246 16.439 / 0.4);
+  --nb-selected: oklch(0.271 0.105 12.094);         /* rose-950 */
+}
+
+/* Prose links in the brand colour, as on the previous site (Nimbus defaults to the
+   foreground colour with a grey underline). */
+.docs-content :where(a:not([class])) {
+  color: var(--nb-primary);
+  text-decoration-color: color-mix(in oklch, var(--nb-primary) 40%, transparent);
+}
+.docs-content :where(a:not([class]):hover) {
+  color: var(--nb-primary-hover);
+  text-decoration-color: var(--nb-primary-hover);
+}
