@@ -1,6 +1,6 @@
 {
 	"name": "@ethercorps/sveltekit-og",
-	"version": "4.4.0",
+	"version": "5.0.0-next.0",
 	"license": "MIT",
 	"homepage": "https://sveltekit-og.dev",
 	"repository": "github:etherCorps/sveltekit-og",
@@ -125,11 +125,11 @@
 		"unwasm": "^0.5.3"
 	},
 	"peerDependencies": {
+		"@resvg/resvg-wasm": "^2.6.2",
 		"@sveltejs/kit": "^2.0.0 || ^3.0.0",
-		"svelte": "^5.0.0",
-		"takumi-js": "^2.0.1",
 		"satori": "^0.25.0",
-		"@resvg/resvg-wasm": "^2.6.2"
+		"svelte": "^5.0.0",
+		"takumi-js": "^2.0.1"
 	},
 	"peerDependenciesMeta": {
 		"takumi-js": {
