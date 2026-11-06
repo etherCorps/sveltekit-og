@@ -121,7 +121,7 @@
 	"type": "module",
 	"dependencies": {
 		"@resvg/resvg-wasm": "^2.6.2",
-		"satori": "^0.25.0",
+		"satori": "^0.33.5",
 		"satori-html": "0.3.2",
 		"std-env": "^4.1.0",
 		"unwasm": "^0.5.3"
